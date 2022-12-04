@@ -62,9 +62,12 @@ cd tap/install-tap
 ```
 it will create ~/.tapconfig that export `TAP_ENV` environment variable pointing to tap-env file.
 if the given file is not exist, then it will copy tap/install-tap/tap-env.template to ~/homelab/tap-env. 
+cat ~/.tapconfig 
 ```
 export TAP_ENV=/home/ubuntu/homelab/tap-env
+export TAP_ENV_DIR=/home/ubuntu/homelab
 ```
+and also it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
 
 ###  Install-tanzu-cli (02-install-tanzu-tap-cli.sh)
 to install the tap cli 
@@ -134,7 +137,13 @@ for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
-it will use tap-values-{profile}-1st-TEMPLATE.yml by default and it will replace values from the `TAP_ENV` file to tap-values.yml
+it will use tap-values file under the `TAP_ENV_DIR` and it will replace values from the `TAP_ENV` file to tap-values.yml
+
+cat ~/.tapconfig 
+```
+export TAP_ENV=/home/ubuntu/homelab/tap-env
+export TAP_ENV_DIR=/home/ubuntu/homelab
+```
 
 or you may specify other file:
 ```
@@ -172,7 +181,13 @@ it will combine following two file by default:
 - tap-values-{profile}-1st-TEMPLATE.yml
 - tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 
-it will replace values from the `TAP_ENV` file to tap-values.yml
+it will use yml file under the `TAP_ENV_DIR` and it will replace values from the `TAP_ENV` file to tap-values.yml
+
+cat ~/.tapconfig 
+```
+export TAP_ENV=/home/ubuntu/homelab/tap-env
+export TAP_ENV_DIR=/home/ubuntu/homelab
+```
 
 or you may specify other file:
 ```

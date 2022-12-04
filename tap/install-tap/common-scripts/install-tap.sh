@@ -20,7 +20,9 @@ if [ -z "$PROFILE" ]; then
 fi
 
 if is_yml_arg_not_exist "$@"; then
-  YML=$SCRIPTDIR/tap-values-${PROFILE}-1st-TEMPLATE.yml
+  TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
+  echo "Loading tap-values file from TAP_ENV_DIR:$TAP_ENV_DIR"
+  YML=$TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml
   echo "Using default yml tempalate: $YML"
 else
   echo "Using Given yml file: $YML"

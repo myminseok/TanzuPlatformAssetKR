@@ -26,6 +26,8 @@ function print_help {
 
 function print_help_customizing {
   echo "  Setup tapconfig:"
+  echo "    install-tap/01-setup-tapconfig.sh ~/any/path/tap-env"
+  echo "    or "
   echo "    cp -r install-tap/tap-env.template /any/path/tap-env"
   echo "    export TAP_ENV=/path/to/tap-env > ~/.tapconfig"
   echo ""
@@ -36,14 +38,31 @@ function set_tapconfig {
   DEFAULT_ENV_PATH="$SCRIPTDIR/tap-env" 
   ENV_PATH=${1:-$DEFAULT_ENV_PATH}  
 
+  ENV_PATH_DIR=$(echo $ENV_PATH | rev | cut -d'/' -f2- | rev)
+  echo "$ENV_PATH_DIR"
+  if [ ! -d "$ENV_PATH_DIR" ]; then
+    echo "Creating folder $ENV_PATH_DIR"
+    mkdir -p "$ENV_PATH_DIR"
+  fi
+
+  ABS_ENV_DIR="$( cd "$( dirname "${ENV_PATH[0]}" )" && pwd )"
   ABS_ENV_PATH="$( cd "$( dirname "${ENV_PATH[0]}" )" && pwd )/$(basename -- $ENV_PATH)"
 
   if [ ! -f $ABS_ENV_PATH ]; then
     echo "Coping $SCRIPTDIR/tap-env.template to $ABS_ENV_PATH"
     cp $SCRIPTDIR/tap-env.template $ABS_ENV_PATH
   fi
-  echo "export TAP_ENV=$ABS_ENV_PATH"
+  echo "Creating ~/.tapconfig for TAP_ENV $ABS_ENV_PATH"
   echo "export TAP_ENV=$ABS_ENV_PATH" > ~/.tapconfig
+  echo "export TAP_ENV_DIR=$ABS_ENV_DIR" >> ~/.tapconfig
+  echo ""
+  cat ~/.tapconfig
+  echo ""
+  echo "Coping tap-values templates to $ABS_ENV_DIR"
+  for file in $(find $SCRIPTDIR -name "setup_tapconfig._copy_files.sh") ; do
+    echo "executing $file"
+    sh $file
+  done
 }
 
 function load_env_file {
@@ -252,4 +271,17 @@ function replace_key_if_template_yml {
   done < $TAP_ENV
 
   echo "Replaced values to $NEW_YML_PATH"
+}
+
+
+function copy_if_not_exist {
+  SRC_FILE_PATH=$1
+  DEST_FOLDER=$2
+  SRC_FILENAME=$(echo $SRC_FILE_PATH | rev | cut -d'/' -f1 | rev)
+  if [ -f $DEST_FOLDER/$SRC_FILENAME ]; then
+    echo "Skip Coping. File already exist: $DEST_FOLDER/$SRC_FILENAME "
+  else
+    echo "Coping $SRC_FILENAME to $DEST_FOLDER"
+    cp $SRC_FILE_PATH $DEST_FOLDER/
+  fi
 }

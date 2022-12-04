@@ -19,8 +19,10 @@ fi
 
 ## set the default yml 
 if is_yml_arg_not_exist "$@"; then
-  YML_1st=$SCRIPTDIR/tap-values-${PROFILE}-1st-TEMPLATE.yml
-  YML_2nd=$SCRIPTDIR/tap-values-${PROFILE}-2nd-overlay-TEMPLATE.yml
+  TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
+  echo "Loading tap-values file from TAP_ENV_DIR:$TAP_ENV_DIR"
+  YML_1st=$TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml
+  YML_2nd=$TAP_ENV_DIR/tap-values-${PROFILE}-2nd-overlay-TEMPLATE.yml
   YTT_YML="/tmp/tap-values-${PROFILE}-update-TEMPLATE.yml"
   set -ex
   ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd  > $YTT_YML
