@@ -20,7 +20,7 @@ fi
 ## set the default yml 
 if is_yml_arg_not_exist "$@"; then
   TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
-  echo "Loading tap-values file from TAP_ENV_DIR:$TAP_ENV_DIR"
+ echo "[YML] Using tap-values template file from TAP_ENV_DIR '$TAP_ENV_DIR'"
   YML_1st=$TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml
   YML_2nd=$TAP_ENV_DIR/tap-values-${PROFILE}-2nd-overlay-TEMPLATE.yml
   YTT_YML="/tmp/tap-values-${PROFILE}-update-TEMPLATE.yml"
@@ -28,9 +28,8 @@ if is_yml_arg_not_exist "$@"; then
   ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd  > $YTT_YML
   set +x
   YML=$YTT_YML
-  echo "Using default yml tempalate: $YML"
 else
-  echo "Using Given yml file: $YML"
+  echo "[YML] Using Given yml file '$YML'"
 fi
 
 ## processing custom CA.
@@ -44,10 +43,10 @@ overlay_custom_ca_to_yml $YML $REGISTRY_CA_FILE_PATH $OVERLAYED_YML
 FINAL_YML="/tmp/$(generate_new_filename $OVERLAYED_YML 'FINAL')"
 replace_key_if_template_yml $OVERLAYED_YML $FINAL_YML 
 
-echo "Final YML: $FINAL_YML"
-echo "================"
+echo "[YML] Final '$FINAL_YML'"
+echo "================================"
 cat $FINAL_YML
-echo "----------------"
+echo "--------------------------------"
 
 if [ "$YES" != "y" ]; then
  confirm_target_k8s

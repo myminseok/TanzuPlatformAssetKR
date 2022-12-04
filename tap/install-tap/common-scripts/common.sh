@@ -11,6 +11,13 @@ for i in "$@"; do
   
 done
 
+
+function print_debug {
+  if [ "$DEBUG" == "y" ]; then
+    echo "  DEBUG: $1"  
+  fi
+}
+
 function print_help {
   echo ""
   echo "Usage: $0 -p PROFILE [-f YOUR-YAML]"
@@ -54,7 +61,7 @@ function set_tapconfig {
     echo "Coping $SCRIPTDIR/tap-env.template to $ABS_ENV_PATH"
     cp $SCRIPTDIR/tap-env.template $ABS_ENV_PATH
   fi
-  echo "Creating ~/.tapconfig for TAP_ENV $ABS_ENV_PATH"
+  echo "Creating ~/.tapconfig for  $ABS_ENV_PATH"
   echo "export TAP_ENV=$ABS_ENV_PATH" > ~/.tapconfig
   echo "export TAP_ENV_DIR=$ABS_ENV_DIR" >> ~/.tapconfig
   echo ""
@@ -67,30 +74,58 @@ function set_tapconfig {
   done
 }
 
-function load_env_file {
-  DEFAULT_ENV=$1
-
+function _decide_tapconfig {
   if [ -f ~/.tapconfig ]; then
-    echo "Loading TAP_ENV from ~/.tapconfig"
+    echo "[TAP_ENV] Loading env from ~/.tapconfig"
     source ~/.tapconfig
   fi
 
   TAP_ENV=${TAP_ENV:-$DEFAULT_ENV}
   if [ ! -f $TAP_ENV ]; then
-    echo "ERROR: Env file not found $TAP_ENV"
+    echo "ERROR: Env file not found '$TAP_ENV'"
     print_help_customizing
     exit 1
   fi
-  echo "Using env from '$TAP_ENV'"
-  export TAP_ENV=$TAP_ENV
+  echo "[TAP_ENV] Using env from '$TAP_ENV'"
   source $TAP_ENV
+  export TAP_ENV=$TAP_ENV
+  export TAP_ENV_DIR=$TAP_ENV_DIR
 }
 
-function print_debug {
-  if [ "$DEBUG" == "y" ]; then
-    echo "  DEBUG: $1"  
-  fi
+function trim_string {
+    echo $(echo $1 | xargs)
 }
+function _export_env_file {
+   while IFS= read line || [ -n "$line" ]; do
+      if [[ "$line" == "#"* || "$line" == "" ]]; then
+         continue
+      fi
+      ## trim leading /trailing whitespace
+      line=$(trim_string "$line")
+      
+      key=$(echo $line | cut -d'=' -f1)
+      value=$(echo $line | cut -d'=' -f2 | sed 's/"//g' | sed 's/\//\\\//g')
+      
+      ## remove 'export ' prefix and trim leading /trailing whitespace 
+      key=$( echo $key | sed 's/^export //g' | xargs)
+      #echo "$key:$value"
+      eval "export $key=$value"
+   done < $TAP_ENV
+}
+
+function load_env_file {
+  DEFAULT_ENV=$1
+  if [ ! -z $TAP_ENV ]; then
+    echo "[TAP_ENV] already loaded '$TAP_ENV'"
+    return
+  fi
+  _decide_tapconfig $DEFAULT_ENV
+
+  _export_env_file $TAP_ENV
+
+}
+
+
 
 function is_yml_arg_not_exist {
   for i in "$@"; do
@@ -195,21 +230,23 @@ function _extract_custom_ca_file_from_env {
   REGISTRY_CA_FILE_PATH=$1
   rm -rf $REGISTRY_CA_FILE_PATH
   if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "No IMGPKG_REGISTRY_CA_CERTIFICATE env"
+    echo "[YML] Not Overlaying as IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found"
     return
   fi
-  echo "Extracting CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
+  echo "[YML] Extracting Custom CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
 
   if [ -n "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
     echo $IMGPKG_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
   fi
+
   if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
     if [ "$IMGPKG_REGISTRY_CA_CERTIFICATE" != "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
       echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d >> $REGISTRY_CA_FILE_PATH
     fi
   fi
+
   if [ ! -f "$REGISTRY_CA_FILE_PATH" ]; then
-    echo "ERROR: CA file is not generated. $REGISTRY_CA_FILE_PATH"
+    echo "ERROR [YML] Extracted Custom CA file is not found. $REGISTRY_CA_FILE_PATH"
     echo "  check IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE in the tap-env file:$TAP_ENV"
     exit 1
   fi
@@ -224,46 +261,46 @@ function overlay_custom_ca_to_yml {
   RESULT_YTT_YML=$3
 
   if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "No IMGPKG_REGISTRY_CA_CERTIFICATE env"
+    echo "[YML] Not Overlaying as IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found"
     cp $YML_1st $RESULT_YTT_YML
     return
   fi
   
   _extract_custom_ca_file_from_env $REGISTRY_CA_FILE_PATH
   
-   echo "Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
+   echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
    YML_1st=$YML
    YML_2nd=$COMMON_SCRIPTDIR/tap-values-custom-ca-overlay-template.yaml
    rm -rf $RESULT_YTT_YML
    set -ex
    ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd -f $REGISTRY_CA_FILE_PATH > $RESULT_YTT_YML
    set +x
-   echo "Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
 
 }
 
 
 
 ## replace template with "tap-env" and
-## create a new file under /tmp
+## create a new file under NEW_YML_PATH
 function replace_key_if_template_yml {
-  YML=$1
+  SRC_YML=$1
   NEW_YML_PATH=$2
   
-  if [[ ! "$YML" == *"TEMPLATE"* ]]; then
+  if [[ ! "$SRC_YML" == *"TEMPLATE"* ]]; then
     ## it is not template yml. 
-    echo "NO Params Replacement as the filename doesn'tinclude 'TEMPLATE'. $YML"
-    cp $YML $NEW_YML_PATH
+    echo "[WARNING][YML] NO Params Replacement as the filename doesn't include 'TEMPLATE'. $SRC_YML"
+    cp $SRC_YML $NEW_YML_PATH
     return 
   fi
-  echo "Replacing values from $TAP_ENV to  $YML"
-
-  cp $YML $NEW_YML_PATH
+  echo "[YML] Replacing values from $TAP_ENV to $SRC_YML"
+  cp $SRC_YML $NEW_YML_PATH
   ## read all line including the last line without the trailing return char.
   while IFS= read line || [ -n "$line" ]; do
       if [[ "$line" == "#"* || "$line" == "" ]]; then
          continue
       fi
+      ## trim leading /trailing whitespace
+      line=$(echo "$line" | xargs)
       #echo "$line"
       key=$(echo $line | cut -d'=' -f1)
       value=$(echo $line | cut -d'=' -f2 | sed 's/"//g' | sed 's/\//\\\//g')
@@ -272,7 +309,7 @@ function replace_key_if_template_yml {
       sed -i -r "s/$key/$value/g" $NEW_YML_PATH
   done < $TAP_ENV
 
-  echo "Replaced values to $NEW_YML_PATH"
+  #echo "Replaced values to $NEW_YML_PATH"
 }
 
 
