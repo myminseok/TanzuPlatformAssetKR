@@ -17,7 +17,7 @@ Following scripts are compatible for TAP `1.3` and only tested on
 - Ubuntu
 - Mac OS
 
-## Setup Jumpbox
+# Setup Jumpbox
 To run this scripts conveniently, it would be good to have a config file.
 
 ### Create TAP_ENV file.
@@ -81,17 +81,18 @@ TAP_BIN=/data/tapbin-1.3
 and run the scripts 02-install-tanzu-tap-cli.sh.
 
 
-## Relocate TAP packages.
+# Relocate TAP packages.
 
 ### 03-relocate-images-tap.sh
 
 ### 04-tbs-full-deps-relocate-images.sh
 
 
-## Checks TKG cluster readiness
+# Checks TKG cluster Readiness
 run following checks for All Workload cluster (View, Build, Run, Iterate)
 
-### 00-manual-check-custom-harbor-access-from-TKG-node.sh
+### check harbor access from TKG cluster
+00-manual-check-custom-harbor-access-from-TKG-node.sh
 
 ### check kapp-controller-config from mgmt-cluster
 on workload cluster. kapp controller init might fails if there is no proper config such as CA in kapp-controller-config in mgmt cluster.
@@ -106,7 +107,7 @@ and on workload cluster
 kubectl get cm -n tkg-system kapp-controller-config -o yaml
 ```
 
-## Install TAP on `VIEW` cluster
+# Install TAP on `VIEW` cluster
 
 ### locate k8s context
 
@@ -150,7 +151,7 @@ configure any changes from previous step
 install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 
-### update tap with view profile (2nd phase)
+### update tap with VIEW profile (2nd phase)
 apply changes until successful.
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh
@@ -167,7 +168,7 @@ install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ### verify tap-gui access.
 
 
-## Install TAP on  `BUILD` cluster
+# Install TAP on `BUILD` cluster
 
 ### locate k8s context
 
@@ -217,7 +218,7 @@ configure any changes from previous step
 install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 
-### update tap with view profile (2nd phase)
+### update tap with BUILD profile (2nd phase)
 apply changes until successful.
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh
@@ -249,8 +250,7 @@ install-tap/43-status-build-service.sh
 all builder should be Ready status.
 
 
-
-## Install TAP on  `RUN` cluster
+# Install TAP on  `RUN` cluster
 
 ### locate k8s context
 
@@ -305,8 +305,23 @@ configure any changes from previous step
 install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 
-## Test Sample workload
-#### setup `BUILD` cluster
+### update tap with RUN profile (2nd phase)
+apply changes until successful.
+```
+install-tap/multi-{profile}-cluster/23-update-tap.sh
+```
+it will combine following two file by default:
+- tap-values-{profile}-1st-TEMPLATE.yml
+- tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+
+or you may specify other file:
+```
+install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
+```
+
+
+# Test Sample workload
+### Deploy workload on `BUILD` cluster
 setup developer namespace
 - install-tap/70-setup-developer-namespace-build-cluster.sh
 it will create 
@@ -325,7 +340,7 @@ deploy workload
 check workload from tap-gui and fetch `deliverable`:
 - sample-workload/multi-cluster-workload/2-fetch-deliverable-from-build-cluster.sh
 
-#### setup `RUN` cluster
+### Deploy workload on `RUN` cluster
 setup developer namespace
 - install-tap/71-setup-developer-namespace-run-cluster.sh
 
