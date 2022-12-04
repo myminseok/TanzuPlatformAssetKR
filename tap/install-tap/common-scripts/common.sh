@@ -27,9 +27,11 @@ function print_help {
 function print_help_customizing {
   echo "  Setup tapconfig:"
   echo "    install-tap/01-setup-tapconfig.sh ~/any/path/tap-env"
-  echo "    or "
-  echo "    cp -r install-tap/tap-env.template /any/path/tap-env"
-  echo "    export TAP_ENV=/path/to/tap-env > ~/.tapconfig"
+  echo "    it will do:"
+  echo "      cp -r install-tap/tap-env.template /any/path/tap-env"
+  echo "      export TAP_ENV=/path/to/tap-env > ~/.tapconfig"
+  echo "      export TAP_ENV_DIR=/path/to/ > ~/.tapconfig" 
+  echo "      copy tap-values-templates.yml to TAP_ENV_DIR"
   echo ""
 }
 

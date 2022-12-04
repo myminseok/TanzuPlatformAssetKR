@@ -28,8 +28,8 @@ To run this scripts conveniently, it would be good to have a config file.
 
 create a copy of `tap-env` from `tap-env.template` to any path
 ```
-mkdir ~/homelab
-cp tap/install-tap/tap-env.template ~/homelab/tap-env
+mkdir ~/tap-config
+cp tap/install-tap/tap-env.template ~/tap-config/tap-env
 ```
 `tap-env` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
 for example, following key in the `tap-env` file,
@@ -54,18 +54,18 @@ please note that the replacement only affects to the only file with filename inc
 ### Setup tapconfig file to point the TAP_ENV file path (00-set-tapconfig.sh)
 run following command to create enviroment setup.
 ```
-mkdir ~/homelab
+mkdir ~/tap-config
 cd tap/install-tap
 ```
 ```
-01-setup-tapconfig.sh ~/homelab/tap-env
+01-setup-tapconfig.sh ~/tap-config/tap-env
 ```
 it will create ~/.tapconfig that export `TAP_ENV` environment variable pointing to tap-env file.
-if the given file is not exist, then it will copy tap/install-tap/tap-env.template to ~/homelab/tap-env. 
+if the given file is not exist, then it will copy tap/install-tap/tap-env.template to ~/tap-config/tap-env. 
 cat ~/.tapconfig 
 ```
-export TAP_ENV=/home/ubuntu/homelab/tap-env
-export TAP_ENV_DIR=/home/ubuntu/homelab
+export TAP_ENV=/home/ubuntu/tap-config/tap-env
+export TAP_ENV_DIR=/home/ubuntu/tap-config
 ```
 and also it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
 
@@ -141,8 +141,8 @@ it will use tap-values file under the `TAP_ENV_DIR` and it will replace values f
 
 cat ~/.tapconfig 
 ```
-export TAP_ENV=/home/ubuntu/homelab/tap-env
-export TAP_ENV_DIR=/home/ubuntu/homelab
+export TAP_ENV=/home/ubuntu/tap-config/tap-env
+export TAP_ENV_DIR=/home/ubuntu/tap-config
 ```
 
 or you may specify other file:
@@ -185,8 +185,8 @@ it will use yml file under the `TAP_ENV_DIR` and it will replace values from the
 
 cat ~/.tapconfig 
 ```
-export TAP_ENV=/home/ubuntu/homelab/tap-env
-export TAP_ENV_DIR=/home/ubuntu/homelab
+export TAP_ENV=/home/ubuntu/tap-config/tap-env
+export TAP_ENV_DIR=/home/ubuntu/tap-config
 ```
 
 or you may specify other file:

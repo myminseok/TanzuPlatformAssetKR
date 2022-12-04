@@ -1,5 +1,5 @@
 ## it will create ~/.tapconfig which will use to load `TAP_ENV` environment variable
-## and copy TanzuPlatformAssetKR/tap/install-tap/tap-env.template to ~/homelab/tap-env
+## and copy TanzuPlatformAssetKR/tap/install-tap/tap-env.template to ~/tap-config/tap-env
 
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
