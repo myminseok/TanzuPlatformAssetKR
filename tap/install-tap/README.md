@@ -130,7 +130,7 @@ for installing cert-manager, ingress with minimum default configuratons
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources
+### prepare resources (for update tap)
 
 verify metastore access:
 - tanzu insight plugin should be installed: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html
@@ -191,7 +191,7 @@ for installing cert-manager, ingress with minimum default configuratons
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources
+### prepare resources (for update tap)
 
 if you missed to fetch metastore cert from `view` cluster
 - switch context to `view` cluster
@@ -273,7 +273,7 @@ for installing cert-manager, ingress with minimum default configuratons
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources
+### prepare resources (for update tap)
 
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
@@ -326,9 +326,16 @@ setup developer namespace
 - install-tap/70-setup-developer-namespace-build-cluster.sh
 it will create 
 - scan policy 
--  testing pipeline
+- testing pipeline
 
-gitops secrets
+and verify resources before deploying workload
+```
+kubectl get clusterbuilder
+kubectl get ScanPolicy -A
+kubectl get Pipeline -A
+```
+
+generate git token and gitops secrets
 ```
 cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
 edit /any/path/gitops-ssh-secret-basic.yml
@@ -339,12 +346,14 @@ deploy workload
 - sample-workload/multi-cluster-workload/1-create-sample-workload-on-build-cluster.sh
 check workload from tap-gui and fetch `deliverable`:
 - sample-workload/multi-cluster-workload/2-fetch-deliverable-from-build-cluster.sh
+it will create files on /tmp folder
+- /tmp/${WORKLOAD_NAME}-delivery.yml
 
 ### Deploy workload on `RUN` cluster
 setup developer namespace
 - install-tap/71-setup-developer-namespace-run-cluster.sh
 
-gitops secrets
+apply gitops secrets (the same from previous step)
 ```
 cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
 edit /any/path/gitops-ssh-secret-basic.yml
@@ -353,5 +362,16 @@ kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
 
 apply the delivery 
 - sample-workload/multi-cluster-workload/3-apply-deliverable-to-run-cluster.sh
+
+it will apply 
+```
+kubectl -n ${DEVELOPER_NAMESPACE} apply -f /tmp/${WORKLOAD_NAME}-deliverable.yml
+```
+and verify resources
+```
+kubectl get deliverables.carto.run -A
+kubectl get httpproxy -A
+```
+
 and verify access
 - sample-workload/multi-cluster-workload/4-verify.sh
