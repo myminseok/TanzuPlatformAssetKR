@@ -1,17 +1,15 @@
 #!/bin/bash
 set -e
 
-
-
 ## this is for this program only.
 ## check debug flag
 for i in "$@"; do
   if [ "$i" == "--debug" ]; then
     DEBUG="y"
+    set -x
   fi
+  
 done
-
-
 
 function print_help {
   echo ""
@@ -56,15 +54,15 @@ function load_env_file {
     source ~/.tapconfig
   fi
 
-  ENV=${TAP_ENV:-$DEFAULT_ENV}
-  if [ ! -f $ENV ]; then
-    echo "ERROR: Env file not found $ENV"
+  TAP_ENV=${TAP_ENV:-$DEFAULT_ENV}
+  if [ ! -f $TAP_ENV ]; then
+    echo "ERROR: Env file not found $TAP_ENV"
     print_help_customizing
     exit 1
   fi
-  echo "Using env from '$ENV'"
-  export ENV=$ENV
-  source $ENV
+  echo "Using env from '$TAP_ENV'"
+  export TAP_ENV=$TAP_ENV
+  source $TAP_ENV
 }
 
 function print_debug {
@@ -73,16 +71,16 @@ function print_debug {
   fi
 }
 
-
-function yml_arg_not_exist {
+function is_yml_arg_not_exist {
   for i in "$@"; do
     case $i in
       -f=*|--file=*|-f|--file)
-      return 1
+        print_debug "$i"
+        return 1
       ;;
     esac
-    return 0
   done
+  return 0
 }
 
 
@@ -93,7 +91,6 @@ function parse_args {
   for i in "$@"; do
     print_debug "=== iteration ==="
     print_debug "input: '$i'"
-    
     case $i in
       -f=*|--file=*)
         print_debug "case -f=) $i"
@@ -160,18 +157,86 @@ function confirm_target_k8s {
     fi
 }
 
+function generate_new_filename {
+  SRC_FILE_PATH=$1
+  PREFIX_TO_ADD=$2
+  ## generate NEW_YML filenaming.
+  SRC_FILENAME=$(echo $SRC_FILE_PATH | rev | cut -d'/' -f1 | rev)
+  NEW_FILENAME="${PREFIX_TO_ADD}-${SRC_FILENAME}"
+  echo "$NEW_FILENAME"
+}
+
+
+## fetch IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE 
+## in the tap-env file $TAP_ENV
+## and save to REGISTRY_CA_FILE_PATH="/tmp/tap_registry_ca.crt" 
+function _extract_custom_ca_file_from_env {
+  REGISTRY_CA_FILE_PATH=$1
+  rm -rf $REGISTRY_CA_FILE_PATH
+  if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
+    echo "No IMGPKG_REGISTRY_CA_CERTIFICATE env"
+    return
+  fi
+  echo "Extracting CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
+
+  if [ -n "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
+    echo $IMGPKG_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
+  fi
+  if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+    if [ "$IMGPKG_REGISTRY_CA_CERTIFICATE" != "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+      echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d >> $REGISTRY_CA_FILE_PATH
+    fi
+  fi
+  if [ ! -f "$REGISTRY_CA_FILE_PATH" ]; then
+    echo "ERROR: CA file is not generated. $REGISTRY_CA_FILE_PATH"
+    echo "  check IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE in the tap-env file:$TAP_ENV"
+    exit 1
+  fi
+}
+
+## fetch IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE from the tap-env file $TAP_ENV
+## overlay to tap values RESULT_YTT_YML
+## if no IMGPKG_REGISTRY_CA_CERTIFICATE, copy YML_1st to RESULT_YTT_YML
+function overlay_custom_ca_to_yml {
+  YML_1st=$1
+  REGISTRY_CA_FILE_PATH=$2
+  RESULT_YTT_YML=$3
+
+  if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
+    echo "No IMGPKG_REGISTRY_CA_CERTIFICATE env"
+    cp $YML_1st $RESULT_YTT_YML
+    return
+  fi
+  
+  _extract_custom_ca_file_from_env $REGISTRY_CA_FILE_PATH
+  
+   echo "Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
+   YML_1st=$YML
+   YML_2nd=$COMMON_SCRIPTDIR/tap-values-custom-ca-overlay-template.yaml
+   rm -rf $RESULT_YTT_YML
+   set -ex
+   ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd -f $REGISTRY_CA_FILE_PATH > $RESULT_YTT_YML
+   set +x
+   echo "Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
+
+}
+
+
+
 ## replace template with "tap-env" and
 ## create a new file under /tmp
-function generate_yml_if_template_yml {
+function replace_key_if_template_yml {
   YML=$1
+  NEW_YML_PATH=$2
+  
   if [[ ! "$YML" == *"TEMPLATE"* ]]; then
     ## it is not template yml. 
-    echo "$YML"
+    echo "NO Params Replacement as the filename doesn'tinclude 'TEMPLATE'. $YML"
+    cp $YML $NEW_YML_PATH
     return 
   fi
-  yml_file=$(echo $YML | rev | cut -d'/' -f1 | rev)
-  NEW_YML=$(echo $yml_file | sed 's/TEMPLATE/CONVERTED/g')
-  NEW_YML_PATH="/tmp/${NEW_YML}"
+  echo "Replacing values from $TAP_ENV to  $YML"
+
   cp $YML $NEW_YML_PATH
   ## read all line including the last line without the trailing return char.
   while IFS= read line || [ -n "$line" ]; do
@@ -184,7 +249,7 @@ function generate_yml_if_template_yml {
       #echo "value:$value"
       #echo "sed -i -r 's/$key/$value/g' $NEW_YML"
       sed -i -r "s/$key/$value/g" $NEW_YML_PATH
-  done < $TANZU_ENV
+  done < $TAP_ENV
 
-  echo "$NEW_YML_PATH"
+  echo "Replaced values to $NEW_YML_PATH"
 }

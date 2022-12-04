@@ -1,5 +1,6 @@
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/../common-scripts/prepare-resources.sh $@
 
 chmod +x $SCRIPTDIR/*.sh
 chmod +x $SCRIPTDIR/../https-overlay/*.sh

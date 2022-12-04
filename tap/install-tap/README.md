@@ -17,8 +17,12 @@ Following scripts are compatible for TAP `1.3` and only tested on
 - Ubuntu
 - Mac OS
 
+
 # Setup Jumpbox
 To run this scripts conveniently, it would be good to have a config file.
+
+### tools
+- ytt
 
 ### Create TAP_ENV file.
 
@@ -45,6 +49,7 @@ shared:
   ...
     username: "admin"
 ```
+please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
 
 ### Setup tapconfig file to point the TAP_ENV file path (00-set-tapconfig.sh)
 run following command to create enviroment setup.
@@ -129,6 +134,13 @@ for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
+it will use tap-values-{profile}-1st-TEMPLATE.yml by default and it will replace values from the `TAP_ENV` file to tap-values.yml
+
+or you may specify other file:
+```
+install-tap/multi-{profile}-cluster/21-install-tap.sh -f /path/to/my-values.yml
+```
+please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
 
 ### prepare resources (for update tap)
 
@@ -160,10 +172,16 @@ it will combine following two file by default:
 - tap-values-{profile}-1st-TEMPLATE.yml
 - tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 
+it will replace values from the `TAP_ENV` file to tap-values.yml
+
 or you may specify other file:
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
+please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
+
+
+
 
 ### verify tap-gui access.
 

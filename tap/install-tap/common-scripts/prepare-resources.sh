@@ -1,9 +1,9 @@
 #!/bin/bash
-_SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+COMMON_SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $COMMON_SCRIPTDIR/common.sh
+load_env_file $COMMON_SCRIPTDIR/../tap-env
 
 set -e
-source $_SCRIPTDIR/common.sh
-load_env_file $_SCRIPTDIR/../tap-env
 
 parse_args "$@"
 

@@ -5,30 +5,9 @@ shared:
     username: "IMGPKG_REGISTRY_USERNAME"
     password: "IMGPKG_REGISTRY_PASSWORD"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
-  ca_cert_data: | # To be passed if using custom certificates.
-    -----BEGIN CERTIFICATE-----
-    MIID5TCCAs2gAwIBAgIJAMWKW6niC9SnMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNV
-    BAMMBG15Y2EwIBcNMjIxMTE3MTIzMjQxWhgPMjA1MDA0MDQxMjMyNDFaMG4xCzAJ
-    BgNVBAYTAktPMQ4wDAYDVQQIDAVTZW91bDEOMAwGA1UEBwwFU2VvdWwxDDAKBgNV
-    BAoMA09yZzENMAsGA1UECwwEdW5pdDEiMCAGA1UEAwwZaDJvLTItMjI1Ny5oMm8u
-    dm13YXJlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALEA9lKs
-    AuH2fktSfUvrpMfh8quStkm8wqfumRlVj0tMhs3M7tMlUl4e5bfi5gNTxoEchawG
-    jE4FWKo19XccG2uaudr43ioPd/xJmLD9RBrOIcuoiaYAZGzOLQ1rqbbRdCxSy66D
-    BGxQCvudW1rAqJhaYNsUBKDQEKfO3PCZOiZ9DyISheR7gU4b+/MzXJ+m/BIEPjHK
-    e3ver+mtotiRuIIM2FjgDSUUGksmI/bHkLAOUFwjaVhB97IpgW/gQ9L2LP3tUuyF
-    CJEuPS08Dqobl5xXeoYyKoUrYE3OKVS+ytVB50hG/EYvRc7rKZnv6SQGCbrImAjj
-    ttd+xJRdS4KVh0ECAwEAAaOB4jCB3zBKBgNVHSMEQzBBgBRgMkpJhBLDu2NuK+sy
-    fJpV93zrtqETpBEwDzENMAsGA1UEAwwEbXljYYIUO/QfKBRofjgd//5sGBVnKtCC
-    z8owCQYDVR0TBAIwADALBgNVHQ8EBAMCBDAwHQYDVR0lBBYwFAYIKwYBBQUHAwEG
-    CCsGAQUFBwMCMFoGA1UdEQRTMFGCGyouaDJvLTItMjI1Ny5oMm8udm13YXJlLmNv
-    bYIgaGFyYm9yLmgyby0yLTIyNTcuaDJvLnZtd2FyZS5jb22HBH8AAAGHBKwRAAGH
-    BArcD1owDQYJKoZIhvcNAQELBQADggEBAFl0DquGwU7GngqC9z7t9JZMWBC7g9WV
-    DYXp2R+WlUZ8/I4GgqBnCbVSTz+A7nyWInbkJfS23ej0mcjpZuTRRlgKGu2He1T/
-    0Hu2cJ03BCsbB/wLSGgJyGWiSub12jqKoyRFD4qlkU+ddxxPZo8GEpuSUz3DlkdT
-    TcUTr1zC91+yMXogSlx5Ztl+hQQQzjk31H3eAWaU7WEEuaDkyBY5FtJe5z2daShH
-    x6RtTZzJ/pp6pe9uI1Gln8xjSNcArkNvX1LnIMM3JdLj6pJ9NtrghSULXfHYWheF
-    rRZzPSE77bClb/6uGbqA2uIPxI66dZhwgYxt2PlNCv1jzeHxn3U7VVw=
-    -----END CERTIFICATE-----
+  #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
+   
+
 ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
 
 #The above keys are minimum numbers of entries needed in tap-values.yaml to get a functioning TAP Full profile installation.
