@@ -1,0 +1,60 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-reference-tap-values-run-sample.html
+profile: run # Can take iterate, build, run, view.
+ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
+
+shared:
+  ingress_domain: "TAP_DOMAIN"
+  image_registry:
+    project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
+    username: "IMGPKG_REGISTRY_USERNAME"
+    password: "IMGPKG_REGISTRY_PASSWORD"
+  kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
+  ca_cert_data: | # To be passed if using custom certificates.
+    -----BEGIN CERTIFICATE-----
+    MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
+    BQAwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNVBAMME3Jvb3Qg
+    U2VsZiBTaWduZWQgQ0EwHhcNMjIxMjAyMDMzMDU5WhcNMzIxMTI5MDMzMDU5WjA6
+    MQswCQYDVQQGEwJLUjENMAsGA1UECgwETXlDQTEcMBoGA1UEAwwTcm9vdCBTZWxm
+    IFNpZ25lZCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPHhqddI
+    Dn193GcUybpXpmJqHEDnh7fI0KONrh1Cp1k4vAv1O7P8BwVZf6WW6r52GN4J4bo5
+    UOi1XN4dYTRAFzoMAfJAnxJvTqrhEILL1N7vclzVCVS2mdtcddiC2TfMsTqp2K3J
+    Vv/UgxTpIqMBOlDUu7fhh6cd4iS8XA32btQXZHARuz6eVZziUyLHxwUkL3ZZrhLF
+    GKs7YZftfAkISwCF4frWYQYZf32dJGqRaXW4j8O/UwYDp2DKMCa4cdxOJT4MyJ/N
+    b4iRCTRAWs+EnLZQc8Rh6JtelW+QFKAh6BWXihU6rlxL/HNudTX1B+DDrXKCyZl9
+    YYOuuv7MLWk/YW0CAwEAAaOByjCBxzAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
+    BBRl540rI3YLXOumjA1nrsTXgcVctTB1BgNVHSMEbjBsgBRl540rI3YLXOumjA1n
+    rsTXgcVctaE+pDwwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNV
+    BAMME3Jvb3QgU2VsZiBTaWduZWQgQ0GCFDXIej+X67LQJ/9/rMsB/MBmiKN9MAsG
+    A1UdDwQEAwIBBjARBglghkgBhvhCAQEEBAMCAAcwDQYJKoZIhvcNAQELBQADggEB
+    ACgvk4FXepiiVBo7Dif5dD8FZ4B26jYBjhZcVAp1uMW38nFmHIpWWzIJy1pDo2rJ
+    oByk67EoL9h0YYOMZMEE9anLtesEs0wlqPke4/eWvVysJWEYeTDGqzcJgIP8HHHd
+    ASKJnZW+hk2Obzj3/CGw6TW9Y7TIJKN0W6GivMyEslCykL4PXlHuFWiG38Z3grHy
+    Wet+XL6SGmmcRSee8ZVhLc17jUYWTwpBOXYXsq+UFwyDWe/zmv6xE3SjeSgCRiX7
+    q22++tb6Rk9sFCrnGsqfwm/gs0LKlf3JIbjte6g8r10YlDaskQsfWkClpTugAEhQ
+    Zv0+hwgpeQUFe2ZsoKGcpfI=
+    -----END CERTIFICATE-----
+
+buildservice:
+  kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
+  kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
+  kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
+  stack_configuration: jammy-only
+  ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
+  exclude_dependencies: true
+
+
+supply_chain: basic            # Can take testing, testing_scanning.
+ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
+  registry:
+    server: "BUILDSERVICE_REGISTRY_HOSTNAME" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+    repository: "SUPPLYCHAIN_REPO" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+  gitops:
+    ssh_secret: "" # Takes "" as value by default; but can be overridden by setting a different value.
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
+
+excluded_packages:
+- policy.apps.tanzu.vmware.com # workaround for policy controller error

@@ -1,0 +1,20 @@
+## only for view cluster, full cluster
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+ name: ca-issuer
+ namespace: tap-gui
+spec:
+ selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+ name: tap-gui-cert
+ namespace: tap-gui
+spec:
+ secretName: tap-gui-cert
+ dnsNames:
+ - tap-gui.tap.h2o-2-2257.h2o.vmware.com
+ issuerRef:
+   name: ca-issuer

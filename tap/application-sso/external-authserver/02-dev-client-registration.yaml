@@ -1,0 +1,24 @@
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: ClientRegistration
+metadata:
+   name: dev-client-registration
+   namespace: default
+spec:
+   authServerSelector:
+      matchLabels:
+         name: dev-authserver
+         env: development
+   redirectURIs:
+      - "http://dev-app.full.lab.pksdemo.net/oauth2/callback"
+      #- "http://test-app.example.com/oauth2/callback"
+   requireUserConsent: false
+   clientAuthenticationMethod: basic
+   authorizationGrantTypes:
+      - "client_credentials"
+      - "authorization_code"
+   scopes:
+      - name: "openid"
+      - name: "email"
+      - name: "profile"
+      - name: "roles"
+      - name: "message.read"

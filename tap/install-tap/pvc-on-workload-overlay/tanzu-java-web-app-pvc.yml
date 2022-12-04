@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tanzu-java-web-app-pvc
+  namespace: demo-app
+  labels:
+   app: tanzu-java-web-app
+spec:
+  #storageClassName: default
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi

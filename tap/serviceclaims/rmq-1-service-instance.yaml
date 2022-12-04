@@ -1,0 +1,7 @@
+# rmq-1-service-instance.yaml
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rmq-1
+  namespace: service-instances

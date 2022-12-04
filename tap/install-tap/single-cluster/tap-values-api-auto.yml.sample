@@ -1,0 +1,43 @@
+tap_gui_url: https://tap-gui.tap.lab.pcfdemo.net
+cluster_name: view
+## CA for tap-gui.tap.lab.pcfdemo.net
+## CA for app workload domain
+## k get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+## k get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+ca_cert_data: |
+  -----BEGIN CERTIFICATE-----
+  MIIC1TCCAb2gAwIBAgIQLYj6KQBdNUO4Q0oF1W/nxDANBgkqhkiG9w0BAQsFADAA
+  MB4XDTIyMTEwODA2MTQzOFoXDTIzMDIwNjA2MTQzOFowADCCASIwDQYJKoZIhvcN
+  AQEBBQADggEPADCCAQoCggEBAKkCln8Ey4Z2WmzWez5oSSPVomfYdmVM9Xkj1Gh5
+  40jh9ryeLuMdBqKvxUaPYDdRnLtg7lFWItaX2hkocvBvjfW9MQHOrmjr+khR9CQ2
+  /X9OHtYF3dJFOx+gDJZjFexe+VTJnb9MsVRhNUN8fJUC59JWytNvak8tG7yUvMjM
+  M7J3oV+e86LZe0T9W2Y0YEpgnGR0CsotYHZROcRByADrz49taMRGcdaDW7yfRgY3
+  uODuHdXMefGGbr+th7QMR08lYvSOwvTUlhZa2hbSK8YLvyhh9kD4FwAlsJ7rnnYP
+  /op7qApqPRxmcPKj7/oq25EGtBes+z72mK8EiEJdzZlHa58CAwEAAaNLMEkwDgYD
+  VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwKQYDVR0RAQH/BB8wHYIbdGFwLWd1
+  aS50YXAubGFiLnBjZmRlbW8ubmV0MA0GCSqGSIb3DQEBCwUAA4IBAQAYPlduX4x+
+  9yA/u9GD9BFPuKq/e/ln4IPev8aWIKzjBjkzqkqpLeCsLwcu35mgnDm8vHOCIgDw
+  Zf4oJ2JeIsZMDP+ANXaRJueoygoaOD9zh9/FzDjMzwgHMla3uchNb7iqK+dgL79x
+  bXpCNPvi1vWGZklYi4kq5G9cEJ3SmCbIQptIHXG17p2DPP5YCsEAshiLLMx3jMMZ
+  B6Ud7pJ9Srr4tGNONCYO6oE2Gkge1dk+kUGuzdT75pta0rgc6E9NB4kvroI18wY9
+  LUqibSxecUeLPUPz+qMBVBGzawyTnPyOXFx/371jHsqtQJkjhixXi5cL47fk9FWm
+  PPoj9Ua0A7t/
+  -----END CERTIFICATE-----
+  -----BEGIN CERTIFICATE-----
+  MIIC8TCCAdmgAwIBAgIRAO4ulzqEK16uvlx8uwpLajgwDQYJKoZIhvcNAQELBQAw
+  EjEQMA4GA1UEAxMHY25ycy1jYTAeFw0yMjExMDgwNTEyMzVaFw0yMzAyMDYwNTEy
+  MzVaMBIxEDAOBgNVBAMTB2NucnMtY2EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+  ggEKAoIBAQCTa1eSp13VYuAEGs18EP4FLIbRlS3rT1vVNANx+BbaXflzbr7XUmve
+  M1HJAQQagTzCxSaapSIT8yoWCsWRDutAe3q4vUW/K+lXy6+qcfqZzQ4kjTYibm6P
+  MT6V/k/xLpHhS/mC/4eBaLf7sff3gLr76VkYAucOW3og+tSvPR/w7ZfRJW7Kkw5l
+  ufFvlEnBtU8cm8HaYLJygs7n7Bk+k0Q0NZULnKHeTK3vnWppw/LW4nUcsNE8YnXE
+  CrDDzn+X9FYJt7rKkoVJ4SoIDHft5dB+ZZ+PjNDqy0XQ/2PU4gwCxSJtSMZDZY/a
+  QmcBxodbn0v4efVnHUDw+Gmbjj/1S0uRAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIC
+  pDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTQqfwL8m0SNR9QDnN1vgliYKFA
+  EjANBgkqhkiG9w0BAQsFAAOCAQEAkP8BpitgyMBnzbpET8j8dyxXXlRFv2Z0Pbou
+  2IW8W5e8QiQ2m2z5VsH0AbmEeV+dGwJVHoWnODcBO4fqsKr6ffx+ZC5QmQL0BxZc
+  To/0OCTIIls2gYk3iyRK9igY8mel1gxPyBqazYHivDR6EscgYw4iaQbq7NARYnfW
+  HU7EZKNKBGzD5ndBQzDhoz9Uqv0/lHptUSrwmCpvNROyrN/uyID1TVmdCgTV7Ut6
+  8UnflIxP0ldBSzhGRwgA0+vVQXsZZ+F0Lp5Oeop6tUo+s6f88OwaTU7ADbGQe6bG
+  CR3b11+dhQFIPrMX8KVyVTJesJ0uysoFVnyVGixbIC2Zlf17Dw==
+  -----END CERTIFICATE-----

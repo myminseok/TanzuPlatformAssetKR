@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: scanning-ca-overlay
+  namespace: tap-install #! namespace where tap is installed
+stringData:
+  patch.yaml: |
+    #@ load("@ytt:overlay", "overlay")
+
+    #! @overlay/match by=overlay.subset({"kind":"ScanTemplate","metadata":{"namespace":"demo-app"}}),expects="1+" 
+    #@overlay/match by=overlay.subset({"kind":"ScanTemplate"}),expects="1+" 
+    ---
+    spec:
+      template:
+        initContainers:
+          #@overlay/match by=overlay.subset({"name": "scan-plugin"}), expects="1+"
+          - name: scan-plugin
+            #@overlay/match missing_ok=True
+            volumeMounts:
+              #@overlay/append
+              - name: harbor-ca
+                mountPath: /etc/ssl/certs/custom-ca.crt
+                subPath: CONFIG_MAP_SUBPATH #! key pointing to ca certificate. ie) harbor.ca
+        volumes:
+        #@overlay/append
+        - name: harbor-ca
+          configMap:
+            name: CONFIG_MAP_NAME  #! name of the configmap created that contains ca. ie) scanning-harbor-ca-overlay-cm
+            
+

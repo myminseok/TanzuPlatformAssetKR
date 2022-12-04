@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ootb-templates-overlay
+  namespace: tap-install
+stringData:
+  missing-kapp-config.yaml: |
+    #@ load("@ytt:overlay", "overlay")
+    #@ load("@ytt:data", "data")
+    #@ load("@ytt:yaml", "yaml")
+
+    #@ def convention_template():
+    kind: ClusterConfigTemplate
+    metadata:
+      name: convention-template
+    #@ end
+
+    #@overlay/match by=overlay.subset(convention_template())
+    ---
+    spec:
+      ytt: |
+        #@ load("@ytt:data", "data")
+        #@ load("@ytt:yaml", "yaml")
+
+        #@ def workload_param(name):
+        #@   if not hasattr(data.values.workload.spec, "params"):
+        #@     return None
+        #@   end
+        #@   for p in data.values.workload.spec.params:
+        #@     if p.name == name:
+        #@       return p.value
+        #@     end
+        #@   end
+        #@ end
+
+        #@ def merge_labels(fixed_values):
+        #@   labels = {}
+        #@   if hasattr(data.values.workload.metadata, "labels"):
+        #@     labels.update(data.values.workload.metadata.labels)
+        #@   end
+        #@   labels.update(fixed_values)
+        #@   return labels
+        #@ end
+
+        #@ def build_fixed_annotations():
+        #@   fixed_annotations = { "developer.conventions/target-containers": "workload" }
+        #@   if workload_param("debug"):
+        #@     fixed_annotations["apps.tanzu.vmware.com/debug"] = workload_param("debug")
+        #@   end
+        #@   if workload_param("live-update"):
+        #@     fixed_annotations["apps.tanzu.vmware.com/live-update"] = workload_param("live-update")
+        #@   end
+        #@   return fixed_annotations
+        #@ end
+
+        #@ def merge_annotations(fixed_values):
+        #@   annotations = {}
+        #@   if hasattr(data.values.workload.metadata, "annotations"):
+        #@     annotations.update(data.values.workload.metadata.annotations)
+        #@   end
+        #@   annotations.update(fixed_values)
+        #@   return annotations
+        #@ end
+
+        apiVersion: conventions.apps.tanzu.vmware.com/v1alpha1
+        kind: PodIntent
+        metadata:
+          name: #@ data.values.workload.metadata.name
+          labels:
+            app.kubernetes.io/component: intent
+            #@ if/end hasattr(data.values.workload.metadata, "labels") and hasattr(data.values.workload.metadata.labels, "app.kubernetes.io/part-of"):
+            app.kubernetes.io/part-of: #@ data.values.workload.metadata.labels["app.kubernetes.io/part-of"]
+        spec:
+          serviceAccountName: #@ data.values.params.serviceAccount
+          template:
+            metadata:
+              annotations: #@ merge_annotations(build_fixed_annotations())
+              labels: #@ merge_labels({ "app.kubernetes.io/component": "run", "carto.run/workload-name": data.values.workload.metadata.name })
+            spec:
+              serviceAccountName: #@ data.values.params.serviceAccount
+              containers:
+                - name: workload
+                  image: #@ data.values.image
+                  #! securityContext:
+                  #!   runAsUser: 1000
+                  #@ if hasattr(data.values.workload.spec, "env"):
+                  env:
+                    #@ for var in data.values.workload.spec.env:
+                    - #@ var
+                    #@ end
+                  #@ end
+                  #@ if/end hasattr(data.values.workload.spec, "resources"):
+                  resources: #@ data.values.workload.spec["resources"]
+                  #@ if/end workload_param("volumeMounts"):
+                  volumeMounts: #@ workload_param("volumeMounts")
+              #@ if/end workload_param("volumes"):
+              volumes: #@ workload_param("volumes")
+

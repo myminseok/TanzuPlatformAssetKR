@@ -1,0 +1,69 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-reference-tap-values-view-sample.html
+profile: view # Can take iterate, build, run, view.
+ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
+
+shared:
+  ingress_domain: "TAP_DOMAIN"
+  image_registry:
+    project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
+    username: "IMGPKG_REGISTRY_USERNAME"
+    password: "IMGPKG_REGISTRY_PASSWORD"
+  kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
+  ca_cert_data: | # To be passed if using custom certificates.
+    -----BEGIN CERTIFICATE-----
+    MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
+    BQAwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNVBAMME3Jvb3Qg
+    U2VsZiBTaWduZWQgQ0EwHhcNMjIxMjAyMDMzMDU5WhcNMzIxMTI5MDMzMDU5WjA6
+    MQswCQYDVQQGEwJLUjENMAsGA1UECgwETXlDQTEcMBoGA1UEAwwTcm9vdCBTZWxm
+    IFNpZ25lZCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPHhqddI
+    Dn193GcUybpXpmJqHEDnh7fI0KONrh1Cp1k4vAv1O7P8BwVZf6WW6r52GN4J4bo5
+    UOi1XN4dYTRAFzoMAfJAnxJvTqrhEILL1N7vclzVCVS2mdtcddiC2TfMsTqp2K3J
+    Vv/UgxTpIqMBOlDUu7fhh6cd4iS8XA32btQXZHARuz6eVZziUyLHxwUkL3ZZrhLF
+    GKs7YZftfAkISwCF4frWYQYZf32dJGqRaXW4j8O/UwYDp2DKMCa4cdxOJT4MyJ/N
+    b4iRCTRAWs+EnLZQc8Rh6JtelW+QFKAh6BWXihU6rlxL/HNudTX1B+DDrXKCyZl9
+    YYOuuv7MLWk/YW0CAwEAAaOByjCBxzAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
+    BBRl540rI3YLXOumjA1nrsTXgcVctTB1BgNVHSMEbjBsgBRl540rI3YLXOumjA1n
+    rsTXgcVctaE+pDwwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNV
+    BAMME3Jvb3QgU2VsZiBTaWduZWQgQ0GCFDXIej+X67LQJ/9/rMsB/MBmiKN9MAsG
+    A1UdDwQEAwIBBjARBglghkgBhvhCAQEEBAMCAAcwDQYJKoZIhvcNAQELBQADggEB
+    ACgvk4FXepiiVBo7Dif5dD8FZ4B26jYBjhZcVAp1uMW38nFmHIpWWzIJy1pDo2rJ
+    oByk67EoL9h0YYOMZMEE9anLtesEs0wlqPke4/eWvVysJWEYeTDGqzcJgIP8HHHd
+    ASKJnZW+hk2Obzj3/CGw6TW9Y7TIJKN0W6GivMyEslCykL4PXlHuFWiG38Z3grHy
+    Wet+XL6SGmmcRSee8ZVhLc17jUYWTwpBOXYXsq+UFwyDWe/zmv6xE3SjeSgCRiX7
+    q22++tb6Rk9sFCrnGsqfwm/gs0LKlf3JIbjte6g8r10YlDaskQsfWkClpTugAEhQ
+    Zv0+hwgpeQUFe2ZsoKGcpfI=
+    -----END CERTIFICATE-----
+contour:
+  envoy:
+    service:
+      type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
+
+
+tap_gui:
+  service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
+  app_config:
+    customize:
+      custom_name: "Developer Portal - view"
+    organization:
+      name: "DevOps Team"
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/blank/catalog-info.yaml
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/yelb/yelb-catalog/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/myrsvpapp/blob/main/rsvpapp-catalog/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/spring-sensors/blob/main/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
+
+
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-app-live-view-install.html
+appliveview:
+  ingressEnabled: true
+  #sslDisabled: false
+
+excluded_packages:
+- policy.apps.tanzu.vmware.com # workaround for policy controller error

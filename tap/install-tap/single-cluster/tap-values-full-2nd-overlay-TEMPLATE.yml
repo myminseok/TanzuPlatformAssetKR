@@ -1,0 +1,149 @@
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.all
+---
+
+#@overlay/match missing_ok=True
+profile: full # Can take iterate, build, run, view.
+
+
+#@overlay/match missing_ok=True
+#supply_chain: testing_scanning # Can take testing, testing_scanning.
+
+#@overlay/match missing_ok=True
+ootb_supply_chain_testing: # Optional if the corresponding shared keys are provided.
+  registry:
+    server: "BUILDSERVICE_REGISTRY_HOSTNAME"
+    repository: "SUPPLYCHAIN_REPO"
+  gitops:
+    ssh_secret: "" # (Optional) Defaults to "".
+
+#@overlay/match missing_ok=True
+ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys are provided.
+  registry:
+    server: "BUILDSERVICE_REGISTRY_HOSTNAME"
+    repository: "SUPPLYCHAIN_REPO"
+  gitops:
+    ssh_secret: "" # (Optional) Defaults to "".
+  #git_implementation: libgit2
+
+#@overlay/match missing_ok=True
+tap_gui:
+  #@overlay/match missing_ok=True
+  tls:
+   namespace: tap-gui
+   secretName: tap-gui-cert
+  service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
+  app_config:
+    customize:
+      custom_name: "Developer Portal"
+    organization:
+      name: "DevOps Team"
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        #@overlay/match missing_ok=True
+        headers:
+          ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
+          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImNjQ2U0eHBSZzMxdEI2Y2pFMzcwc1dINEU1RXVYMUliclFIVk5nZmVtQ1UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi1jMnh2cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQ3ZGJkYjhjLTcxMzItNDZlYi05NTY3LTBhM2UzYmEyNzJmMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.JiWBOTLaocGriDmbO7U3ixlGA6j53efJ5es4bjTfKsoiucVUJzFr5bfCuEDExaU0yuilmFLCXbNjan5ENLvpKPPvVVWlqPwUBBP-slVOjo0zZnKyD8P3M8YjtGBCGvpPnUxsVFw01a4eUpOf0QZHjEli6RlEyAqBSoa_eqSznYWQOxPkBH4zuxagF9yN_ZROiktPoxW9SqYF1yxJ3h_tQsGuJZygKNro-w6tC75zaGFensRVS-wHv1wl4l9kBTXKkig8wXO7ApTQ-ALIICkz6KWL_CMPXPlZ2my49qKK31QUtysoxajtMO4em093XHjGje2hBicBOjr0lAZeO7jwKQ"
+          X-Custom-Source: project-star
+
+
+    # github working
+    # auth:
+    #   environment: development
+    #   providers:
+    #     github:
+    #       development:
+    #         clientId: 
+    #         clientSecret: 
+
+#@overlay/match missing_ok=True
+cnrs:
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+  #@overlay/match missing_ok=True
+  default_tls_secret: tanzu-system-ingress/cnrs-default-tls
+
+#@overlay/match missing_ok=True
+grype:
+  namespace: "DEVELOPER_NAMESPACE"
+  targetImagePullSecret: "registry-credentials"
+
+#@overlay/match missing_ok=True
+api_auto_registration:
+  tap_gui_url: https://tap-gui.TAP_DOMAIN
+  cluster_name: full-cluster
+  ##  CA for tap-gui.tap.lab.pcfdemo.net
+  ##  kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+  ##  CA for app workload domain
+  ##  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+  ca_cert_data: |
+    -----BEGIN CERTIFICATE-----
+    MIIC3zCCAcegAwIBAgIQfh3AvZ2SyfO0xP304IDx+TANBgkqhkiG9w0BAQsFADAA
+    MB4XDTIyMTExNzA3MDEzMFoXDTIzMDIxNTA3MDEzMFowADCCASIwDQYJKoZIhvcN
+    AQEBBQADggEPADCCAQoCggEBALqyeK/jAUA0Dng5aO5mzBqL2kFQ/QDVnwPEyaPH
+    bS64zL9A1vhw/1rpWt4CWolKmpk3tlUvAJdZqLF9ORfss6kcNVeWI79keo2z3NQR
+    XluKbKK1prdl7kdU9HzrTmbqono9ZL19V3vaU5uoA4ohzJkTGw+S9Sx2SaAmj26D
+    EAxhNNao5AZYh1rNfm7ISiVexJ6fm0bgAPacNlIL35Kc+b7HdQz+5lRs2aQutQxI
+    N04mSUCmE0VncYBoL5TgLwSvowWqs6FfGmeWMpSE2XLpw5aY5N3+i+Pb9TNxLZmP
+    8uHN1WqBxLZq/UsOZg4DAv/xPxyyilvTDZYQhexS192aGW8CAwEAAaNVMFMwDgYD
+    VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwMwYDVR0RAQH/BCkwJ4IldGFwLWd1
+    aS50YXAuaDJvLTItMjI1Ny5oMm8udm13YXJlLmNvbTANBgkqhkiG9w0BAQsFAAOC
+    AQEAebnc/9CW9C0nvq/3d4g+LHC/CzMJwfKLbWe9+5dz94ExHbgvHIwUld90ubtK
+    BZGGzvDmtvEAyOXInriolBZf+dB3hZt01kNwqcLQnj7l3uX5fo6N2Zoj54ji3gzn
+    BSw9KvWgz5Z/f9EYKqGB8iIbBHDJK8TfVrCh9DyNClaXiflC/tLwyukAkkg8QueL
+    sppt63i+GWE52AYqvo2Cp/0UyWjx7Ye+mnl2bmOAsXE8p0ret/ZbjaQUukRw/BLk
+    SkEPRW3DueTtf1t7fSrvRD8XZXYEqBHWG8YLy+XGo/RwZ7VDuYR1vPMBJW01osuZ
+    /MmaGiovLNNMZTqf0cLsjA8G8w==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIC8DCCAdigAwIBAgIQWrbHntyH/uac36W1AUKYsDANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdjbnJzLWNhMB4XDTIyMTExNzA0MjYxNloXDTIzMDIxNTA0MjYx
+    NlowEjEQMA4GA1UEAxMHY25ycy1jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+    AQoCggEBAMf6es2/VGBcYy+7WF6fTBCzrB8hbHjTAfpq5/ee9n6qZrJmRw92YTeV
+    hsmCKy9QZDMsrSbjwiVkewP5rlc2sT7TiYHBukjYk1LQVScLpgGV1UmZiG6IOsRr
+    uqV3YdFl2ZKzNybWAE3QZTuwm3xPWa3aj9YHZVPzj7ebq5x86kfGF4KyTyLqrVh2
+    QDVbBhJ/TfXwTePdcvIfNes9maKQgfRr38+YHJHP4TdZzrdPgyTeUwueLTXE4VbT
+    wCeIM11WsLSin+phIyAS+ox2tKe9QyXsDqyK3TTL0+KcWRyhVLgttYLhJDCn1alz
+    JgtVpRJmXdWIG7UTJyGSaGy61mPwHRcCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgKk
+    MA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFBiGfQKCYq4a6AA0HKXdF66Y1ziS
+    MA0GCSqGSIb3DQEBCwUAA4IBAQBM8IVq8WH8MTnVuxfSDg6NNY6GCLqx5yvOUq66
+    A66cKdiiQAnbD8RXvFqTlVAuwnjoLCJvwLJdTdx3pR1gBJgLRxDpBqYSon27Oww3
+    RYmhvGjB1ZnumZpzjHvItoVyZFboP3eZdFk6SxvgOIh0unO3NFYRhZper5zfnYam
+    qhhpiV4hz5PjbHpC/Ev2+86Q6MozwEHcBdTt6bSCA+7yMtSetWbdP0YHt7Ipg535
+    h3BJCyYk/IIFmY0aEf9pcVQwJo2RYObUQziElByS75igz6YBQrX0HiiLz8bzfq9X
+    VGR2RiY3r5gljy0dYMyInnrkiOjReQ/fBbyNIi07Q//LTErR
+    -----END CERTIFICATE-----
+
+#@overlay/match missing_ok=True
+package_overlays:
+- name: cnrs
+  secrets:
+  - name: cnrs-default-tls
+  ## for pvc support on knative.
+  - name: "knative-serving-overlay"
+- name: "grype"
+  secrets:
+  - name: "scanning-ca-overlay"
+- name: ootb-templates
+  secrets:
+  ## for pvc support on knative.
+  - name: "ootb-templates-overlay"
+
+
+#@overlay/match missing_ok=True
+accelerator:
+  server:
+    service_type: "ClusterIP"
+    watched_namespace: "accelerator-system"
+    engine_skip_tls_verify: true
+  samples:
+    include: true
+  sources:
+    skip_tls_verify: true
+
+# # https://github.com/x95castle1/custom-cartographer-supply-chain-examples/tree/main/github-pr
+# ootb_templates:
+#   excluded_templates:
+#   - 'tekton-taskrun'

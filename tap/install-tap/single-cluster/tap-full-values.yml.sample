@@ -1,0 +1,236 @@
+shared:
+  ingress_domain: "tap.h2o-2-2257.h2o.vmware.com"
+  image_registry:
+    project_path: "harbor.h2o-2-2257.h2o.vmware.com/tap"
+    username: "admin"
+    password: ""
+  kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
+  ca_cert_data: | # To be passed if using custom certificates.
+    -----BEGIN CERTIFICATE-----
+    MIID5TCCAs2gAwIBAgIJAMWKW6niC9SnMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNV
+    BAMMBG15Y2EwIBcNMjIxMTE3MTIzMjQxWhgPMjA1MDA0MDQxMjMyNDFaMG4xCzAJ
+    BgNVBAYTAktPMQ4wDAYDVQQIDAVTZW91bDEOMAwGA1UEBwwFU2VvdWwxDDAKBgNV
+    BAoMA09yZzENMAsGA1UECwwEdW5pdDEiMCAGA1UEAwwZaDJvLTItMjI1Ny5oMm8u
+    dm13YXJlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALEA9lKs
+    AuH2fktSfUvrpMfh8quStkm8wqfumRlVj0tMhs3M7tMlUl4e5bfi5gNTxoEchawG
+    jE4FWKo19XccG2uaudr43ioPd/xJmLD9RBrOIcuoiaYAZGzOLQ1rqbbRdCxSy66D
+    BGxQCvudW1rAqJhaYNsUBKDQEKfO3PCZOiZ9DyISheR7gU4b+/MzXJ+m/BIEPjHK
+    e3ver+mtotiRuIIM2FjgDSUUGksmI/bHkLAOUFwjaVhB97IpgW/gQ9L2LP3tUuyF
+    CJEuPS08Dqobl5xXeoYyKoUrYE3OKVS+ytVB50hG/EYvRc7rKZnv6SQGCbrImAjj
+    ttd+xJRdS4KVh0ECAwEAAaOB4jCB3zBKBgNVHSMEQzBBgBRgMkpJhBLDu2NuK+sy
+    fJpV93zrtqETpBEwDzENMAsGA1UEAwwEbXljYYIUO/QfKBRofjgd//5sGBVnKtCC
+    z8owCQYDVR0TBAIwADALBgNVHQ8EBAMCBDAwHQYDVR0lBBYwFAYIKwYBBQUHAwEG
+    CCsGAQUFBwMCMFoGA1UdEQRTMFGCGyouaDJvLTItMjI1Ny5oMm8udm13YXJlLmNv
+    bYIgaGFyYm9yLmgyby0yLTIyNTcuaDJvLnZtd2FyZS5jb22HBH8AAAGHBKwRAAGH
+    BArcD1owDQYJKoZIhvcNAQELBQADggEBAFl0DquGwU7GngqC9z7t9JZMWBC7g9WV
+    DYXp2R+WlUZ8/I4GgqBnCbVSTz+A7nyWInbkJfS23ej0mcjpZuTRRlgKGu2He1T/
+    0Hu2cJ03BCsbB/wLSGgJyGWiSub12jqKoyRFD4qlkU+ddxxPZo8GEpuSUz3DlkdT
+    TcUTr1zC91+yMXogSlx5Ztl+hQQQzjk31H3eAWaU7WEEuaDkyBY5FtJe5z2daShH
+    x6RtTZzJ/pp6pe9uI1Gln8xjSNcArkNvX1LnIMM3JdLj6pJ9NtrghSULXfHYWheF
+    rRZzPSE77bClb/6uGbqA2uIPxI66dZhwgYxt2PlNCv1jzeHxn3U7VVw=
+    -----END CERTIFICATE-----
+ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
+
+#The above keys are minimum numbers of entries needed in tap-values.yaml to get a functioning TAP Full profile installation.
+
+#Below are the keys which may have default values set, but can be overridden.
+
+profile: full # Can take iterate, build, run, view.
+supply_chain: basic            # Can take testing, testing_scanning.
+#supply_chain: testing          # Can take testing, testing_scanning.
+## TODO 2nd tap update
+#supply_chain: testing_scanning # Can take testing, testing_scanning.
+
+ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
+  registry:
+    server: "harbor.h2o-2-2257.h2o.vmware.com" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+    repository: "tap/minseok-supply-chain" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+  gitops:
+    ssh_secret: "" # Takes "" as value by default; but can be overridden by setting a different value.
+
+ootb_supply_chain_testing: # Optional if the corresponding shared keys are provided.
+  registry:
+    server: "harbor.h2o-2-2257.h2o.vmware.com"
+    repository: "tap/minseok-supply-chain"
+  gitops:
+    ssh_secret: "" # (Optional) Defaults to "".
+
+ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys are provided.
+  registry:
+    server: "harbor.h2o-2-2257.h2o.vmware.com"
+    repository: "tap/minseok-supply-chain"
+  gitops:
+    ssh_secret: "" # (Optional) Defaults to "".
+  #git_implementation: libgit2
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
+
+buildservice:
+  kp_default_repository: "harbor.h2o-2-2257.h2o.vmware.com/tap/minseok-build-service"
+  kp_default_repository_username: "admin"
+  kp_default_repository_password: ""
+  stack_configuration: jammy-only
+  ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
+  exclude_dependencies: true
+
+
+tap_gui:
+## TODO 2nd tap update
+  tls:
+   namespace: tap-gui
+   secretName: tap-gui-cert
+  service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
+  app_config:
+    customize:
+      custom_name: "Developer Portal"
+    organization:
+      name: "DevOps Team"
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        ## TODO 2nd tap update
+        headers:
+          ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
+          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImNjQ2U0eHBSZzMxdEI2Y2pFMzcwc1dINEU1RXVYMUliclFIVk5nZmVtQ1UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi1jMnh2cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQ3ZGJkYjhjLTcxMzItNDZlYi05NTY3LTBhM2UzYmEyNzJmMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.JiWBOTLaocGriDmbO7U3ixlGA6j53efJ5es4bjTfKsoiucVUJzFr5bfCuEDExaU0yuilmFLCXbNjan5ENLvpKPPvVVWlqPwUBBP-slVOjo0zZnKyD8P3M8YjtGBCGvpPnUxsVFw01a4eUpOf0QZHjEli6RlEyAqBSoa_eqSznYWQOxPkBH4zuxagF9yN_ZROiktPoxW9SqYF1yxJ3h_tQsGuJZygKNro-w6tC75zaGFensRVS-wHv1wl4l9kBTXKkig8wXO7ApTQ-ALIICkz6KWL_CMPXPlZ2my49qKK31QUtysoxajtMO4em093XHjGje2hBicBOjr0lAZeO7jwKQ"
+          X-Custom-Source: project-star
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/blank/catalog-info.yaml
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/yelb/yelb-catalog/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/myrsvpapp/blob/main/rsvpapp-catalog/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/spring-sensors/blob/main/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
+
+    # github working
+    # auth:
+    #   environment: development
+    #   providers:
+    #     github:
+    #       development:
+    #         clientId: 
+    #         clientSecret: 
+
+cnrs:
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+# TODO 2nd tap update
+  ## https://ik.am/entries/706
+  default_tls_secret: tanzu-system-ingress/cnrs-default-tls
+
+metadata_store:
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-scan-upgrading.html
+  ns_for_export_app_cert: "demo-app"
+  app_service_type: LoadBalancer
+  #app_service_type: ClusterIP
+
+scanning:
+  metadataStore:
+    url: "" # Configuration is moved, so set this string to empty.
+
+grype:
+  namespace: "demo-app"
+  targetImagePullSecret: "registry-credentials"
+
+api_portal:
+  apiPortalServer:
+    title: "API portal"
+    description: "Description"
+    # imagePullPolicy: IfNotPresent
+    # registryCredentialsSecret: api-portal-image-pull-secret
+    replicaCount: 1
+    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://myweb.lab.pksdemo.net:8080/openapi.json,http://myweb.lab.pksdemo.net:9090/v3/api-docs"
+    sourceUrlsCacheTtlSec: "10"
+    sourceUrlsTimeoutSec: "10"
+    requestMemory: "512Mi"
+    requestCpu: "100m"
+    limitMemory: "1024Mi"
+    limitCpu: "500m"
+    namespace: "api-portal"
+    trustInsecureSourceUrls: true
+    caCertData: ""
+
+  sso:
+    enabled: false
+    # secretName: sso-credentials
+
+  # apiKey:
+  #   enabled: true
+  #   vault:
+  #     url: http://vault.vault.svc:8200/
+  #     role: example-api-portal-role
+
+  # serviceAccount:
+  #   name: api-portal
+
+## TODO 2nd tap update
+api_auto_registration:
+  tap_gui_url: https://tap-gui.tap.h2o-2-2257.h2o.vmware.com
+  cluster_name: minseok-cluster
+# CA for tap-gui.tap.lab.pcfdemo.net
+#  k get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+#  CA for app workload domain
+#  k get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+  ca_cert_data: |
+    -----BEGIN CERTIFICATE-----
+    MIIC3zCCAcegAwIBAgIQfh3AvZ2SyfO0xP304IDx+TANBgkqhkiG9w0BAQsFADAA
+    MB4XDTIyMTExNzA3MDEzMFoXDTIzMDIxNTA3MDEzMFowADCCASIwDQYJKoZIhvcN
+    AQEBBQADggEPADCCAQoCggEBALqyeK/jAUA0Dng5aO5mzBqL2kFQ/QDVnwPEyaPH
+    bS64zL9A1vhw/1rpWt4CWolKmpk3tlUvAJdZqLF9ORfss6kcNVeWI79keo2z3NQR
+    XluKbKK1prdl7kdU9HzrTmbqono9ZL19V3vaU5uoA4ohzJkTGw+S9Sx2SaAmj26D
+    EAxhNNao5AZYh1rNfm7ISiVexJ6fm0bgAPacNlIL35Kc+b7HdQz+5lRs2aQutQxI
+    N04mSUCmE0VncYBoL5TgLwSvowWqs6FfGmeWMpSE2XLpw5aY5N3+i+Pb9TNxLZmP
+    8uHN1WqBxLZq/UsOZg4DAv/xPxyyilvTDZYQhexS192aGW8CAwEAAaNVMFMwDgYD
+    VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwMwYDVR0RAQH/BCkwJ4IldGFwLWd1
+    aS50YXAuaDJvLTItMjI1Ny5oMm8udm13YXJlLmNvbTANBgkqhkiG9w0BAQsFAAOC
+    AQEAebnc/9CW9C0nvq/3d4g+LHC/CzMJwfKLbWe9+5dz94ExHbgvHIwUld90ubtK
+    BZGGzvDmtvEAyOXInriolBZf+dB3hZt01kNwqcLQnj7l3uX5fo6N2Zoj54ji3gzn
+    BSw9KvWgz5Z/f9EYKqGB8iIbBHDJK8TfVrCh9DyNClaXiflC/tLwyukAkkg8QueL
+    sppt63i+GWE52AYqvo2Cp/0UyWjx7Ye+mnl2bmOAsXE8p0ret/ZbjaQUukRw/BLk
+    SkEPRW3DueTtf1t7fSrvRD8XZXYEqBHWG8YLy+XGo/RwZ7VDuYR1vPMBJW01osuZ
+    /MmaGiovLNNMZTqf0cLsjA8G8w==
+    -----END CERTIFICATE-----
+    -----BEGIN CERTIFICATE-----
+    MIIC8DCCAdigAwIBAgIQWrbHntyH/uac36W1AUKYsDANBgkqhkiG9w0BAQsFADAS
+    MRAwDgYDVQQDEwdjbnJzLWNhMB4XDTIyMTExNzA0MjYxNloXDTIzMDIxNTA0MjYx
+    NlowEjEQMA4GA1UEAxMHY25ycy1jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+    AQoCggEBAMf6es2/VGBcYy+7WF6fTBCzrB8hbHjTAfpq5/ee9n6qZrJmRw92YTeV
+    hsmCKy9QZDMsrSbjwiVkewP5rlc2sT7TiYHBukjYk1LQVScLpgGV1UmZiG6IOsRr
+    uqV3YdFl2ZKzNybWAE3QZTuwm3xPWa3aj9YHZVPzj7ebq5x86kfGF4KyTyLqrVh2
+    QDVbBhJ/TfXwTePdcvIfNes9maKQgfRr38+YHJHP4TdZzrdPgyTeUwueLTXE4VbT
+    wCeIM11WsLSin+phIyAS+ox2tKe9QyXsDqyK3TTL0+KcWRyhVLgttYLhJDCn1alz
+    JgtVpRJmXdWIG7UTJyGSaGy61mPwHRcCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgKk
+    MA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFBiGfQKCYq4a6AA0HKXdF66Y1ziS
+    MA0GCSqGSIb3DQEBCwUAA4IBAQBM8IVq8WH8MTnVuxfSDg6NNY6GCLqx5yvOUq66
+    A66cKdiiQAnbD8RXvFqTlVAuwnjoLCJvwLJdTdx3pR1gBJgLRxDpBqYSon27Oww3
+    RYmhvGjB1ZnumZpzjHvItoVyZFboP3eZdFk6SxvgOIh0unO3NFYRhZper5zfnYam
+    qhhpiV4hz5PjbHpC/Ev2+86Q6MozwEHcBdTt6bSCA+7yMtSetWbdP0YHt7Ipg535
+    h3BJCyYk/IIFmY0aEf9pcVQwJo2RYObUQziElByS75igz6YBQrX0HiiLz8bzfq9X
+    VGR2RiY3r5gljy0dYMyInnrkiOjReQ/fBbyNIi07Q//LTErR
+    -----END CERTIFICATE-----
+
+
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-app-live-view-install.html
+appliveview:
+  backend:
+    ingressEnabled: true
+
+excluded_packages:
+- policy.apps.tanzu.vmware.com # workaround for policy controller error
+
+## TODO 2nd tap update
+package_overlays:
+- name: cnrs
+  secrets:
+  - name: cnrs-default-tls
+- name: "grype"
+  secrets:
+  - name: "scanning-ca-overlay"

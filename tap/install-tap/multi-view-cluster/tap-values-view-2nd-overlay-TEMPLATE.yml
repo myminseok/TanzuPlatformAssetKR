@@ -1,0 +1,140 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-reference-tap-values-view-sample.html
+
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.all
+
+---
+#@overlay/match missing_ok=True
+profile: view # Can take iterate, build, run, view.
+
+#@overlay/match missing_ok=True
+tap_gui:
+  ## https-overlay/apply-tap-gui-https-view-cluster.sh
+  #@overlay/match missing_ok=True
+  tls:
+   namespace: tap-gui
+   secretName: tap-gui-cert
+  service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
+  app_config:
+    organization:
+      name: "DevOps Team"
+      
+    #@overlay/match missing_ok=True
+    proxy:
+      ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tap-gui-plugins-scc-tap-gui.html#scan
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        headers:
+          ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
+          ## metadata-store-read-client.sh
+          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxCbURjTEdLZmdnX0VlRkNKX0hCVWJMZXhqUVUwQ1JSSmg2Z2RmMm5tRmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi10OGwydyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjZlMDZjZDk0LTdlMzQtNGIyZC05YjFmLWIyMGJhZTk3ZWVkNyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.kIdbcCjqxv-QmjRuXx0Y1RtT0N7Xqwg-lvr-Sj_L_6wCA-Q9A1-j1oaflSQmTzoxRQp6p7h-RmpvVEYHhVMxXDZlolsT_luY5NWFwnvuG-FI5FF6yJYYfqcnevFoDrgCeHxcVFkJn-rC_kZ2cJecytIMSNHzUpiV5Ip_52fue06ifW4A9ZTHhQPW4Z6a7vLyo6u_oPFgNIjT8b3Hqi-23olHu9KTWixlrKGOyhsmbTZ-gCLRCX0mOb4gLAuOZSY3Xva1zfIfSKxUfCOepus8e18EkKgozwsHhThNvyn2NwQVk77Q5wq_La2NV-zl_2DrVAWGp0Z2trPkr47OauLGUw"
+          X-Custom-Source: project-star
+    #@overlay/match missing_ok=True
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/blank/catalog-info.yaml
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/yelb/yelb-catalog/catalog-info.yaml
+        - type: url
+          target: https://github.com/myminseok/tanzu-java-web-app/blob/main/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/spring-sensors/blob/main/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
+
+    #@overlay/match missing_ok=True
+    ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tap-gui-cluster-view-setup.html
+    # app:
+    #   baseUrl: https://tap-gui.tap.h2o-2-2257.h2o.vmware.com"
+    # backend:
+    #   baseUrl: http://tap-gui.tap.h2o-2-2257.h2o.vmware.com"
+    #   cors:
+    #     origin: http://tap-gui.tap.h2o-2-2257.h2o.vmware.com"
+
+    #@overlay/match missing_ok=True
+    ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-reference-tap-values-view-sample.html
+    ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tap-gui-cluster-view-setup.html
+    ## tap-gui-viewer-service-account-rbac on RUN-CLUSTER
+    kubernetes:
+      serviceLocatorMethod:
+        type: 'multiTenant'
+      clusterLocatorMethods:
+        - type: 'config'
+          clusters:
+            ## result from /TanzuPlatformAssetKR/tap/install-tap/multi-build-cluster/22-tap-gui-viewer-service-account-rbac.sh
+            - url: https://192.168.80.22:6443
+              name: build # Build profile cluster can go here.
+              authProvider: serviceAccount
+              serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6ImgzcjgzdG5VNkdXZ3hHcXNjNkFsZ0NQYWU4Q0t5UnFQYjhselVRRl9vMVEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLXNxYmZiIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNjI3M2EwZWYtMWRiOC00NTlkLWJhNmYtMzkwM2I3OGE0YjZjIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.Rha5XnsIuRxJXRJCN-ExJNnPVbWvuDHZDLbjRSNTyd5pMcHFo2sNYg0U5qEt-jXkWnksrOVmTzDz0xVU0uaq0-e2OPlS4kGKTtUgL6-2tEVidMHt8v4_GlfZPvVxMEzBNBN7ZfO2XlAKmAmWeh1GqvW-Z8Az5_B7vdecCSUwV6utDslVd40D1otXrPYNpvkDgIKidE8Z_ueBobSmQdNJwg_mxDtrt1ex_T2tdPrMvGhq6wTB0qbifezNB1CIVEw-Ei2GGc4-sIsisFhoBuX6xry3Yg_ofUeIUv5uo0lmIg2Glou40F3GqEDpcVYU8LJTB2ZRcsacTcgFEpLhoKXzXw
+              skipTLSVerify: true
+            - url: https://192.168.80.25:6443
+              name: run # Build profile cluster can go here.
+              authProvider: serviceAccount
+              serviceAccountToken: eyJhbGciOiJSUzI1NiIsImtpZCI6Ik5SMWkwWWpJN2RPVE02LXZvai05WEZPdGV2TUs1bEVKQnpQaW54Vm5sVFUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0YXAtZ3VpIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6InRhcC1ndWktdmlld2VyLXRva2VuLTZicmd2Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InRhcC1ndWktdmlld2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiNTc1YTQ4OTktYWY5Ni00ZjdjLTgxMTQtZGI5YTQ3MTEzYTZiIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OnRhcC1ndWk6dGFwLWd1aS12aWV3ZXIifQ.RwjB5lA_Q-4yIfLkFBV0AQEHw0WsSb3eH26GaqGSrsDj9YzjO21Ay4kkNP6lN8CMgrBRIBf-uqDlrkKSuu8lu0g_3XIflNWVAjs0Mx6Skc_NpDL2twhPSYwb0kWg8Ws_klh9u2jxggllWN7F1ere-qECpYtZeRql-ZT7FPYrd3Uio02MbO6tQJRYGHfq_hg6hKJs3kQAVeVLG8ApyLtNZ4Y2noxeOaKhpqli5_bXs3WafXVuAhjjzQOafijPXGusUBqG8nwiFihz6S8HM6jSiEwSCjJ2Q4TdmanuJVAN5l0tPI7-KLrh7wzfcvwrHUgNfP5wN7-riyEf5c94Pc16oQ
+              skipTLSVerify: true
+
+    # github working
+    # auth:
+    #   environment: development
+    #   providers:
+    #     github:
+    #       development:
+    #         clientId: 
+    #         clientSecret: 
+
+
+#@overlay/match missing_ok=True
+scanning:
+  metadataStore:
+    url: "" # Configuration is moved, so set this string to empty.
+
+
+#@overlay/match missing_ok=True
+metadata_store:
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-scan-upgrading.html
+  #ns_for_export_app_cert: "DEVELOPER_NAMESPACE"
+  ns_for_export_app_cert: "*"
+  app_service_type: LoadBalancer
+  #app_service_type: ClusterIP
+
+
+#@overlay/match missing_ok=True
+api_auto_registration:
+  tap_gui_url: https://tap-gui.TAP_DOMAIN
+  cluster_name: view-cluster
+#  CA for tap-gui.tap.lab.pcfdemo.net
+#  k get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+#  CA for app workload domain
+#  k get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+  ca_cert_data: |
+    -----BEGIN CERTIFICATE-----
+    MIIC4DCCAcigAwIBAgIRAKQGneejWmG7jA+ldNhT2YIwDQYJKoZIhvcNAQELBQAw
+    ADAeFw0yMjExMjQwMjI1NDdaFw0yMzAyMjIwMjI1NDdaMAAwggEiMA0GCSqGSIb3
+    DQEBAQUAA4IBDwAwggEKAoIBAQCryBwtwKiMrMR+1rt2UnmR2jLHyyhVclyPavck
+    FnjD2bkYZW9UORS7ZBMZbLR1BQDDlQh+pgKkOjiNGkeY48GAO7X3hwfabkRIkoBE
+    Pb2rNTonRJ8sLPR0rztfv+IqTGfirh3DUpshmHbAgqMOY3Whf6KugcEdoBbj2Puo
+    W6K8I9wfk2iVxuBsmSuplWJuUl/TXsOC1+TW5KTe/NB5h7zU+o0KXLAYNZqsNJFo
+    MLqb+luP7bcvl0Kxjp2lNECygr6wKZERpkAnh7RXM5gunpBqP08LOA/mdhD6FUcA
+    /eg7cJdCG7Do8yCDao9c+ddRK3zmuivdYx4j+/JD4g0gD71pAgMBAAGjVTBTMA4G
+    A1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMDMGA1UdEQEB/wQpMCeCJXRhcC1n
+    dWkudGFwLmgyby0yLTIyNTcuaDJvLnZtd2FyZS5jb20wDQYJKoZIhvcNAQELBQAD
+    ggEBAKWtfv11lUd9SBJXYSYao1stYv3WvdHNms+TAZRTl8YN4+Etl3kHQiuo3IHr
+    Y817zVskqiHEUr7pTTZ28p5MIhq/ngo16SI3UTJQ7EaxjB0naaLMizhV7NPD4hFD
+    gO/LBtBExp8Bd+vJRRz26aYzypmbuqZlsnjUEoGzUWi4ro43ThcnhbIu65JztV/Q
+    NGQ5K58HR7IuZWMvOyJU5No+hw9DxPI4fgpswFbG7T9NssQDSGNOJCo+qbrHtMU6
+    TX1Y4pzCIi7djcDcBk5KLfp7KhSkjK5PxWJf0ltIVxuL17NkkAIJQXEGHFyJ2iX9
+    zlNdTATXHX8TmWhiZ6ZELcQmcUo=
+    -----END CERTIFICATE-----
+#@overlay/match missing_ok=True
+accelerator:
+  server:
+    service_type: "ClusterIP"
+    watched_namespace: "accelerator-system"
+    engine_skip_tls_verify: true
+  samples:
+    include: true
+  sources:
+    skip_tls_verify: true

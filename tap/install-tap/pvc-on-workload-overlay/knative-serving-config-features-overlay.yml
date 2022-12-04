@@ -1,0 +1,10 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"metadata":{"name":"config-features"}, "kind": "ConfigMap"})
+---
+data:
+  #@overlay/match missing_ok=True
+  kubernetes.podspec-persistent-volume-claim: "enabled"
+  #@overlay/match missing_ok=True
+  kubernetes.podspec-persistent-volume-write: "enabled"

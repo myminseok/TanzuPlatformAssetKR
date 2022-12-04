@@ -1,0 +1,29 @@
+apiPortalServer:
+  title: "API portal"
+  description: "Description"
+  # imagePullPolicy: IfNotPresent
+  # registryCredentialsSecret: api-portal-image-pull-secret
+  replicaCount: 1
+  sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://myweb.lab.pksdemo.net:8080/openapi.json,http://myweb.lab.pksdemo.net:9090/v3/api-docs"
+  sourceUrlsCacheTtlSec: "10"
+  sourceUrlsTimeoutSec: "10"
+  requestMemory: "512Mi"
+  requestCpu: "100m"
+  limitMemory: "1024Mi"
+  limitCpu: "500m"
+  namespace: "api-portal"
+  trustInsecureSourceUrls: true
+  caCertData: ""
+
+sso:
+  enabled: false
+  # secretName: sso-credentials
+
+# apiKey:
+#   enabled: true
+#   vault:
+#     url: http://vault.vault.svc:8200/
+#     role: example-api-portal-role
+
+# serviceAccount:
+#   name: api-portal

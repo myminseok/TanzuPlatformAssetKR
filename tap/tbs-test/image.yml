@@ -1,0 +1,15 @@
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: tutorial-image
+  namespace: tbs-test 
+spec:
+  tag: harbor.h2o-2-2257.h2o.vmware.com/tap/minseok-tbs-test
+  serviceAccountName: default
+  builder:
+    name: my-builder
+    kind: Builder
+  source:
+    git:
+      url: https://github.com/myminseok/tanzu-java-web-app
+      revision: d8d612d1ee198d3bb689ca59f8a6b498249f9016

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-portal-ingress
+  namespace: api-portal
+  annotations:
+    kubernetes.io/ingress.class: contour
+spec:
+  rules:
+  - host: api-portal.tap.lab.pcfdemo.net
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: api-portal-server
+            port:
+              number: 8080

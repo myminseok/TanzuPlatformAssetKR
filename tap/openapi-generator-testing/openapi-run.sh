@@ -1,0 +1,1 @@
+docker run --name openapi-sample --rm -p 8080:80 openapi-sample

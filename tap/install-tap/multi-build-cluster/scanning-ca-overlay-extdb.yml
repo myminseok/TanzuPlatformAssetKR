@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: scanning-ca-overlay
+  namespace: tap-install #! namespace where tap is installed
+stringData:
+  patch.yaml: |
+    #@ load("@ytt:overlay", "overlay")
+
+    #! @overlay/match by=overlay.subset({"kind":"ScanTemplate","metadata":{"namespace":"demo-app"}}),expects="1+" 
+    #@overlay/match by=overlay.subset({"kind":"ScanTemplate"}),expects="1+" 
+    ---
+    spec:
+      template:
+        initContainers:
+          #@overlay/match by=overlay.subset({"name": "scan-plugin"}), expects="1+"
+          - name: scan-plugin
+            #@overlay/match missing_ok=True
+            env:
+              #@overlay/append
+              - name: GRYPE_CHECK_FOR_APP_UPDATE
+                value: "false"
+              - name: GRYPE_DB_AUTO_UPDATE
+                value: "true"
+              - name: GRYPE_DB_UPDATE_URL
+                value: https://myweb.lab.pksdemo.net:8443/databases/listing.json #! url points to the internal file server
+              - name: GRYPE_DB_CA_CERT
+                value: "/etc/ssl/certs/scanning-db-ca.crt"
+              - name: GRYPE_DB_MAX_ALLOWED_BUILT_AGE
+                value: 120000h
+            volumeMounts:
+              #@overlay/append
+              - name: harborapp-ca
+                mountPath: /etc/ssl/certs/harborapp-ca.crt
+                subPath: harbor-app-ca.crt #! key pointing to ca certificate
+              - name: scanning-db-ca
+                mountPath: /etc/ssl/certs/scanning-db-ca.crt
+                subPath: myweb.lab.pksdemo.net.ca.crt #! key pointing to ca certificate
+        volumes:
+        #@overlay/append
+        - name: harborapp-ca
+          configMap:
+            name: scanning-harborapp-ca-overlay-cm  #! name of the configmap created that contains ca
+        - name: scanning-db-ca
+          configMap:
+            name: scanning-db-ca-overlay-cm  #! name of the configmap created that contains ca
+

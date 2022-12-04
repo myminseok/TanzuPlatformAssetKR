@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: appliveview-ingress
+  namespace: app-live-view
+  annotations:
+    kubernetes.io/ingress.class: contour
+spec:
+  rules:
+  - host: appliveview.tap.lab.pcfdemo.net
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: application-live-view-7000
+            port:
+              number: 7000

@@ -1,0 +1,19 @@
+# rmq-claim-policy.yaml
+---
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ResourceClaimPolicy
+metadata:
+  name: rabbitmqcluster-cross-namespace
+  namespace: service-instances
+spec:
+  consumingNamespaces:
+  - '*'
+  subject:
+    group: rabbitmq.com
+    kind: RabbitmqCluster
+# for Postgres
+#   group: sql.tanzu.vmware.com
+#   kind: Postgres
+# for MySql
+#   group: with.sql.tanzu.vmware.com
+#   kind: MySQL
