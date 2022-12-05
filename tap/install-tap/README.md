@@ -34,26 +34,27 @@ to seperate config file from scripts, this script uses `~/.tapconfig` file and `
 export TAP_ENV=/home/ubuntu/tap-config/tap-env
 export TAP_ENV_DIR=/home/ubuntu/tap-config
 ```
-`TAP_ENV_DIR` has all config files required to this scripts.
-and `tap-env` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
+- `TAP_ENV_DIR` has all config files required to this scripts.
+-  `tap-env` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
+
 for example, following key in the `tap-env` file,
 ```
 IMGPKG_REGISTRY_USERNAME="admin"
 ```
-the script tap/install-tap/multi-view-cluster/21-install-tap.sh wil generate /tmp/tap-values-build-1st-CONVERTED.yml from the tap/install-tap/multi-view-cluster/tap-values-view-1st-TEMPLATE.yml by replacing the string `IMGPKG_REGISTRY_USERNAME` with the value from `tap-env` file with identical key.
+then the install-tap/update-tap script(tap/install-tap/multi-view-cluster/21-install-tap.sh) wil generate `/tmp/tap-values-build-1st-CONVERTED.yml` from the `tap/install-tap/multi-view-cluster/tap-values-view-1st-TEMPLATE.yml` by replacing the string `IMGPKG_REGISTRY_USERNAME` with the value from `tap-env` file.
 so, tap/install-tap/multi-view-cluster/tap-values-view-1st-TEMPLATE.yml
 ```
 shared:
   ...
     username: "IMGPKG_REGISTRY_USERNAME"
 ```
-will be /tmp/tap-values-build-1st-CONVERTED.yml 
+will be turned into `/tmp/tap-values-build-1st-CONVERTED.yml` as:
 ```
 shared:
   ...
     username: "admin"
 ```
-please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
+please note that the replacement only affects to the only file with filename included `*TEMPLATE*` such as `tap-values-{profile}-1st-TEMPLATE.yml`.
 
 ### how to create TAP_ENV
 run following script with existing tap-env file or new file path.
