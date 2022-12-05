@@ -43,27 +43,30 @@ function print_help_customizing {
 
 
 function set_tapconfig {
-  DEFAULT_ENV_PATH="$SCRIPTDIR/tap-env" 
-  ENV_PATH=${1:-$DEFAULT_ENV_PATH}  
+  DEFAULT_ENV_FILE="$SCRIPTDIR/tap-env" 
+  ENV_FILE=${1:-$DEFAULT_ENV_FILE}  
 
-  ENV_PATH_DIR=$(echo $ENV_PATH | rev | cut -d'/' -f2- | rev)
-  echo "$ENV_PATH_DIR"
-  if [ ! -d "$ENV_PATH_DIR" ]; then
-    echo "Creating folder $ENV_PATH_DIR"
-    mkdir -p "$ENV_PATH_DIR"
+  ENV_DIR=$(echo $ENV_FILE | rev | cut -d'/' -f2- | rev)
+  echo "$ENV_DIR"
+  if [ ! -d "$ENV_DIR" ]; then
+    echo "Creating folder $ENV_DIR"
+    mkdir -p "$ENV_DIR"
   fi
 
-  ABS_ENV_DIR="$( cd "$( dirname "${ENV_PATH[0]}" )" && pwd )"
-  ABS_ENV_PATH="$( cd "$( dirname "${ENV_PATH[0]}" )" && pwd )/$(basename -- $ENV_PATH)"
+  ABS_ENV_DIR="$( cd "$( dirname "${ENV_FILE[0]}" )" && pwd )"
+  ABS_ENV_FILE="$( cd "$( dirname "${ENV_FILE[0]}" )" && pwd )/$(basename -- $ENV_FILE)"
 
-  if [ ! -f $ABS_ENV_PATH ]; then
-    echo "Coping $SCRIPTDIR/tap-env.template to ABS_ENV_PATH: $ABS_ENV_PATH"
-    cp $SCRIPTDIR/tap-env.template $ABS_ENV_PATH
+  if [ ! -f $ABS_ENV_FILE ]; then
+    echo "Coping $SCRIPTDIR/tap-env.template to ABS_ENV_FILE: $ABS_ENV_FILE"
+    cp $SCRIPTDIR/tap-env.template $ABS_ENV_FILE
   fi
-  echo "Creating ~/.tapconfig for ABS_ENV_PATH: $ABS_ENV_PATH"
-  echo "export TAP_ENV=$ABS_ENV_PATH" > ~/.tapconfig
+  copy_to_file_if_not_exist $SCRIPTDIR/tap-env.template $ABS_ENV_FILE
+  
+
+
+  echo "Creating ~/.tapconfig for ABS_ENV_FILE: $ABS_ENV_FILE"
+  echo "export TAP_ENV=$ABS_ENV_FILE" > ~/.tapconfig
   echo "export TAP_ENV_DIR=$ABS_ENV_DIR" >> ~/.tapconfig
-  echo ""
   cat ~/.tapconfig
   echo ""
   echo "Coping tap-values templates to ABS_ENV_DIR: $ABS_ENV_DIR"
@@ -117,12 +120,12 @@ function trim_string {
 # }
 
 function load_env_file {
-  DEFAULT_ENV=$1
+  DEFAULT_ENV_FILE=$1
   # if [ ! -z $TAP_ENV ]; then
   #   echo "[TAP_ENV] already loaded '$TAP_ENV'"
   #   return
   # fi
-  _decide_tapconfig $DEFAULT_ENV
+  _decide_tapconfig $DEFAULT_ENV_FILE
   source $TAP_ENV
 }
 
@@ -350,15 +353,25 @@ function replace_key_if_template_yml {
   #echo "Replaced values to $NEW_YML_PATH"
 }
 
-
-function copy_if_not_exist {
-  SRC_FILE_PATH=$1
-  DEST_FOLDER=$2
-  SRC_FILENAME=$(echo $SRC_FILE_PATH | rev | cut -d'/' -f1 | rev)
-  if [ -f $DEST_FOLDER/$SRC_FILENAME ]; then
-    echo "Skip Coping. File already exist: $DEST_FOLDER/$SRC_FILENAME "
+function copy_to_dir_if_not_exist {
+  SRC_FILE=$1
+  DEST_DIR=$2
+  SRC_FILENAME=$(echo $SRC_FILE | rev | cut -d'/' -f1 | rev)
+  if [ -f $DEST_DIR/$SRC_FILENAME ]; then
+    echo "Skip Coping. File already exist: $DEST_DIR/$SRC_FILENAME "
   else
-    echo "Coping $SRC_FILENAME to $DEST_FOLDER"
-    cp $SRC_FILE_PATH $DEST_FOLDER/
+    echo "Coping $SRC_FILE to $DEST_DIR"
+    cp $SRC_FILE $DEST_DIR/
+  fi
+}
+
+function copy_to_file_if_not_exist {
+  SRC_FILE=$1
+  DEST_FILE=$2
+  if [ -f $DEST_FILE ]; then
+    echo "Skip Coping. File already exist: $DEST_FILE "
+  else
+    echo "Coping $SRC_FILE to $DEST_FILE"
+    cp $SRC_FILE $DEST_FILE
   fi
 }
