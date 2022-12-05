@@ -11,18 +11,17 @@
 This Scripts is not intened to 
 - provides Gitops model based TAP installation.
 
-
 Following scripts are compatible for TAP `1.3` and only tested on
 - TKG on vSphere
 - Ubuntu
 - Mac OS
 
-
 # Setup Jumpbox
 To run this scripts conveniently, it would be good to have a config file.
 
-### tools
+### Prerequitest tools on Jumpbox.
 - ytt
+
 
 ### Create TAP_ENV file.
 
@@ -114,6 +113,11 @@ and on workload cluster
 ```
 kubectl get cm -n tkg-system kapp-controller-config -o yaml
 ```
+
+# NOTE: Changing profile
+Please note that, if you want to change profile, for example one cluster already installed `build` profile and  wants to change to `run` profile.
+before installing new profile, existing tap should be deleted completely.(use 99-delete-tap.sh) otherwise CR is not properly installed.
+
 
 # Install TAP on `VIEW` cluster
 
