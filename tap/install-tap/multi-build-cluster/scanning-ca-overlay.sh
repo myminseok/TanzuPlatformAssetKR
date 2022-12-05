@@ -9,13 +9,22 @@ set -e
 ## create configmap
 CONFIG_MAP_NAME="scanning-harbor-ca-overlay-cm"
 REGISTRY_CA_FILE="harbor.crt"
-REGISTRY_CA_PATH="/tmp/$REGISTRY_CA_FILE"
+REGISTRY_CA_FILE_PATH="/tmp/$REGISTRY_CA_FILE"
 if [ -z $BUILDSERVICE_REGISTRY_CA_CERTIFICATE ]; then
   echo "ERROR: ENV `BUILDSERVICE_REGISTRY_CA_CERTIFICATE` not found"
   exit 1
 fi
 
-echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_PATH
+echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
+
+## TODO. 
+## wiedly, while echoing IMGPKG_REGISTRY_CA_CERTIFICATE, the last character '=' is trimed
+## so that output certificates is not well-formed.
+## following the fix for the mal-formed certificate. 
+sed -i -r 's/END CERTIFICATE----$/END CERTIFICATE-----/g' $REGISTRY_CA_FILE_PATH
+
+
+
 set +e
 kubectl delete cm ${CONFIG_MAP_NAME}  -n $DEVELOPER_NAMESPACE
 set -e

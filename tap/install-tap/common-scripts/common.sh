@@ -236,14 +236,21 @@ function _extract_custom_ca_file_from_env {
   echo "[YML] Extracting Custom CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
 
   if [ -n "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo $IMGPKG_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
+    echo "$IMGPKG_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
   fi
 
   if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
     if [ "$IMGPKG_REGISTRY_CA_CERTIFICATE" != "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+      echo "" >> $REGISTRY_CA_FILE_PATH
       echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d >> $REGISTRY_CA_FILE_PATH
     fi
   fi
+
+  ## TODO. 
+  ## wiedly, while echoing IMGPKG_REGISTRY_CA_CERTIFICATE, the last character '=' is trimed
+  ## so that output certificates is not well-formed.
+  ## following the fix for the mal-formed certificate. 
+  sed -i -r 's/END CERTIFICATE----$/END CERTIFICATE-----/g' $REGISTRY_CA_FILE_PATH
 
   if [ ! -f "$REGISTRY_CA_FILE_PATH" ]; then
     echo "ERROR [YML] Extracted Custom CA file is not found. $REGISTRY_CA_FILE_PATH"
@@ -259,6 +266,14 @@ function overlay_custom_ca_to_yml {
   YML_1st=$1
   REGISTRY_CA_FILE_PATH=$2
   RESULT_YTT_YML=$3
+
+  if [[ ! "$YML_1st" == *"TEMPLATE"* ]]; then
+    ## it is not template yml. 
+    echo "[WARNING][YML] NO Params Replacement as the filename doesn't include 'TEMPLATE'. $YML_1st"
+    cp $YML_1st $RESULT_YTT_YML
+    return 
+  fi
+
 
   if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
     echo "[YML] Not Overlaying as IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found"
