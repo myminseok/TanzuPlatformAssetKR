@@ -23,4 +23,4 @@ echo "    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath=
 echo ""
 echo "  - Fetch CA for TAP GUI domain from VIEW cluster"
 echo "    kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
-echo "    * multi-view-cluster/22-prepare-resources.sh should create the cert to /tmp/tap-gui-cert.txt"
+echo "    or cat /tmp/tap-gui-cert.txt  (saved to  by $SCRIPTDIR/../https-overlay/1-apply-tap-gui-https-view-cluster.sh)"

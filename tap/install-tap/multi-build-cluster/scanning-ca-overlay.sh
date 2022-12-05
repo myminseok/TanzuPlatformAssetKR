@@ -3,7 +3,6 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
-set -x
 
 set +e
 kubectl create ns $DEVELOPER_NAMESPACE

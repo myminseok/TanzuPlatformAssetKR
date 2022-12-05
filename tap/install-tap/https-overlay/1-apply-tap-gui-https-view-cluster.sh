@@ -4,8 +4,7 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ## only for view cluster, full cluster
 
 kubectl apply -f $SCRIPTDIR/tap-gui-certificate.yaml -n tap-gui
-
-
+echo "kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}'"
 TAP_GUI_CERT=$(kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d)
 ## verify
 if [[ "x$TAP_GUI_CERT" == "x" ]]; then
