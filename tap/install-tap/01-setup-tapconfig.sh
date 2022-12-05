@@ -2,7 +2,7 @@
 ## and copy TanzuPlatformAssetKR/tap/install-tap/tap-env.template to ~/tap-config/tap-env
 
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 
 if [ -z $1 ]; then
