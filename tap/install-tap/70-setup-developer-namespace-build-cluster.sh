@@ -8,9 +8,9 @@ verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_H
 verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_USERNAME"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_PASSWORD", "$BUILDSERVICE_REGISTRY_PASSWORD"
 
-
 print_current_k8s
 
+parse_args "$@"
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi

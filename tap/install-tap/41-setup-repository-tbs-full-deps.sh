@@ -6,6 +6,7 @@ load_env_file $SCRIPTDIR/tap-env
 
 print_current_k8s
 
+parse_args "$@"
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
