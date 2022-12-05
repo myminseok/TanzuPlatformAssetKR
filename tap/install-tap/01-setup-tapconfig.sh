@@ -6,7 +6,9 @@ export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 
 if [ -z $1 ]; then
-  echo "$0 /path/to/tap-env-file"
+  echo "Usage: $0 /path/to/tap-env-file"
+  echo " - /path/to/tap-env-file: it can be existing path to tap-env file or new path."
+  echo "                          the directory will be created if not exist and tap-env.template will be copied."
   exit 1
 fi
 
