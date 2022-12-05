@@ -8,3 +8,4 @@ kubectl create secret generic cnrs-default-tls -n tap-install \
   --dry-run=client \
   --from-file=$SCRIPTDIR/cnrs-default-tls.yml \
   | kubectl apply -f-
+

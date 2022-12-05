@@ -24,11 +24,10 @@ package_overlays:
 api_auto_registration:
   tap_gui_url: https://tap-gui.TAP_DOMAIN
   cluster_name: run-cluster
-  ## - CA for TAP GUI domain from VIEW cluster"
-  ##    kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
   ##  - CA for app workload domain from RUN cluster"
   ##    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
+  ## - CA for TAP GUI domain from VIEW cluster"
+  ##    kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
   #ca_cert_data: |
   ##  -----BEGIN CERTIFICATE-----
-  ##  MIIC4DCCAcigAwIBAgIRAKa9DSP+t5bDeb66AgDChaQwDQYJKoZIhvcNAQELBQAw
     
