@@ -12,7 +12,7 @@ $SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh
 
 echo ""
 echo "==============================================================="
-echo "Manully update tap-values file"
+echo "Manully update tap-values file on RUN cluster"
 echo "---------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-run-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"
