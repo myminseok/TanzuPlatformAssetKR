@@ -139,6 +139,21 @@ function is_yml_arg_exist {
 }
 
 
+function exit_if_not_valid_yml {
+  YML=$1
+  if [ ! -f "$YML" ]; then
+    echo "ERROR: File Not found :$YML"
+    print_help 
+    exit 1
+  fi
+  RESULT=$(grep -r 'profile:' $YML || true;)
+  if [ "x$RESULT" == "x" ]; then
+    echo "ERROR: Malformed YML: $YML"
+    print_help
+    exit 1
+  fi
+}
+
 function parse_args {
   ## takes the first arg.
   EXPECTED_KEY=""

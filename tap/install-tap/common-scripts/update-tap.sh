@@ -17,7 +17,7 @@ if [ -z "$PROFILE" ]; then
    exit 1
 fi
 
-## set the default yml 
+## select default yml file if no yml given with -f option
 if ! is_yml_arg_exist "$@"; then
   TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
  echo "[YML] Using tap-values template file from TAP_ENV_DIR '$TAP_ENV_DIR'"
@@ -32,12 +32,7 @@ else
   echo "[YML] Using Given YML file: $YML"
 fi
 
-if [ ! -f "$YML" ]; then
-   echo "File Not found :$YML"
-   print_help 
-   exit 1
-fi
-
+exit_if_not_valid_yml "$YML"
 
 ## processing custom CA.
 ## filename should be 'tap_registry_ca.crt' that matches with  tap-values-custom-ca-overlay-template.yaml contents.
