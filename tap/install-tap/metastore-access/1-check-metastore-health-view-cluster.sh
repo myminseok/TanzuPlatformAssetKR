@@ -3,8 +3,7 @@
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
-
-echo "Should run on VIEW cluster"
+echo "This script should run on BUILD cluster"
 echo "tanzu insight plugin should be installed."
 
 read -p "Are you sure the target cluster '$CONTEXT'? (Y/y) " -n 1 -r

@@ -3,6 +3,11 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 load_env_file $SCRIPTDIR/tap-env
 
+verify_tap_env_param "DEVELOPER_NAMESPACE", "$DEVELOPER_NAMESPACE"
+verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
+verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_USERNAME"
+verify_tap_env_param "BUILDSERVICE_REGISTRY_PASSWORD", "$BUILDSERVICE_REGISTRY_PASSWORD"
+
 print_current_k8s
 
 if [ "$YES" != "y" ]; then
@@ -23,7 +28,7 @@ kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace.y
 # kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
 
 echo "==============================================================="
-echo "Manual GITOPS configuration ..."
+echo "Manual create token secret for GITOPS configuration ..."
 echo "---------------------------------------------------------------"
 echo "cp $SCRIPTDIR/setup-developer-namespace/gitops-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
 echo "edit /any/path/gitops-ssh-secret-basic.yml"

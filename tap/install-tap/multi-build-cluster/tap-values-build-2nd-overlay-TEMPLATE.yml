@@ -24,7 +24,7 @@ ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys 
   gitops:
     ssh_secret: git-ssh
     server_address: https://github.com
-    repository_owner: myminseok
+    repository_owner: SUPPLYCHAIN_GITOPS_REPOSITORY_OWNER
     repository_name: tap-gitops-repo
     #branch: main
     commit_strategy: pull_request

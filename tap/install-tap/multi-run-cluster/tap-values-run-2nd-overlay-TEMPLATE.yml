@@ -24,45 +24,11 @@ package_overlays:
 api_auto_registration:
   tap_gui_url: https://tap-gui.TAP_DOMAIN
   cluster_name: run-cluster
-  ##  CA for tap-gui.tap.lab.pcfdemo.net: view-admin@view
-  ##  kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
-  ##  CA for app workload domain :  run-admin@run
-  ##  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
-  ca_cert_data: |
-    -----BEGIN CERTIFICATE-----
-    MIIC4DCCAcigAwIBAgIRAKa9DSP+t5bDeb66AgDChaQwDQYJKoZIhvcNAQELBQAw
-    ADAeFw0yMjEyMDMwODMxMDFaFw0yMzAzMDMwODMxMDFaMAAwggEiMA0GCSqGSIb3
-    DQEBAQUAA4IBDwAwggEKAoIBAQCb3ZFA/xW08t8XJUsY/MJ0/lDxLbj0lFxPzR0c
-    MCiWQGtmFy6vR31iy4uVYSK6hvi5bTN7FfMQYeGzHQxwsjJ9zVy0jjT6rtwy/nZT
-    C/Y4wrKnoh5IlBE2jkE2Xbv8o257bGfLlU0lXM27HK0lGlCbmDyuuGrPagSkyM0h
-    YCYpShcdWFUMonQ5p1WnroKAUCxcpS3x5R2D35KJCcfvFf9snFO2DsSohb9f17zy
-    P/oFmIcob/zI+N4YcISHAT4uCNCZkSNpwlE4Y/ep+M6Kbt5WMRAshVW0JrPFaasI
-    cznS1zA3bWnAzD51e92XahHeLFsc94mXkfz3UJ3Jh0t5jOz/AgMBAAGjVTBTMA4G
-    A1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMDMGA1UdEQEB/wQpMCeCJXRhcC1n
-    dWkudGFwLmgyby0yLTIyNTcuaDJvLnZtd2FyZS5jb20wDQYJKoZIhvcNAQELBQAD
-    ggEBAFjnXoK6+pDzsuDqyUh2O/pgJNsiR/5Lu77q2f+1FHskxPQOjaWEY3IexdKJ
-    bHueds5k8i0f365D8ogrg9pedA1QZsXjHOidrwx75SZD5uGq/dC8K4qeXmx0HFwQ
-    Z4O1BW9knTDRwt4M5KUzrejyK3Lge43T4EDA8VtSSD1i++KvUY/BKHSRgzemsHDJ
-    YCSzrhJzAlbPfUs2AbF+/0ltTD814HOALIxaDFb+RcUDSQiDMgkv7MVnZQ3Nt24a
-    sMarBnYuID5nNXMIQdRbs5H5JkQPgq6hRYaqpfkEjggyRju2Px9vYHwS0TG2MiGl
-    cJw4ei406EKzIHRnO+9EhE/7/Dc=
-    -----END CERTIFICATE-----
-    -----BEGIN CERTIFICATE-----
-    MIIC8TCCAdmgAwIBAgIRAP2so2OEo2M1gJciWYZ3CMEwDQYJKoZIhvcNAQELBQAw
-    EjEQMA4GA1UEAxMHY25ycy1jYTAeFw0yMjEyMDMxNDE4NTFaFw0yMzAzMDMxNDE4
-    NTFaMBIxEDAOBgNVBAMTB2NucnMtY2EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
-    ggEKAoIBAQDAkC1Ttp1PwgCn8BUvw+E9h5IhTU6vkyunKXTTV6oXg3dovdiqWkP9
-    hBkb2LtHaAni39F53zD3QgIq4gzR+C1goQ8Z3ruaWTiyfqF0MR2XjGlqHO6QHIGh
-    jNx2FPqBI4Y0OqV0x/P0SzdsXZu5S/L7yIOvAuLTSunxNTLBxFDcIc38pMySI0K6
-    zTHRmE1p3XySaUjob+d3079G/pPYOevLbvr2c6KVPD/gJwMkHDaTS1H28Y/g8Gds
-    7SwQh9ZJwqrzYFLopzJhxn37WT4NAdK7os+TwnOUXSNJZOXYhVXP4fIlfKksxnuW
-    OUb2m0ALRphU6cmnmaJPYneTCV0gsS77AgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIC
-    pDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBREPaLpjb4QOJv/GqXRyEqxAxZZ
-    PDANBgkqhkiG9w0BAQsFAAOCAQEAtSbhseCpP9mUBZi8I9rB/ynAz2Wi8sOj/wIb
-    6hTE9wArb5uKB9sVjUSU93HhAcDMPfyDidBCo9stxjinPy/wAIcdSHqL78TT01Mp
-    4DwQm2s4S4D1c5ggsLUfu9f408CijVzJr0tjkxNswURio50ojKUalJbYtY3l6RFI
-    Wm5P/Hk511EueUhuOYcOztRZrxLPOktqGtoxKz2ZLrVZN6PA2MFexjN7MDaCyJBl
-    8I0s+a4JGEuX6e6QUpkeGGESdbbLKY8VGJKPACNIV5wSNbsAoYAUXolSH1VfgWXY
-    mufzs+W3Xj+0DTHWYXgN2EtkxPtjSD1AoyX2hBIM9WlACknnmA==
-    -----END CERTIFICATE----
-
+  ## - CA for TAP GUI domain from VIEW cluster"
+  ##    kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
+  ##  - CA for app workload domain from RUN cluster"
+  ##    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
+  #ca_cert_data: |
+  ##  -----BEGIN CERTIFICATE-----
+  ##  MIIC4DCCAcigAwIBAgIRAKa9DSP+t5bDeb66AgDChaQwDQYJKoZIhvcNAQELBQAw
+    

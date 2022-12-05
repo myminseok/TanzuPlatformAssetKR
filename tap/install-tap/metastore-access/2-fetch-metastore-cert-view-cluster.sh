@@ -1,12 +1,14 @@
-echo "Should run on VIEW cluster"
+#!/bin/bash
+SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+echo "This script should run on VIEW cluster"
 
 CA_CERT=$(kubectl get secret -n metadata-store ingress-cert -o json | jq -r ".data.\"ca.crt\"")
 
 ## verify
 if [[ "x$CA_CERT" == "x" ]]; then
   echo ""
-  echo "!! ERROR: ingress-cert is invalid. "
-  echo "!! ERROR: kubectl get secret -n metadata-store ingress-cert -o json "
+  echo "ERROR: secret 'ingress-cert' is invalid. "
+  echo "  kubectl get secret -n metadata-store ingress-cert -o json "
   echo ""
   exit 1
 fi
@@ -30,8 +32,8 @@ AUTH_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-st
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
   echo ""
-  echo "ERROR: metadata-store-read-write-client is invalid. "
-  echo "       kubectl get secrets metadata-store-read-write-client -n metadata-store "
+  echo "ERROR: secrets 'metadata-store-read-write-client' is invalid. "
+  echo "   kubectl get secrets metadata-store-read-write-client -n metadata-store "
   echo ""
   exit 1
 fi

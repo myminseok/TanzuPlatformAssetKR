@@ -4,4 +4,5 @@ source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
 PROFILE="run"
+
 $SCRIPTDIR/../common-scripts/update-tap.sh -p ${PROFILE} $@
