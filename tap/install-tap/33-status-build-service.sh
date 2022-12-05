@@ -5,4 +5,8 @@ load_env_file $SCRIPTDIR/tap-env
 
 print_current_k8s
 
+kubectl get app -n tap-install buildservice
+kubectl get app -n tap-install full-tbs-deps
+
 kubectl get clusterbuilder
+
