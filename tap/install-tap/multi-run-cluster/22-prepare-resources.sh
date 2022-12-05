@@ -6,10 +6,10 @@ load_env_file $SCRIPTDIR/../tap-env
 chmod +x $SCRIPTDIR/*.sh
 chmod +x $SCRIPTDIR/../https-overlay/*.sh
 chmod +x $SCRIPTDIR/../multi-build-cluster/*.sh
-
+set -x
 $SCRIPTDIR/../https-overlay/1-apply-cnrs-default-tls-run-cluster.sh
 $SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh
-
+set +x
 echo ""
 echo "==============================================================="
 echo "Manully update tap-values file on RUN cluster"

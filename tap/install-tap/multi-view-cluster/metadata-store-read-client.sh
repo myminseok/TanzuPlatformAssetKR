@@ -10,8 +10,8 @@ kubectl apply -f $SCRIPTDIR/metadata-store-read-client.yml
 echo "==============================================================="
 echo "Manully copy following info to VIEW cluster"
 echo "---------------------------------------------------------------"
-echo "  multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml"
-echo "  tap_gui.app_config.proxy./metadata-store.headers.Authorization"
+echo "  file: $TAP_ENV_DIR/tap-values-view-2nd-overlay-TEMPLATE.yml"
+echo "  > tap_gui.app_config.proxy./metadata-store.headers.Authorization"
 echo ""
 kubectl get secret $(kubectl get sa -n metadata-store metadata-store-read-client -o json | jq -r '.secrets[0].name') -n metadata-store -o json | jq -r '.data.token' | base64 -d
 echo ""

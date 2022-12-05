@@ -5,6 +5,8 @@ source $SCRIPTDIR/../common-scripts/prepare-resources.sh $@
 chmod +x $SCRIPTDIR/*.sh
 chmod +x $SCRIPTDIR/../https-overlay/*.sh
 
+set -x
 $SCRIPTDIR/../https-overlay/1-apply-tap-gui-https-view-cluster.sh
 $SCRIPTDIR/../https-overlay/1-apply-cnrs-default-tls-run-cluster.sh
 $SCRIPTDIR/../multi-build-cluster/scanning-ca-overlay.sh
+set +x
