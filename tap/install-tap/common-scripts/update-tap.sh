@@ -47,7 +47,7 @@ echo "[YML] Final '$FINAL_YML'"
 echo "================================"
 cat $FINAL_YML
 echo "--------------------------------"
-
+echo "To Update YML, edit the template file: $YML"
 print_current_k8s
 
 if [ "$YES" != "y" ]; then
