@@ -12,6 +12,7 @@ for i in "$@"; do
 done
 
 
+
 function print_debug {
   if [ "$DEBUG" == "y" ]; then
     echo "  DEBUG: $1"  
@@ -214,6 +215,17 @@ function confirm_target_k8s {
       exit 1
     fi
 }
+
+function verify_tap_env_param {
+  KEY=$1
+  VALUE=$2
+  if [ "x$VALUE" == "x" ]; then
+    echo "$KEY is empty. check TAP_ENV '$TAP_ENV'"
+    exit 1
+  fi
+}
+
+
 
 function generate_new_filename {
   SRC_FILE_PATH=$1
