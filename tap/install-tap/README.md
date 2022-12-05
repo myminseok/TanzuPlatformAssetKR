@@ -355,6 +355,9 @@ or you may specify other file:
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 
+## verify update and fetch data(24-verify-resources.sh)
+
+
 # Test Sample workload
 ### Deploy workload on `BUILD` cluster
 setup developer namespace
