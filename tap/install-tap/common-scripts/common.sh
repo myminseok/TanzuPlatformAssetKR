@@ -97,32 +97,34 @@ function _decide_tapconfig {
 function trim_string {
     echo $(echo $1 | xargs)
 }
-function _export_env_file {
-   while IFS= read line || [ -n "$line" ]; do
-      if [[ "$line" == "#"* || "$line" == "" ]]; then
-         continue
-      fi
-      ## trim leading /trailing whitespace
-      line=$(trim_string "$line")
+
+# ## DEPRECDATED
+# function _export_env_file {
+#    while IFS= read line || [ -n "$line" ]; do
+#       if [[ "$line" == "#"* || "$line" == "" ]]; then
+#          continue
+#       fi
+#       ## trim leading /trailing whitespace
+#       line=$(trim_string "$line")
       
-      key=$(echo $line | cut -d'=' -f1)
-      value=$(echo $line | cut -d'=' -f2- | sed 's/\//\\\//g')
+#       key=$(echo $line | cut -d'=' -f1)
+#       value=$(echo $line | cut -d'=' -f2- | sed 's/\//\\\//g')
       
-      ## remove 'export ' prefix and trim leading /trailing whitespace 
-      key=$( echo $key | sed 's/^export //g' | xargs)
-      #echo "$key:$value"
-      eval "export $key=$value"
-   done < $TAP_ENV
-}
+#       ## remove 'export ' prefix and trim leading /trailing whitespace 
+#       key=$( echo $key | sed 's/^export //g' | xargs)
+#       #echo "$key:$value"
+#       eval "export $key=$value"
+#    done < $TAP_ENV
+# }
 
 function load_env_file {
   DEFAULT_ENV=$1
-  if [ ! -z $TAP_ENV ]; then
-    echo "[TAP_ENV] already loaded '$TAP_ENV'"
-    return
-  fi
+  # if [ ! -z $TAP_ENV ]; then
+  #   echo "[TAP_ENV] already loaded '$TAP_ENV'"
+  #   return
+  # fi
   _decide_tapconfig $DEFAULT_ENV
-  _export_env_file $TAP_ENV
+  source $TAP_ENV
 }
 
 
