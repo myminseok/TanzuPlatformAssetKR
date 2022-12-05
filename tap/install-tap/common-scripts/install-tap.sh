@@ -25,7 +25,6 @@ else
   echo "[YML] Using Given yml file '$YML'"
 fi
 
-
 ## processing custom CA.
 ## filename should be 'tap_registry_ca.crt' that matches with  tap-values-custom-ca-overlay-template.yaml contents.
 REGISTRY_CA_FILE_PATH="/tmp/tap_registry_ca.crt" 

@@ -47,7 +47,10 @@ echo "[YML] Final '$FINAL_YML'"
 echo "================================"
 cat $FINAL_YML
 echo "--------------------------------"
-echo "To Update YML, edit the template file: $YML"
+echo "To Update YML, edit the template file from TAP_ENV_DIR:$TAP_ENV_DIR"
+echo "  - $TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml"
+echo "  - $TAP_ENV_DIR/tap-values-${PROFILE}-2nd-overlay-TEMPLATE.yml"
+
 print_current_k8s
 
 if [ "$YES" != "y" ]; then
