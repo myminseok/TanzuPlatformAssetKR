@@ -7,4 +7,4 @@ print_current_k8s
 
 #kubectl edit PackageInstall cnrs -n tap-install
 #kapp delete --app tap-ctrl -n tap-install
-tanzu package installed delete tap -n tap-install 
+tanzu package installed delete tap -n tap-install $@
