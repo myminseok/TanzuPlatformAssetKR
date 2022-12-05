@@ -115,9 +115,8 @@ kubectl get cm -n tkg-system kapp-controller-config -o yaml
 ```
 
 # NOTE: Changing profile
-Please note that, if you want to change profile, for example one cluster already installed `build` profile and  wants to change to `run` profile.
-before installing new profile, existing tap should be deleted completely.(use 99-delete-tap.sh) otherwise CR is not properly installed.
-
+Please note that, if you want to change profile, for example one cluster already installed `build` profile and wants to change to `run` profile, then it would be safe to delete the existing tap first before installing new tap profile as SOMETIMES the CR is not properly installed.
+may use install-tap/99-delete-tap.sh.
 
 # Install TAP on `VIEW` cluster
 
@@ -276,13 +275,13 @@ install-tap/04-relocate-images-tbs-full-deps.sh
 ```
 switch context to `build` and install package.
 ```
-install-tap/41-setup-repository-tbs-full-deps.sh
-install-tap/42-install-tbs-full-deps.sh
+install-tap/31-setup-repository-tbs-full-deps.sh
+install-tap/32-install-tbs-full-deps.sh
 ```
 
 verify clusterbuilder status by running
 ```
-install-tap/43-status-build-service.sh
+install-tap/33-status-build-service.sh
 ```
 all builder should be Ready status.
 
