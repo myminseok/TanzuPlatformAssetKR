@@ -71,7 +71,8 @@ function set_tapconfig {
   echo " finding setup_tapconfig._copy_files.sh under '$SCRIPTDIR'"
   for file in $(find $SCRIPTDIR -name "setup_tapconfig_copy_files.sh") ; do
     echo "executing $file"
-    sh $file
+    chmod +x $file
+    $file
   done
 }
 
