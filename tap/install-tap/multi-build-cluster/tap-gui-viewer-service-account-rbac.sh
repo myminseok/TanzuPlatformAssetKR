@@ -22,10 +22,10 @@ CLUSTER_CA_CERTIFICATES=$(kubectl config view --raw -o jsonpath='{.clusters[?(@.
 echo "==============================================================="
 echo "Manully copy following info to VIEW cluster"
 echo "---------------------------------------------------------------"
-echo "  multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml"
-echo "  tap_gui.app_config.kubernetes.clusterLocatorMethods"
+echo "  file: multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml"
+echo "  > tap_gui.app_config.kubernetes.clusterLocatorMethods"
 echo ""
-echo "  run 23-update-tap.sh"
+echo "  and run 23-update-tap.sh"
 echo ""
 CURRENT_CONTEXT=$(kubectl config current-context)
 echo CONTEXT: $CURRENT_CONTEXT

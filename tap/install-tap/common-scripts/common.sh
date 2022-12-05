@@ -253,7 +253,7 @@ function _extract_custom_ca_file_from_env {
   if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
     if [ "$IMGPKG_REGISTRY_CA_CERTIFICATE" != "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
       echo "" >> $REGISTRY_CA_FILE_PATH
-      echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d >> $REGISTRY_CA_FILE_PATH
+      echo "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" | base64 -d >> $REGISTRY_CA_FILE_PATH
     fi
   fi
 

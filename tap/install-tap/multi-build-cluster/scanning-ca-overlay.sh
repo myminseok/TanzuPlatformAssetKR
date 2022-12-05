@@ -3,6 +3,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
+set -x
+
 set +e
 kubectl create ns $DEVELOPER_NAMESPACE
 set -e
@@ -20,7 +22,7 @@ echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
 set +e
 kubectl delete cm ${CONFIG_MAP_NAME}  -n $DEVELOPER_NAMESPACE
 set -e
-kubectl create cm ${CONFIG_MAP_NAME}  --from-file $REGISTRY_CA_PATH -n $DEVELOPER_NAMESPACE
+kubectl create cm ${CONFIG_MAP_NAME}  -n $DEVELOPER_NAMESPACE --from-file $REGISTRY_CA_FILE_PATH 
 
 ## verify
 DATA=$(kubectl get cm ${CONFIG_MAP_NAME} -n $DEVELOPER_NAMESPACE -o jsonpath='{.data.harbor\.crt}')

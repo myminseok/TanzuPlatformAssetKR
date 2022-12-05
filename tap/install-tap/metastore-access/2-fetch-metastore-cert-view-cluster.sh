@@ -29,8 +29,9 @@ AUTH_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-st
 ## verify
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
-  echo "!! ERROR: metadata-store-read-write-client is invalid. "
-  echo "!! ERROR: kubectl get secrets metadata-store-read-write-client -n metadata-store "
+  echo ""
+  echo "ERROR: metadata-store-read-write-client is invalid. "
+  echo "       kubectl get secrets metadata-store-read-write-client -n metadata-store "
   echo ""
   exit 1
 fi

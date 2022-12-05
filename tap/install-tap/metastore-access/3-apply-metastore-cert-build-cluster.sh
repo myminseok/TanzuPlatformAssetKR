@@ -36,7 +36,8 @@ AUTH_TOKEN=$(cat $TOKEN_FILE_PATH)
 ## verify
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
-  echo "!! ERROR: $TOKEN_FILE_PATH is invalid. "
+  echo ""
+  echo "ERROR: $TOKEN_FILE_PATH is invalid. "
   echo "  run 2-fetch-metastore-cert-view-cluster.sh first on VIEW cluster"
   echo ""
   exit 1
