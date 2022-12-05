@@ -1,11 +1,11 @@
 # Motivation
 
- [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make mistakes. following scripts are inteneded to:
-- suggest clear steps by following exact the same procedure from TAP public docs.
-- covers single cluster and [multi cluster installation] by providing profile based scripts(https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html)
-- provide scripts that requires minimal typing and confirm steps that lower any human mistakes
-- provide to seperate secret sensitive config file from scripts
-- considerd internet ristricted environment.
+ [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is inteneded to provide following benefits
+- provide scripts that *"suggest clear install/update steps"* by following exact the same procedure from TAP public docs.
+- covers single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile based scripts
+- provide scripts that requires minimal typing and confirm steps that *"lower human mistakes"*
+- can *"seperate sensitive config files from scripts"*
+- considered internet-ristricted environment.
 - straight forward project sturcture and file naming to follow installation steps.
 - easy to modify scripts for the future change with minimal efforts with shared structure.
 
@@ -22,7 +22,6 @@ To run this scripts conveniently, it would be good to have a config file.
 
 ### Prerequitest tools on Jumpbox.
 - ytt
-
 
 
 ## Setup TAP_ENV (01-setup-tapconfig.sh)
@@ -71,7 +70,7 @@ and do following:
 - if the given file is not exist, then it will be copied from tap/install-tap/tap-env.template 
 - it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
 
-###  Install-tanzu-cli (02-install-tanzu-tap-cli.sh)
+### install-tanzu-cli (02-install-tanzu-tap-cli.sh)
 to install the tap cli 
 
 download the following file to target folder 
@@ -93,10 +92,14 @@ and run the scripts 02-install-tanzu-tap-cli.sh.
 
 # Relocate TAP packages to local image repository
 
-### 03-relocate-images-tap.sh
+###  Relocate tap packages (03-relocate-images-tap.sh)
+do following before relocate packages (check TAP_ENV)
+- docker login registry.tanzu.vmware.com
+- docker login $IMGPKG_REGISTRY_HOSTNAME
+- create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 
-### 04-tbs-full-deps-relocate-images.sh
-
+### Reloaate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
+relocate images to image registry(check TAP_ENV)
 
 # Checks TKG cluster Readiness
 run following checks for All Workload cluster (View, Build, Run, Iterate)
@@ -117,7 +120,7 @@ and on workload cluster
 kubectl get cm -n tkg-system kapp-controller-config -o yaml
 ```
 
-# NOTE: Changing profile
+# NOTE: Changing Profile
 Please note that, if you want to change profile, for example one cluster already installed `build` profile and wants to change to `run` profile, then it would be safe to delete the existing tap first before installing new tap profile as SOMETIMES the CR is not properly installed.
 may use install-tap/99-delete-tap.sh.
 
@@ -138,7 +141,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
 
-### install tap with profile (1st phase)
+### install tap with profile (21-install-tap.sh)
 for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
@@ -157,7 +160,7 @@ install-tap/multi-{profile}-cluster/21-install-tap.sh -f /path/to/my-values.yml
 ```
 please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
 
-### prepare resources (for update tap)
+### prepare resources before updating TAP (22-prepare-resources.sh)
 
 verify metastore access:
 - tanzu insight plugin should be installed: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html
@@ -178,7 +181,7 @@ configure any changes from previous step
 install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 
-### update tap with VIEW profile (2nd phase)
+### update tap with VIEW profile (23-update-tap.sh)
 apply changes until successful.
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh
@@ -201,11 +204,8 @@ install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
 
-
-
-
 ### verify tap-gui access.
-
+open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
 
 # Install TAP on `BUILD` cluster
 
@@ -224,13 +224,13 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
 
-### install tap with profile (1st phase)
+### install tap with profile (21-install-tap.sh)
 for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources (for update tap)
+### prepare resources before updating TAP (22-prepare-resources.sh)
 
 if you missed to fetch metastore cert from `view` cluster
 - switch context to `view` cluster
@@ -257,7 +257,7 @@ configure any changes from previous step
 install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 
-### update tap with BUILD profile (2nd phase)
+### update tap with profile (23-update-tap.sh)
 apply changes until successful.
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh
@@ -271,11 +271,8 @@ or you may specify other file:
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 
-### install tap `tbs full deps` depencencies
-relocate images to image registry(check TAP_ENV)
-```
-install-tap/04-relocate-images-tbs-full-deps.sh
-```
+### install tap `tbs full deps` depencencies (31-setup-repository-tbs-full-deps.sh)
+
 switch context to `build` and install package.
 ```
 install-tap/31-setup-repository-tbs-full-deps.sh
@@ -306,13 +303,13 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
 
-### install tap with profile (1st phase)
+### install tap with profile (21-install-tap.sh)
 for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources (for update tap)
+### prepare resources before updating TAP (22-prepare-resources.sh)
 
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
@@ -344,7 +341,7 @@ configure any changes from previous step
 install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 
-### update tap with RUN profile (2nd phase)
+### update tap with profile (23-update-tap.sh)
 apply changes until successful.
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh
@@ -357,7 +354,6 @@ or you may specify other file:
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
-
 
 # Test Sample workload
 ### Deploy workload on `BUILD` cluster
