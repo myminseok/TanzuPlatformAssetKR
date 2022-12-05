@@ -29,7 +29,7 @@ kubectl apply -f $SCRIPTDIR/setup-developer-namespace/testing-pipeline.yml  -n $
 
 ## TODO: only for pvc testing...
 # kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
-
+set +x
 
 echo "==============================================================="
 echo "Manual GITOPS configuration ..."
