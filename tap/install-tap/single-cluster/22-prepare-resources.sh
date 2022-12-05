@@ -7,6 +7,8 @@ chmod +x $SCRIPTDIR/../https-overlay/*.sh
 
 set -x
 $SCRIPTDIR/../https-overlay/1-apply-tap-gui-https-view-cluster.sh
+echo ""
 $SCRIPTDIR/../https-overlay/1-apply-cnrs-default-tls-run-cluster.sh
+echo ""
 $SCRIPTDIR/../multi-build-cluster/scanning-ca-overlay.sh
 set +x

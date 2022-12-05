@@ -7,6 +7,7 @@ chmod +x $SCRIPTDIR/../https-overlay/*.sh
 chmod +x $SCRIPTDIR/../metastore-access/*.sh
 set -x
 $SCRIPTDIR/../https-overlay/1-apply-tap-gui-https-view-cluster.sh
-#$SCRIPTDIR/../metastore-access/1-check-metastore-health-view-cluster.sh
+echo ""
 $SCRIPTDIR/../metastore-access/2-fetch-metastore-cert-view-cluster.sh
+echo ""
 $SCRIPTDIR/metadata-store-read-client.sh
