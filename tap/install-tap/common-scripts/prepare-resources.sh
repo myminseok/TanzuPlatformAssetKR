@@ -7,6 +7,8 @@ set -e
 
 parse_args "$@"
 
+print_current_k8s
+
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi

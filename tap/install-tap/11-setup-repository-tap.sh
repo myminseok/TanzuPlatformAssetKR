@@ -10,6 +10,8 @@ verify_tap_env_param "IMGPKG_REGISTRY_USERNAME", "$IMGPKG_REGISTRY_USERNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
 verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
 
+print_current_k8s
+
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi

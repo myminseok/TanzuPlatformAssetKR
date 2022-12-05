@@ -202,6 +202,10 @@ function parse_args {
 
 }
 
+function print_current_k8s {
+   CONTEXT=$(kubectl config current-context)
+   echo "Current cluster: $CONTEXT"
+}
 
 function confirm_target_k8s {
     CONTEXT=$(kubectl config current-context)

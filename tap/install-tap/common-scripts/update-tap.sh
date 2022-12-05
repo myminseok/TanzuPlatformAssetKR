@@ -48,6 +48,8 @@ echo "================================"
 cat $FINAL_YML
 echo "--------------------------------"
 
+print_current_k8s
+
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
