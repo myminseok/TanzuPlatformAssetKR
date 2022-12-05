@@ -247,7 +247,6 @@ function _extract_custom_ca_file_from_env {
   echo "[YML] Extracting Custom CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
 
   if [ -n "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "$IMGPKG_REGISTRY_CA_CERTIFICATE"
     echo "$IMGPKG_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
   fi
 
@@ -257,12 +256,6 @@ function _extract_custom_ca_file_from_env {
       echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d >> $REGISTRY_CA_FILE_PATH
     fi
   fi
-
-  ## TODO. 
-  ## wiedly, while echoing IMGPKG_REGISTRY_CA_CERTIFICATE, the last character '=' is trimed
-  ## so that output certificates is not well-formed.
-  ## following the fix for the mal-formed certificate. 
-  sed -i -r 's/END CERTIFICATE----$/END CERTIFICATE-----/g' $REGISTRY_CA_FILE_PATH
 
   if [ ! -f "$REGISTRY_CA_FILE_PATH" ]; then
     echo "ERROR [YML] Extracted Custom CA file is not found. $REGISTRY_CA_FILE_PATH"

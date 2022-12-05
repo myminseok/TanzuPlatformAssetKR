@@ -17,14 +17,6 @@ fi
 
 echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
 
-## TODO. 
-## wiedly, while echoing IMGPKG_REGISTRY_CA_CERTIFICATE, the last character '=' is trimed
-## so that output certificates is not well-formed.
-## following the fix for the mal-formed certificate. 
-sed -i -r 's/END CERTIFICATE----$/END CERTIFICATE-----/g' $REGISTRY_CA_FILE_PATH
-
-
-
 set +e
 kubectl delete cm ${CONFIG_MAP_NAME}  -n $DEVELOPER_NAMESPACE
 set -e
