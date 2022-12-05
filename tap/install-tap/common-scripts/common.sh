@@ -59,17 +59,17 @@ function set_tapconfig {
   ABS_ENV_PATH="$( cd "$( dirname "${ENV_PATH[0]}" )" && pwd )/$(basename -- $ENV_PATH)"
 
   if [ ! -f $ABS_ENV_PATH ]; then
-    echo "Coping $SCRIPTDIR/tap-env.template to ABS_ENV_PATH '$ABS_ENV_PATH'"
+    echo "Coping $SCRIPTDIR/tap-env.template to ABS_ENV_PATH: $ABS_ENV_PATH"
     cp $SCRIPTDIR/tap-env.template $ABS_ENV_PATH
   fi
-  echo "Creating ~/.tapconfig for ABS_ENV_PATH '$ABS_ENV_PATH'"
+  echo "Creating ~/.tapconfig for ABS_ENV_PATH: $ABS_ENV_PATH"
   echo "export TAP_ENV=$ABS_ENV_PATH" > ~/.tapconfig
   echo "export TAP_ENV_DIR=$ABS_ENV_DIR" >> ~/.tapconfig
   echo ""
   cat ~/.tapconfig
   echo ""
-  echo "Coping tap-values templates to ABS_ENV_DIR '$ABS_ENV_DIR'"
-  echo " finding setup_tapconfig._copy_files.sh under '$SCRIPTDIR'"
+  echo "Coping tap-values templates to ABS_ENV_DIR: $ABS_ENV_DIR"
+  echo " finding setup_tapconfig_copy_files.sh under '$SCRIPTDIR'"
   for file in $(find $SCRIPTDIR -name "setup_tapconfig_copy_files.sh") ; do
     echo "executing $file"
     chmod +x $file
@@ -220,7 +220,7 @@ function verify_tap_env_param {
   KEY=$1
   VALUE=$2
   if [ "x$VALUE" == "x" ]; then
-    echo "$KEY is empty. check TAP_ENV '$TAP_ENV'"
+    echo "$KEY is empty. check TAP_ENV: $TAP_ENV"
     exit 1
   fi
 }
