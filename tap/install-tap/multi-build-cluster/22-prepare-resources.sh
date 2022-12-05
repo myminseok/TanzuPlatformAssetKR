@@ -13,3 +13,7 @@ $SCRIPTDIR/../metastore-access/3-apply-metastore-cert-build-cluster.sh
 echo ""
 $SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh
 set +x
+
+echo "==============================================================="
+echo "Now update TAP on ${PROFILE} cluster with by running 23-update-tap.sh"
+echo "---------------------------------------------------------------"
