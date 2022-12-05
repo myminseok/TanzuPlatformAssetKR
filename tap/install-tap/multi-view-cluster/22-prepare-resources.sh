@@ -6,7 +6,6 @@ chmod +x $SCRIPTDIR/*.sh
 chmod +x $SCRIPTDIR/../https-overlay/*.sh
 chmod +x $SCRIPTDIR/../metastore-access/*.sh
 
-
 echo "$SCRIPTDIR/../https-overlay/1-apply-tap-gui-https-view-cluster.sh"
 $SCRIPTDIR/../https-overlay/1-apply-tap-gui-https-view-cluster.sh
 

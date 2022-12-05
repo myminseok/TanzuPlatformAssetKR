@@ -4,16 +4,13 @@ source $SCRIPTDIR/../common-scripts/prepare-resources.sh $@
 
 chmod +x $SCRIPTDIR/*.sh
 chmod +x $SCRIPTDIR/../metastore-access/*.sh
-set -x
-$SCRIPTDIR/grype-metastore.sh
-echo ""
-$SCRIPTDIR/scanning-ca-overlay.sh
-echo ""
-$SCRIPTDIR/../metastore-access/3-apply-metastore-cert-build-cluster.sh
-echo ""
-$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh
-set +x
 
-echo "==============================================================="
-echo "Now update TAP on ${PROFILE} cluster with by running 23-update-tap.sh"
-echo "---------------------------------------------------------------"
+echo "$SCRIPTDIR/grype-metastore.sh"
+$SCRIPTDIR/grype-metastore.sh
+echo "$SCRIPTDIR/scanning-ca-overlay.sh"
+$SCRIPTDIR/scanning-ca-overlay.sh
+echo "$SCRIPTDIR/../metastore-access/3-apply-metastore-cert-build-cluster.sh"
+$SCRIPTDIR/../metastore-access/3-apply-metastore-cert-build-cluster.sh
+echo "$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh"
+$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh
+
