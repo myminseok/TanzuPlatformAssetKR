@@ -121,15 +121,15 @@ package_overlays:
 - name: cnrs
   secrets:
   - name: cnrs-default-tls
-  ## for pvc support on knative.
-  - name: "knative-serving-overlay"
+  # ## for pvc support on knative.
+  # - name: "knative-serving-overlay"
 - name: "grype"
   secrets:
   - name: "scanning-ca-overlay"
-- name: ootb-templates
-  secrets:
-  ## for pvc support on knative.
-  - name: "ootb-templates-overlay"
+# - name: ootb-templates
+#   secrets:
+#   ## for pvc support on knative.
+#   - name: "ootb-templates-overlay"
 
 
 #@overlay/match missing_ok=True
