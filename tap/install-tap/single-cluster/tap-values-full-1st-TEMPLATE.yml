@@ -1,3 +1,6 @@
+profile: full
+ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
+
 shared:
   ingress_domain: "TAP_DOMAIN"
   image_registry:
@@ -6,15 +9,7 @@ shared:
     password: "IMGPKG_REGISTRY_PASSWORD"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
-   
 
-ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
-
-#The above keys are minimum numbers of entries needed in tap-values.yaml to get a functioning TAP Full profile installation.
-
-#Below are the keys which may have default values set, but can be overridden.
-
-profile: full # Can take iterate, build, run, view.
 supply_chain: basic            # Can take testing, testing_scanning.
 #supply_chain: testing          # Can take testing, testing_scanning.
 ## TODO 2nd tap update
@@ -39,7 +34,6 @@ buildservice:
   stack_configuration: jammy-only
   ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
   exclude_dependencies: true
-
 
 tap_gui:
   service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP

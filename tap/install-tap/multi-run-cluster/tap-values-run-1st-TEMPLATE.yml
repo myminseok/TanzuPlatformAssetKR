@@ -10,7 +10,6 @@ shared:
     password: "IMGPKG_REGISTRY_PASSWORD"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
-   
 
 buildservice:
   kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
@@ -19,7 +18,6 @@ buildservice:
   stack_configuration: jammy-only
   ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
   exclude_dependencies: true
-
 
 supply_chain: basic            # Can take testing, testing_scanning.
 ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
