@@ -1,4 +1,5 @@
-# Summary
+# Motivation
+
  [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make mistakes. following scripts are inteneded to:
 - suggest clear steps by following exact the same procedure from TAP public docs.
 - covers single cluster and [multi cluster installation] by providing profile based scripts(https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html)
@@ -23,14 +24,18 @@ To run this scripts conveniently, it would be good to have a config file.
 - ytt
 
 
-### Create TAP_ENV file.
 
-create a copy of `tap-env` from `tap-env.template` to any path
+## Setup TAP_ENV (01-setup-tapconfig.sh)
+
+to seperate config file from scripts, this script uses `~/.tapconfig` file and `TAP_ENV`, `TAP_ENV_DIR` environment variables
+
+`~/.tapconfig` simply points to TAP_ENV file path
 ```
-mkdir ~/tap-config
-cp tap/install-tap/tap-env.template ~/tap-config/tap-env
+export TAP_ENV=/home/ubuntu/tap-config/tap-env
+export TAP_ENV_DIR=/home/ubuntu/tap-config
 ```
-`tap-env` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
+`TAP_ENV_DIR` has all config files required to this scripts.
+and `tap-env` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
 for example, following key in the `tap-env` file,
 ```
 IMGPKG_REGISTRY_USERNAME="admin"
@@ -50,23 +55,20 @@ shared:
 ```
 please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
 
-### Setup tapconfig file to point the TAP_ENV file path (00-set-tapconfig.sh)
-run following command to create enviroment setup.
-```
-mkdir ~/tap-config
-cd tap/install-tap
-```
+### how to create TAP_ENV
+run following script with existing tap-env file or new file path.
 ```
 01-setup-tapconfig.sh ~/tap-config/tap-env
 ```
-it will create ~/.tapconfig that export `TAP_ENV` environment variable pointing to tap-env file.
-if the given file is not exist, then it will copy tap/install-tap/tap-env.template to ~/tap-config/tap-env. 
-cat ~/.tapconfig 
+it will `~/.tapconfig` will be created as following.
 ```
 export TAP_ENV=/home/ubuntu/tap-config/tap-env
 export TAP_ENV_DIR=/home/ubuntu/tap-config
 ```
-and also it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
+and do following:
+- if the given diretory is not exist, it will be created. 
+- if the given file is not exist, then it will be copied from tap/install-tap/tap-env.template 
+- it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
 
 ###  Install-tanzu-cli (02-install-tanzu-tap-cli.sh)
 to install the tap cli 
@@ -88,7 +90,7 @@ TAP_BIN=/data/tapbin-1.3
 and run the scripts 02-install-tanzu-tap-cli.sh.
 
 
-# Relocate TAP packages.
+# Relocate TAP packages to local image repository
 
 ### 03-relocate-images-tap.sh
 
