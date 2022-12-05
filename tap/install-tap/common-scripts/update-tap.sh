@@ -18,7 +18,7 @@ if [ -z "$PROFILE" ]; then
 fi
 
 ## set the default yml 
-if is_yml_arg_not_exist "$@"; then
+if ! is_yml_arg_exist "$@"; then
   TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
  echo "[YML] Using tap-values template file from TAP_ENV_DIR '$TAP_ENV_DIR'"
   YML_1st=$TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml
@@ -29,8 +29,15 @@ if is_yml_arg_not_exist "$@"; then
   set +x
   YML=$YTT_YML
 else
-  echo "[YML] Using Given yml file '$YML'"
+  echo "[YML] Using Given YML file: $YML"
 fi
+
+if [ ! -f "$YML" ]; then
+   echo "File Not found :$YML"
+   print_help 
+   exit 1
+fi
+
 
 ## processing custom CA.
 ## filename should be 'tap_registry_ca.crt' that matches with  tap-values-custom-ca-overlay-template.yaml contents.
@@ -47,10 +54,12 @@ echo "[YML] Final '$FINAL_YML'"
 echo "================================"
 cat $FINAL_YML
 echo "--------------------------------"
-echo "To Update YML, edit the template file from TAP_ENV_DIR:$TAP_ENV_DIR"
+echo "To Update YML, edit the template file from TAP_ENV_DIR:$TAP_ENV_DIR "
 echo "  - $TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml"
 echo "  - $TAP_ENV_DIR/tap-values-${PROFILE}-2nd-overlay-TEMPLATE.yml"
-
+echo ""
+echo "or use custom yml:  23-update-tap.sh -f /path/to/YML"
+echo ""
 print_current_k8s
 
 if [ "$YES" != "y" ]; then

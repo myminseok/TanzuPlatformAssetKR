@@ -20,8 +20,7 @@ function print_debug {
 
 function print_help {
   echo ""
-  echo "Usage: $0 -p PROFILE [-f YOUR-YAML]"
-  echo "Usage: $0 -p=PROFILE [-f=YOUR-YAML]"
+  echo "Usage: install-tap.sh/update-tap.sh -p PROFILE [-f YOUR-YAML]"
   echo "  -p,--profile) mandatory. profile such as full, view, build, run, iterate. "
   echo "  -f,--file) optional. path to yml file. default to ytt *1st.yml + overlay yml"
   echo "  -y,--yes) optioanl. verify the target cluster before proceeding"
@@ -127,18 +126,16 @@ function load_env_file {
   source $TAP_ENV
 }
 
-
-
-function is_yml_arg_not_exist {
+function is_yml_arg_exist {
   for i in "$@"; do
     case $i in
       -f=*|--file=*|-f|--file)
         print_debug "$i"
-        return 1
+        return 0
       ;;
     esac
   done
-  return 0
+  return 1
 }
 
 
