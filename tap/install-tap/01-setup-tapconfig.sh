@@ -12,5 +12,5 @@ if [ -z $1 ]; then
   exit 1
 fi
 
-TAP_ENV_FILE=$1
-set_tapconfig $TAP_ENV_FILE
+ENV_FILE=$1
+setup_envconfig $ENV_FILE

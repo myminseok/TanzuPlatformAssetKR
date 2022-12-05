@@ -42,7 +42,7 @@ function print_help_customizing {
 }
 
 
-function set_tapconfig {
+function setup_envconfig {
   DEFAULT_ENV_FILE="$SCRIPTDIR/tap-env" 
   ENV_FILE=${1:-$DEFAULT_ENV_FILE}  
 
