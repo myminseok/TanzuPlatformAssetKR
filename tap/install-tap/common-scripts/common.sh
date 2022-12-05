@@ -12,7 +12,6 @@ for i in "$@"; do
 done
 
 
-
 function print_debug {
   if [ "$DEBUG" == "y" ]; then
     echo "  DEBUG: $1"  
@@ -107,7 +106,7 @@ function _export_env_file {
       line=$(trim_string "$line")
       
       key=$(echo $line | cut -d'=' -f1)
-      value=$(echo $line | cut -d'=' -f2 | sed 's/"//g' | sed 's/\//\\\//g')
+      value=$(echo $line | cut -d'=' -f2- | sed 's/\//\\\//g')
       
       ## remove 'export ' prefix and trim leading /trailing whitespace 
       key=$( echo $key | sed 's/^export //g' | xargs)
@@ -123,9 +122,7 @@ function load_env_file {
     return
   fi
   _decide_tapconfig $DEFAULT_ENV
-
   _export_env_file $TAP_ENV
-
 }
 
 
@@ -250,6 +247,7 @@ function _extract_custom_ca_file_from_env {
   echo "[YML] Extracting Custom CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
 
   if [ -n "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
+    echo "$IMGPKG_REGISTRY_CA_CERTIFICATE"
     echo "$IMGPKG_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
   fi
 
@@ -332,7 +330,7 @@ function replace_key_if_template_yml {
       line=$(echo "$line" | xargs)
       #echo "$line"
       key=$(echo $line | cut -d'=' -f1)
-      value=$(echo $line | cut -d'=' -f2 | sed 's/"//g' | sed 's/\//\\\//g')
+      value=$(echo $line | cut -d'=' -f2- | sed 's/\//\\\//g')
       #echo "value:$value"
       #echo "sed -i -r 's/$key/$value/g' $NEW_YML"
       sed -i -r "s/$key/$value/g" $NEW_YML_PATH
