@@ -219,7 +219,7 @@ run `24-verify-resources.sh` to check the change applied. output should be with 
 [ENV] Using env from '/data/tap-config/tap-env'
 Current cluster: build-admin@build
 =======================================================================================
-[RUN-BEGIN] /data/TanzuPlatformAssetKR/tap/install-tap/single-cluster/../https-overlay/2-fetch-cnrs-run-cluster.sh
+[RUN-BEGIN] /data/TanzuPlatformAssetKR/tap/install-tap/full-cluster/../https-overlay/2-fetch-cnrs-run-cluster.sh
 
 [ENV] Loading env from ~/.tapconfig
 [ENV] Using env from '/data/tap-config/tap-env'
@@ -238,7 +238,7 @@ if there is 'ERROR' or 'WARNING', follow instruction from the output.
 [ENV] Using env from '/data/tap-config/tap-env'
 Current cluster: build-admin@build
 =======================================================================================
-[RUN-BEGIN] /data/TanzuPlatformAssetKR/tap/install-tap/single-cluster/../https-overlay/2-fetch-cnrs-run-cluster.sh
+[RUN-BEGIN] /data/TanzuPlatformAssetKR/tap/install-tap/full-cluster/../https-overlay/2-fetch-cnrs-run-cluster.sh
 
 [ENV] Loading env from ~/.tapconfig
 [ENV] Using env from '/data/tap-config/tap-env'
