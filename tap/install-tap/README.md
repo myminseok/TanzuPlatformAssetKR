@@ -316,7 +316,7 @@ it will run following scripts internally:
 - install-tap/https-overlay/1-apply-cnrs-default-tls-run-cluster.sh: create `cnrs-default-tls` in `tap-install` namespace
 - install-tap/multi-build-cluster/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
 
-keep verify `cnrs-default-tls` by running install-tap/https-overlay/2-verify-cnrs-run-cluster.sh
+keep verify `cnrs-default-tls` by running install-tap/https-overlay/2-fetch-cnrs-run-cluster.sh
 kubectl get cm config-network -n knative-serving  resource should be configured as following:
 ```
 ...
