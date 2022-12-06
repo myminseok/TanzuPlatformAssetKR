@@ -4,6 +4,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
+echo "This script should run on ALL cluster"
+
 kubectl apply -f $SCRIPTDIR/tap-gui-viewer-service-account-rbac.yml
 
 CLUSTER_URL=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')

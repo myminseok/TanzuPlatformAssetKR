@@ -3,6 +3,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 load_env_file $SCRIPTDIR/tap-env
 
+echo "This script should run on BUILD cluster"
+
 verify_tap_env_param "DEVELOPER_NAMESPACE", "$DEVELOPER_NAMESPACE"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_USERNAME"
@@ -29,10 +31,10 @@ kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace.y
 set +x
 
 echo "==============================================================="
-echo "Manual create token secret for GITOPS configuration ..."
+echo "Manual GITOPS configuration ..."
 echo "---------------------------------------------------------------"
-echo "cp $SCRIPTDIR/setup-developer-namespace/gitops-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
-echo "edit /any/path/gitops-ssh-secret-basic.yml"
+echo "cp $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
+echo "edit the yml by refering $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.sample"
 echo "kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE"
-echo "use the secret to workload.yml"
+echo "use the secret on workload.yml"
 echo ""

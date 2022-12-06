@@ -242,9 +242,9 @@ it will creates temp files to apply `build` cluster:
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
 - install-tap/multi-build-cluster/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
-- install-tap/multi-build-cluster/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
+- install-tap/common-scripts/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
 - install-tap/metastore-access/3-apply-grype-metastore-cert-build-cluster.sh: apply metastore config
-- install-tap/multi-build-cluster/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
+- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `BUILD` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
@@ -314,7 +314,7 @@ install-tap/multi-{profile}-cluster/21-install-tap.sh
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
 - install-tap/https-overlay/1-apply-cnrs-default-tls-run-cluster.sh: create `cnrs-default-tls` in `tap-install` namespace
-- install-tap/multi-build-cluster/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
+- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
 
 keep verify `cnrs-default-tls` by running install-tap/https-overlay/2-fetch-cnrs-run-cluster.sh
 kubectl get cm config-network -n knative-serving  resource should be configured as following:

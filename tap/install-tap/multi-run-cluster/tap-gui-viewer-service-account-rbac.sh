@@ -4,4 +4,4 @@
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../tap-env
 
-sh $SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh
+sh $SCRIPTDIR/../common-scripts/tap-gui-viewer-service-account-rbac.sh
