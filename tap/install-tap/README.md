@@ -2,7 +2,7 @@
 
  [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is inteneded to provide following benefits
 - provide comprehensive scripts that *"suggest clear install/update steps"* by following exact the same procedure from TAP public docs.
-- covers single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile based scripts
+- cover single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile(full,view,build,run) based scripts
 - provide scripts that requires minimal typing and confirm steps that *"lower human mistakes"*
 - can *"seperate sensitive config files from scripts"*
 - considered internet-ristricted environment.
