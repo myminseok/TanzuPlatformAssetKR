@@ -1,6 +1,9 @@
 ##https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html
+#!/bin/bash
+SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/common-scripts/common.sh
+load_env_file $SCRIPTDIR/tap-env
 
-#!/bin/bash -e
 # This script only works on mac
 
 # Update local hosts file
