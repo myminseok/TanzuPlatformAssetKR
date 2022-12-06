@@ -448,10 +448,46 @@ kubectl delete cm config-network -n knative-serving
 ../29-reconcile-component.sh cnrs
 ```
 
+
+# ===============================
+# Install TAP on `ITERATE` cluster
+# ===============================
+
+### locate k8s context
+
+### 00-manual-check-custom-harbor-access-from-TKG-node.sh
+
+### check kapp-controller-config from mgmt-cluster
+
+### 11-setup-repository-tap.sh
+
+### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
+
+### install tap with profile (21-install-tap.sh)
+
+### prepare resources before updating TAP (22-prepare-resources.sh)
+
+#### setup RBAC access to `ITERATE` cluster from tap-gui on `VIEW` cluster
+in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
+and and locate `VIEW` cluster and update the tap on `VIEW` cluster
+- install-tap/multi-view-cluster/23-update-tap.sh
+
+### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+
+### update tap with profile (23-update-tap.sh)
+
+## verify update and fetch data(24-verify-resources.sh)
+run `install-tap/multi-{profile}-cluster/24-verify-resources.sh`.
+it will check following:
+- check CA for app workload domain on ITERATE cluster. 
+- check the cnrs updates to 'config-network' configmap in knative-serving namespace.
+
+see the the same section(`verify update and fetch data(24-verify-resources.sh`) on RUN cluster
+
 # Test Sample workload
 ### Deploy workload on `BUILD` cluster
 setup developer namespace
-- install-tap/70-setup-developer-namespace-build-cluster.sh
+- install-tap/70-setup-developer-namespace-build-full-cluster.sh
 it will create 
 - scan policy 
 - testing pipeline
@@ -479,7 +515,7 @@ it will create files on /tmp folder
 
 ### Deploy workload on `RUN` cluster
 setup developer namespace
-- install-tap/71-setup-developer-namespace-run-cluster.sh
+- install-tap/71-setup-developer-namespace-run-iterate-cluster.sh
 
 apply gitops secrets (the same from previous step)
 ```
@@ -503,3 +539,11 @@ kubectl get httpproxy -A
 
 and verify access
 - sample-workload/multi-cluster-workload/4-verify.sh
+
+### Deploy workload on `ITERATE` cluster
+setup developer namespace
+- install-tap/71-setup-developer-namespace-run-iterate-cluster.sh
+
+
+
+

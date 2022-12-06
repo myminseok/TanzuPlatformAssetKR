@@ -3,7 +3,7 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 load_env_file $SCRIPTDIR/tap-env
 
-echo "This script should run on BUILD cluster"
+echo "This script should run on BUILD/FULL cluster"
 
 verify_tap_env_param "DEVELOPER_NAMESPACE", "$DEVELOPER_NAMESPACE"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
@@ -25,6 +25,8 @@ set -x
 tanzu secret registry delete registry-credentials -n $DEVELOPER_NAMESPACE -y
 tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace $DEVELOPER_NAMESPACE
 kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace.yml -n $DEVELOPER_NAMESPACE
+kubectl apply -f $SCRIPTDIR/setup-developer-namespace/scan-policy.yml  -n $DEVELOPER_NAMESPACE
+kubectl apply -f $SCRIPTDIR/setup-developer-namespace/testing-pipeline.yml  -n $DEVELOPER_NAMESPACE
 
 ## TODO: only for pvc testing...
 # kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
