@@ -1,8 +1,8 @@
 # Motivation
 
  [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is inteneded to provide following benefits
-- provide scripts that *"suggest clear install/update steps"* by following exact the same procedure from TAP public docs.
-- covers single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile based scripts
+- provide comprehensive scripts that *"suggest clear install/update steps"* by following exact the same procedure from TAP public docs.
+- cover single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile(full,view,build,run) based scripts
 - provide scripts that requires minimal typing and confirm steps that *"lower human mistakes"*
 - can *"seperate sensitive config files from scripts"*
 - considered internet-ristricted environment.
@@ -100,7 +100,7 @@ do following before relocate packages (check TAP_ENV)
 - docker login $IMGPKG_REGISTRY_HOSTNAME
 - create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 
-### Reloaate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
+### Relocate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
 relocate images to image registry(check TAP_ENV)
 
 # Checks TKG cluster Readiness
