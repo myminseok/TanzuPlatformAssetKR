@@ -14,7 +14,7 @@ kubectl create secret generic cnrs-default-tls -n tap-install \
 kubectl get secret  cnrs-default-tls -n tap-install
 
 echo "---------------------------------------------------------------------------------------"
-echo "Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
+echo "ATTENTION: Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
 echo "---------------------------------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"

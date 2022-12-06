@@ -19,7 +19,7 @@ CLUSTER_TOKEN=$(kubectl -n tap-gui get secret $(kubectl -n tap-gui get sa tap-gu
 CLUSTER_CA_CERTIFICATES=$(kubectl config view --raw -o jsonpath='{.clusters[?(@.name=="tkc-run")].cluster.certificate-authority-data}')
 
 echo "---------------------------------------------------------------------------------------"
-echo "Manully update tap-values file on VIEW cluster"
+echo "ATTENTION: Manully update tap-values file on VIEW cluster"
 echo "---------------------------------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-view-2nd-overlay-TEMPLATE.yml"
 echo "  > tap_gui.app_config.kubernetes.clusterLocatorMethods"
