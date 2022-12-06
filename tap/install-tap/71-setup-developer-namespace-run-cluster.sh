@@ -31,9 +31,9 @@ kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace.y
 set +x
 
 echo "==============================================================="
-echo "Manual GITOPS configuration ..."
+echo "[MANUAL] create GITOPS secret ..."
 echo "---------------------------------------------------------------"
-echo "cp $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
+echo "cp $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.template $TAP_ENV_DIR/gitops-ssh-secret-basic.yml"
 echo "edit the yml by refering $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.sample"
 echo "kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE"
 echo "use the secret on workload.yml"
