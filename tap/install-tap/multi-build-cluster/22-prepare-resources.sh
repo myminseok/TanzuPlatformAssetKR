@@ -7,10 +7,13 @@ chmod +x $SCRIPTDIR/../metastore-access/*.sh
 
 echo "$SCRIPTDIR/grype-metastore.sh"
 $SCRIPTDIR/grype-metastore.sh
+
 echo "$SCRIPTDIR/scanning-ca-overlay.sh"
 $SCRIPTDIR/scanning-ca-overlay.sh
-echo "$SCRIPTDIR/../metastore-access/3-apply-metastore-cert-build-cluster.sh"
-$SCRIPTDIR/../metastore-access/3-apply-metastore-cert-build-cluster.sh
+
+echo "$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-cert-build-cluster.sh"
+$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-cert-build-cluster.sh
+
 echo "$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh"
 $SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh
 

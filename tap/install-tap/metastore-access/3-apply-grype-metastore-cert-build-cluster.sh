@@ -9,7 +9,7 @@ load_env_file $SCRIPTDIR/../tap-env
 function verify_file_exist {
   if [ ! -f "$1" ]; then
     echo "!! ERROR: $1 not found"
-    echo "  run 2-fetch-metastore-cert-view-cluster.sh first on VIEW cluster"
+    echo "  run 2-fetch-grype-metastore-cert-view-cluster.sh first on VIEW cluster"
     echo ""
     exit 1
   fi
@@ -38,7 +38,7 @@ if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
   echo ""
   echo "ERROR: $TOKEN_FILE_PATH is invalid. "
-  echo "  run 2-fetch-metastore-cert-view-cluster.sh first on VIEW cluster"
+  echo "  run 2-fetch-grype-metastore-cert-view-cluster.sh first on VIEW cluster"
   echo ""
   exit 1
 fi

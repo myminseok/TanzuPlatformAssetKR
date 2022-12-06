@@ -172,7 +172,7 @@ create tls for tap-gui:
 install-tap/multi-{profile}-cluster/22-prepare-resources.sh will run following scripts internally:
 - install-tap/https-overlay/1-apply-tap-gui-https-view-cluster.sh: will create `tap-gui-certificate` in  `tap-gui` namespace
 - install-tap/multi-view-cluster/metadata-store-read-client.sh
-- install-tap/metastore-access/2-fetch-metastore-cert-view-cluster.sh:  it will creates temp files to apply `build` cluster later on : /tmp/secret-metadata-store-read-write-client.txt, /tmp/store_ca.yaml
+- install-tap/metastore-access/2-fetch-grype-metastore-cert-view-cluster.sh:  it will creates temp files to apply `build` cluster later on : /tmp/secret-metadata-store-read-write-client.txt, /tmp/store_ca.yaml
 
 
 ### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
@@ -234,7 +234,7 @@ install-tap/multi-{profile}-cluster/21-install-tap.sh
 
 if you missed to fetch metastore cert from `view` cluster
 - switch context to `view` cluster
-- install-tap/metastore-access/2-fetch-metastore-cert-view-cluster.sh
+- install-tap/metastore-access/2-fetch-grype-metastore-cert-view-cluster.sh
 it will creates temp files to apply `build` cluster:
 - /tmp/secret-metadata-store-read-write-client.txt
 - /tmp/store_ca.yaml
@@ -243,7 +243,7 @@ run install-tap/multi-{profile}-cluster/22-prepare-resources.sh
 it will run following scripts internally:
 - install-tap/multi-build-cluster/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
 - install-tap/multi-build-cluster/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
-- install-tap/metastore-access/3-apply-metastore-cert-build-cluster.sh: apply metastore config
+- install-tap/metastore-access/3-apply-grype-metastore-cert-build-cluster.sh: apply metastore config
 - install-tap/multi-build-cluster/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `BUILD` cluster from tap-gui on `VIEW` cluster
