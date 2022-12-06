@@ -1,5 +1,7 @@
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/../common-scripts/common.sh
+load_env_file $SCRIPTDIR/../tap-env
 
 echo "This script should run on RUN cluster"
 
@@ -17,8 +19,7 @@ echo "--------------------------------------------------------------------------
 echo "  file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"
 echo ""
-echo "  - Fetch CA for app workload domain from RUN cluster"
-echo "    !!! this app workload domain CA (tanzu-system-ingress cnrs-ca) Will be created AFTER TAP update completes with 'package_overlays'"
+echo "  - ATTENTION: CA for app workload domain from RUN cluster will be created AFTER TAP update completes with 'package_overlays' "
 echo "    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
 
 

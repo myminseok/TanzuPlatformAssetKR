@@ -114,7 +114,7 @@ function trim_string {
 # ## DEPRECDATED
 # function _export_env_file {
 #    while IFS= read line || [ -n "$line" ]; do
-#       if [[ "$line" == "#"* || "$line" == "" ]]; then
+#       if [ "$line" == "#"* || "$line" == "" ]; then
 #          continue
 #       fi
 #       ## trim leading /trailing whitespace
@@ -160,7 +160,9 @@ function exit_if_not_valid_yml {
     print_help 
     exit 1
   fi
+  set +e
   RESULT=$(grep -r 'profile:' $YML || true;)
+  set -e
   if [ "x$RESULT" == "x" ]; then
     echo "ERROR: Malformed YML: $YML"
     print_help

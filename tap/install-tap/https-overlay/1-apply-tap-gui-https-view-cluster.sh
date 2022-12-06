@@ -10,7 +10,7 @@ cp $SCRIPTDIR/tap-gui-certificate.yaml.template /tmp/tap-gui-certificate.yaml
 sed -i -r "s/TAP_DOMAIN/${TAP_DOMAIN}/g" /tmp/tap-gui-certificate.yaml
 kubectl apply -f /tmp/tap-gui-certificate.yaml -o yaml  --dry-run=client -n tap-gui  | kubectl apply -f-
 
-echo "ATTENTION: wait for seconds for certificate 'tap-gui-cert' is created"
+echo "ATTENTION: wait for few seconds for certificate 'tap-gui-cert' is created"
 echo "    kubectl get secret -n tap-gui tap-gui-cert"
 echo "    kubectl get app -A"
 
@@ -18,7 +18,9 @@ sleep 2
 ## verify
 echo "Verifying ... certificate 'tap-gui-cert' "
 echo "kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}'"
+set +e
 TAP_GUI_CERT=$(kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d)
+set -e
 if [[ "x$TAP_GUI_CERT" == "x" ]]; then
   echo ""
   echo "ATTENTION: NOT FOUND certificate 'tap-gui-cert' "
@@ -29,7 +31,7 @@ if [[ "x$TAP_GUI_CERT" == "x" ]]; then
 fi
 echo "$TAP_GUI_CERT" > /tmp/tap-gui-cert.txt
 openssl x509 -text -in  /tmp/tap-gui-cert.txt | grep DNS
-echo "certificate 'tap-gui-cert' is saved to /tmp/tap-gui-cert.txt "
+echo "OK: certificate 'tap-gui-cert' is saved to /tmp/tap-gui-cert.txt "
 
 
 

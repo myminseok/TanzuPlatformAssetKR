@@ -25,8 +25,10 @@ set -e
 kubectl create cm ${CONFIG_MAP_NAME}  -n $DEVELOPER_NAMESPACE --from-file $REGISTRY_CA_FILE_PATH 
 
 ## verify
+set +e
 DATA=$(kubectl get cm ${CONFIG_MAP_NAME} -n $DEVELOPER_NAMESPACE -o jsonpath='{.data.harbor\.crt}')
-if [[ "x$DATA" == "x" ]]; then
+set -e
+if [ "x$DATA" == "x" ]; then
   echo ""
   echo "!! ERROR: ${CONFIG_MAP_NAME} is invalid. "
   echo "!! ERROR: kubectl get cm ${CONFIG_MAP_NAME}  -n $DEVELOPER_NAMESPACE  -o yaml"

@@ -37,7 +37,7 @@ verify_file_exist $TOKEN_FILE_PATH
 AUTH_TOKEN=$(cat $TOKEN_FILE_PATH)
 
 ## verify
-if [[ "x$AUTH_TOKEN" == "x" ]]; then
+if [ "x$AUTH_TOKEN" == "x" ]; then
   echo ""
   echo ""
   echo "ERROR: NOT found $TOKEN_FILE_PATH "

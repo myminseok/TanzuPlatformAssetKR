@@ -2,8 +2,9 @@
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 echo "This script should run on VIEW cluster"
 
+set +e
 CA_CERT=$(kubectl get secret -n metadata-store ingress-cert -o json | jq -r ".data.\"ca.crt\"")
-
+set -e
 ## verify
 if [[ "x$CA_CERT" == "x" ]]; then
   echo ""
@@ -27,7 +28,9 @@ EOF
 
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
 ## By default, Supply Chain Security Tools - Store comes with read-write service account installed. This service account is cluster-wide.
+set +e
 AUTH_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-store -o jsonpath="{.data.token}" | base64 -d)
+set -e
 ## verify
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
