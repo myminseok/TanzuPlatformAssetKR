@@ -157,6 +157,18 @@ for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
+it will show current k8s context.
+```
+[ENV] Loading env from ~/.tapconfig
+[ENV] Using env from '/Users/kminseok/_dev/tanzu-main/homelab/tap/tap-env'
+Current cluster: view-admin@view
+Are you sure the target cluster 'view-admin@view'? (Y/y)
+```
+you may ignore the k8s context confirm with `-y` option. it is the same for all other scripts.
+```
+install-tap/multi-{profile}-cluster/21-install-tap.sh -y
+```
+
 it will use tap-values template file under the `TAP_ENV_DIR` and it will replace values from the `TAP_ENV` file.
 
 or you may specify other file:
@@ -165,6 +177,12 @@ install-tap/multi-{profile}-cluster/21-install-tap.sh -f /path/to/my-values.yml
 ```
 please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
 
+
+you may debug script internal steps  with `--debug` option. it is the same for all other scripts.
+```
+install-tap/multi-{profile}-cluster/21-install-tap.sh  --debug
+```
+
 ### prepare resources before updating TAP (22-prepare-resources.sh)
 
 verify metastore access:
@@ -172,7 +190,6 @@ verify metastore access:
 run install-tap/metastore-access/1-check-metastore-health-view-cluster-manually.sh
 
 run `install-tap/multi-{profile}-cluster/22-prepare-resources.sh`
-
 
 install-tap/multi-{profile}-cluster/22-prepare-resources.sh will run following scripts internally:
 - install-tap/https-overlay/1-apply-tap-gui-https-view-cluster.sh: will create `tap-gui-certificate` in  `tap-gui` namespace
@@ -189,6 +206,11 @@ file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
 api_auto_registration.ca_cert_data"
 - Update CA for app workload domain from RUN cluster will be created AFTER TAP update completes with 'package_overlays' 
 kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+```
+
+you may ignore the k8s context confirm with `-y` option.
+```
+install-tap/multi-{profile}-cluster/22-prepare-resources.sh -y
 ```
 
 ### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
@@ -215,6 +237,12 @@ or you may specify other file:
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
+
+
+you may ignore the k8s context confirm with `-y` option.
+```
+install-tap/multi-{profile}-cluster/23-update-tap.sh -y
+```
 
 ### verify tap updates (24-verify-resources.sh)
 
