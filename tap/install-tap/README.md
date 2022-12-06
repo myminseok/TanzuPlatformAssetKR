@@ -120,7 +120,8 @@ ref: https://carvel.dev/kapp-controller/docs/v0.42.0/controller-config/
 
 on management cluster
 ```
-kubectl --context mgmt-admin@mgmt get secret build-kapp-controller-data-values -o jsonpath='{.data.values\.yaml}' | base64 -d
+kubectl --context mgmt-admin@mgmt get secret build-kapp-controller-data-values \
+-o jsonpath='{.data.values\.yaml}' | base64 -d
 ```
 and on workload cluster
 ```
@@ -433,12 +434,14 @@ it will check following:
 ### check CA for app workload domain on RUN cluster
 CA for app workload domain on RUN cluster will be created AFTER TAP update completes with 'package_overlays'(23-update-tap.sh)
 ```
- kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+ kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml \
+   -ojsonpath='{.data.ca\.crt}' | base64 -d
 ```
 
 ### check the cnrs updates to 'config-network' configmap in knative-serving namespace.
 ```
-kubectl get cm config-network -n knative-serving -o yaml | grep 'default-external-scheme: https'
+kubectl get cm config-network -n knative-serving -o yaml \
+  | grep 'default-external-scheme: https'
 ```
 if not updated, then
 - 1. manually delete configmap: 
@@ -503,8 +506,10 @@ kubectl get Pipeline -A
 
 generate git token and gitops secrets
 ```
-cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
+cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template \
+  /any/path/gitops-ssh-secret-basic.yml"
 edit /any/path/gitops-ssh-secret-basic.yml
+
 kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
 ```
 
@@ -521,7 +526,8 @@ setup developer namespace
 
 apply gitops secrets (the same from previous step)
 ```
-cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template /any/path/gitops-ssh-secret-basic.yml"
+cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template \
+  /any/path/gitops-ssh-secret-basic.yml"
 edit /any/path/gitops-ssh-secret-basic.yml
 kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
 ```
