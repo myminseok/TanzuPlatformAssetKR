@@ -7,7 +7,7 @@ CA_CERT=$(kubectl get secret -n metadata-store ingress-cert -o json | jq -r ".da
 ## verify
 if [[ "x$CA_CERT" == "x" ]]; then
   echo ""
-  echo "ERROR: secret 'ingress-cert' is invalid. "
+  echo "ERROR: NOT FOUND secret 'ingress-cert'. "
   echo "  kubectl get secret -n metadata-store ingress-cert -o json "
   echo ""
   exit 1
@@ -32,7 +32,7 @@ AUTH_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-st
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
   echo ""
-  echo "ERROR: secrets 'metadata-store-read-write-client' is invalid. "
+  echo "ERROR: NOT FOUND secret 'metadata-store-read-write-client' "
   echo "   kubectl get secrets metadata-store-read-write-client -n metadata-store "
   echo ""
   exit 1
