@@ -44,10 +44,10 @@ function print_help_customizing {
 function run_script {
     SCRIPT_FILE=$1
     echo ""
-    echo "===== BEGIN $SCRIPT_FILE =====""
+    echo "===== BEGIN    $SCRIPT_FILE ====="
     chmod +x $SCRIPT_FILE
     $SCRIPT_FILE
-    echo =====" COMPLETE $SCRIPT_FILE ====="
+    echo "===== COMPLETE $SCRIPT_FILE ====="
 }
 
 function setup_envconfig {
