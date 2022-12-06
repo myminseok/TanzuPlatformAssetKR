@@ -100,7 +100,7 @@ do following before relocate packages (check TAP_ENV)
 - docker login $IMGPKG_REGISTRY_HOSTNAME
 - create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 
-### Reloaate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
+### Relocate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
 relocate images to image registry(check TAP_ENV)
 
 # Checks TKG cluster Readiness
