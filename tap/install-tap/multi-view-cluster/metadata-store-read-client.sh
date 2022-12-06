@@ -8,7 +8,7 @@ load_env_file $SCRIPTDIR/../tap-env
 
 kubectl apply -f $SCRIPTDIR/metadata-store-read-client.yml
 echo "---------------------------------------------------------------------------------------"
-echo "ATTENTION: Manully copy following info to VIEW cluster"
+echo "TODO: Manully copy following info to VIEW cluster"
 echo "---------------------------------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-view-2nd-overlay-TEMPLATE.yml"
 echo "  > tap_gui.app_config.proxy./metadata-store.headers.Authorization"
