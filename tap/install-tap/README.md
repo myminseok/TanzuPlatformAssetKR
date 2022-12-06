@@ -126,9 +126,9 @@ kubectl get cm -n tkg-system kapp-controller-config -o yaml
 Please note that, if you want to change profile, for example one cluster already installed `build` profile and wants to change to `run` profile, then it would be safe to delete the existing tap first before installing new tap profile as SOMETIMES the CR is not properly installed.
 may use install-tap/99-delete-tap.sh.
 
-# ===============================
+=======================================================================================
 # Install TAP on `VIEW` cluster
-# -------------------------------
+
 
 ### locate k8s context
 
@@ -260,9 +260,8 @@ Error from server (NotFound): configmaps "config-network" not found
 ### verify tap-gui access.
 open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
 
-# ===============================
+=======================================================================================
 # Install TAP on `BUILD` cluster
-# -------------------------------
 
 ### locate k8s context
 
@@ -357,9 +356,8 @@ install-tap/33-status-build-service.sh
 all builder should be Ready status.
 
 
-# ===============================
+=======================================================================================
 # Install TAP on `RUN` cluster
-# -------------------------------
 
 ### locate k8s context
 
@@ -449,9 +447,8 @@ kubectl delete cm config-network -n knative-serving
 ```
 
 
-# ===============================
+=======================================================================================
 # Install TAP on `ITERATE` cluster
-# -------------------------------
 
 ### locate k8s context
 
@@ -484,9 +481,8 @@ it will check following:
 
 see the the same section(`verify update and fetch data(24-verify-resources.sh`) on RUN cluster
 
-# ===============================
+=======================================================================================
 # Testing Sample workload
-# -------------------------------
 
 ### Deploy workload on `BUILD` cluster
 setup developer namespace
