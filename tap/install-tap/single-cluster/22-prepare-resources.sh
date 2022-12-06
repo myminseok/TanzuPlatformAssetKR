@@ -16,6 +16,3 @@ $SCRIPTDIR/../multi-build-cluster/scanning-ca-overlay.sh
 
 echo "$SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh"
 $SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh
-
-echo "$SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh"
-$SCRIPTDIR/../multi-build-cluster/tap-gui-viewer-service-account-rbac.sh

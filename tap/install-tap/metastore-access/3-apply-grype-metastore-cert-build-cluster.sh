@@ -18,6 +18,20 @@ function verify_file_exist {
 set +e
 kubectl create ns metadata-store-secrets
 set -e
+
+cat <<EOF > /tmp/store_ca.yaml
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: store-ca-cert
+  namespace: metadata-store-secrets
+data:
+  ca.crt: $CA_CERT
+EOF
+
+
 STORE_FILE_PATH="/tmp/store_ca.yaml"
 
 verify_file_exist $STORE_FILE_PATH
@@ -27,6 +41,7 @@ kubectl delete -f $STORE_FILE_PATH
 set -e
 kubectl apply -f $STORE_FILE_PATH
 
+## comes from 2-fetch-grype-metastore-cert-view-cluster.sh on VIEW cluster
 TOKEN_FILE_PATH="/tmp/secret-metadata-store-read-write-client.txt"
 
 verify_file_exist $TOKEN_FILE_PATH
@@ -37,8 +52,8 @@ AUTH_TOKEN=$(cat $TOKEN_FILE_PATH)
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
   echo ""
-  echo "ERROR: $TOKEN_FILE_PATH is invalid. "
-  echo "  run 2-fetch-grype-metastore-cert-view-cluster.sh first on VIEW cluster"
+  echo "ERROR: NOT found $TOKEN_FILE_PATH "
+  echo "  run 2-fetch-grype-metastore-cert-view-cluster.sh on VIEW cluster"
   echo ""
   exit 1
 fi

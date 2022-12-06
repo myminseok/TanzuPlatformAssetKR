@@ -4,7 +4,7 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ## only for view cluster, full cluster
 
 kubectl apply -f $SCRIPTDIR/tap-gui-certificate.yaml -n tap-gui
-echo "ATTENTION: wait few minutes for certificate 'tap-gui-cert' created"
+echo "ATTENTION: wait for seconds for certificate 'tap-gui-cert' is created"
 echo "    kubectl get secret -n tap-gui tap-gui-cert"
 echo "    kubectl get app -A"
 
