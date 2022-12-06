@@ -8,10 +8,13 @@ set -e
 ## verify
 if [[ "x$CA_CERT" == "x" ]]; then
   echo ""
-  echo "ERROR: NOT FOUND secret 'ingress-cert'. "
-  echo "  kubectl get secret -n metadata-store ingress-cert -o json "
+  echo "  [ERROR] NOT FOUND secret 'ingress-cert'. "
+  echo "    kubectl get secret -n metadata-store ingress-cert -o json "
   echo ""
   exit 1
+else
+  echo "  [OK] secret ingress-cert -n metadata-store is created "
+  echo "    kubectl get secret -n metadata-store ingress-cert -o json "
 fi
 
 cat <<EOF > /tmp/store_ca.yaml
@@ -35,11 +38,14 @@ set -e
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
   echo ""
-  echo "ERROR: NOT FOUND secret 'metadata-store-read-write-client' "
+  echo "  [ERROR] NOT FOUND secret 'metadata-store-read-write-client' "
   echo "   kubectl get secrets metadata-store-read-write-client -n metadata-store "
   echo "check if TAP is installed successfully"
   echo "   kubectl get app -A"
   exit 1
+else
+  echo "  [OK] secret 'metadata-store-read-write-client' -n metadata-store found "
+  echo "     kubectl get secrets metadata-store-read-write-client -n metadata-store "
 fi
 echo "$AUTH_TOKEN" > /tmp/secret-metadata-store-read-write-client.txt
 cat /tmp/secret-metadata-store-read-write-client.txt

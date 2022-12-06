@@ -14,12 +14,8 @@ kubectl create secret generic cnrs-default-tls -n tap-install \
 kubectl get secret  cnrs-default-tls -n tap-install
 
 echo "---------------------------------------------------------------------------------------"
-echo "[MANUAL]:  Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
+echo "[ATTENTION]:  CA for app workload domain on RUN cluster will be created AFTER TAP update completes with 'package_overlays'"
 echo "---------------------------------------------------------------------------------------"
-echo "  file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
-echo "    api_auto_registration.ca_cert_data"
-echo ""
-echo "  - Update CA for app workload domain from RUN cluster will be created AFTER TAP update completes with 'package_overlays' "
 echo "    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
 
 

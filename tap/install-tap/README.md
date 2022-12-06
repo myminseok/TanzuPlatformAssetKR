@@ -136,23 +136,20 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### 11-setup-repository-tap.sh
 
-### edit tap-values-{profile}-1st-TEMPLATE.yml
+### (optional) edit tap-values-{profile}-1st-TEMPLATE.yml
+
 ```
-install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
+$TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
+>  TAP_ENV_DIR: defined in  ~/.tapconfig 
+original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
 
 ### install tap with profile (21-install-tap.sh)
 for installing cert-manager, ingress with minimum default configuratons
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
-it will use tap-values file under the `TAP_ENV_DIR` and it will replace values from the `TAP_ENV` file to tap-values.yml
-
-cat ~/.tapconfig 
-```
-export TAP_ENV=/home/ubuntu/tap-config/tap-env
-export TAP_ENV_DIR=/home/ubuntu/tap-config
-```
+it will use tap-values template file under the `TAP_ENV_DIR` and it will replace values from the `TAP_ENV` file.
 
 or you may specify other file:
 ```
@@ -163,11 +160,11 @@ please note that the replacement only affects to the only file with filename inc
 ### prepare resources before updating TAP (22-prepare-resources.sh)
 
 verify metastore access:
-- tanzu insight plugin should be installed: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html
-- install-tap/metastore-access/1-check-metastore-health-view-cluster-manually.sh
+- [tanzu insight plugin](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html) should be installed: 
+run install-tap/metastore-access/1-check-metastore-health-view-cluster-manually.sh
 
-create tls for tap-gui:
-- install-tap/multi-{profile}-cluster/22-prepare-resources.sh
+run `install-tap/multi-{profile}-cluster/22-prepare-resources.sh`
+
 
 install-tap/multi-{profile}-cluster/22-prepare-resources.sh will run following scripts internally:
 - install-tap/https-overlay/1-apply-tap-gui-https-view-cluster.sh: will create `tap-gui-certificate` in  `tap-gui` namespace
@@ -175,14 +172,27 @@ install-tap/multi-{profile}-cluster/22-prepare-resources.sh will run following s
 - install-tap/metastore-access/2-fetch-grype-metastore-cert-view-cluster.sh:  it will creates temp files to apply `build` cluster later on : /tmp/secret-metadata-store-read-write-client.txt, /tmp/store_ca.yaml
 
 
-### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
-configure any changes from previous step
+then records any output with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
 ```
-install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+---------------------------------------------------------------------------------------
+[MANUAL]:  Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster
+---------------------------------------------------------------------------------------
+file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
+api_auto_registration.ca_cert_data"
+- Update CA for app workload domain from RUN cluster will be created AFTER TAP update completes with 'package_overlays' 
+kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
 ```
 
+### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
+configure any changes from previous step
+```
+$TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+```
+>  TAP_ENV_DIR: defined in  ~/.tapconfig 
+
 ### update tap with VIEW profile (23-update-tap.sh)
-apply changes until successful.
+apply changes. repeats until successful.
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh
 ```
@@ -192,17 +202,57 @@ it will combine following two file by default:
 
 it will use yml file under the `TAP_ENV_DIR` and it will replace values from the `TAP_ENV` file to tap-values.yml
 
-cat ~/.tapconfig 
-```
-export TAP_ENV=/home/ubuntu/tap-config/tap-env
-export TAP_ENV_DIR=/home/ubuntu/tap-config
-```
-
 or you may specify other file:
 ```
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 please note that the replacement only affects to the only file with filename included 'TEMPLATE' such as tap-values-{profile}-1st-TEMPLATE.yml.
+
+### verify tap updates (24-verify-resources.sh)
+
+run `24-verify-resources.sh` to check the change applied. output should be with `OK`.
+```
+[ENV] Loading env from ~/.tapconfig
+[ENV] Using env from '/data/tap-config/tap-env'
+Current cluster: build-admin@build
+=======================================================================================
+[RUN-BEGIN] /data/TanzuPlatformAssetKR/tap/install-tap/single-cluster/../https-overlay/2-fetch-cnrs-run-cluster.sh
+
+[ENV] Loading env from ~/.tapconfig
+[ENV] Using env from '/data/tap-config/tap-env'
+---------------------------------------------------------------------------------------
+Checking cnrs updates(https) to 'config-network' -n knative-serving
+  OK:  applied the cnrs updates to 'config-network' -n knative-serving
+---------------------------------------------------------------------------------------
+Checking if secret 'cnrs-ca' -n tanzu-system-ingress is created ...
+  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+  OK:  secret 'cnrs-ca' -n tanzu-system-ingress is created
+```
+
+if there is 'ERROR' or 'WARNING', follow instruction from the output.
+```
+[ENV] Loading env from ~/.tapconfig
+[ENV] Using env from '/data/tap-config/tap-env'
+Current cluster: build-admin@build
+=======================================================================================
+[RUN-BEGIN] /data/TanzuPlatformAssetKR/tap/install-tap/single-cluster/../https-overlay/2-fetch-cnrs-run-cluster.sh
+
+[ENV] Loading env from ~/.tapconfig
+[ENV] Using env from '/data/tap-config/tap-env'
+---------------------------------------------------------------------------------------
+Checking cnrs updates(https) to 'config-network' -n knative-serving
+Error from server (NotFound): configmaps "config-network" not found
+
+  WARNING: Not Applied the cnrs updates to 'config-network' -n knative-serving
+    kubectl get cm config-network -n knative-serving -o yaml | grep 'default-external-scheme: https'
+
+  if not updated, then
+  1. manually delete configmap:
+    kubectl delete cm config-network -n knative-serving
+  2. reconcine cnrs:
+    ../29-reconcile-component.sh cnrs
+
+```
 
 ### verify tap-gui access.
 open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
