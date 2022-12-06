@@ -12,8 +12,12 @@ set -e
 
 cp $SCRIPTDIR/grype-metadatastore.yml.template /tmp/grype-metadatastore.yml
 sed -i -r "s/DEVELOPER_NAMESPACE/${DEVELOPER_NAMESPACE}/g" /tmp/grype-metadatastore.yml
+
+set +e
+kubectl delete -f /tmp/grype-metadatastore.yml
+set -e
 kubectl apply -f /tmp/grype-metadatastore.yml
 echo ""
 ## verify
 kubectl get secretexports -A
-kubectl get secretexports -n metadata-store-secrets store-auth-token -o yaml
+#kubectl get secretexports -n metadata-store-secrets store-auth-token -o yaml

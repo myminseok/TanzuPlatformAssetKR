@@ -23,9 +23,9 @@ STORE_FILE_PATH="/tmp/store_ca.yaml"
 
 verify_file_exist $STORE_FILE_PATH
 
-# set +e
-# kubectl delete -f $STORE_FILE_PATH
-# set -e
+set +e
+kubectl delete -f $STORE_FILE_PATH
+set -e
 kubectl apply -f $STORE_FILE_PATH \
   --dry-run=client -o yaml  | kubectl apply -f -
 
@@ -48,9 +48,9 @@ else
   echo "  [OK] found $TOKEN_FILE_PATH "
 fi
 
-# set +e
-# kubectl delete secret  store-auth-token -n metadata-store-secrets
-# set -e
+set +e
+kubectl delete secret  store-auth-token -n metadata-store-secrets
+set -e
 kubectl create secret generic store-auth-token \
   --from-literal=auth_token=$AUTH_TOKEN -n metadata-store-secrets \
   --dry-run=client -o yaml  | kubectl apply -f -
