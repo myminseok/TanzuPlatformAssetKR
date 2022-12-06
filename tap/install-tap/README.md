@@ -128,7 +128,7 @@ may use install-tap/99-delete-tap.sh.
 
 # ===============================
 # Install TAP on `VIEW` cluster
-# ===============================
+# -------------------------------
 
 ### locate k8s context
 
@@ -262,7 +262,7 @@ open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
 
 # ===============================
 # Install TAP on `BUILD` cluster
-# ===============================
+# -------------------------------
 
 ### locate k8s context
 
@@ -359,7 +359,7 @@ all builder should be Ready status.
 
 # ===============================
 # Install TAP on `RUN` cluster
-# ===============================
+# -------------------------------
 
 ### locate k8s context
 
@@ -451,7 +451,7 @@ kubectl delete cm config-network -n knative-serving
 
 # ===============================
 # Install TAP on `ITERATE` cluster
-# ===============================
+# -------------------------------
 
 ### locate k8s context
 
@@ -484,7 +484,10 @@ it will check following:
 
 see the the same section(`verify update and fetch data(24-verify-resources.sh`) on RUN cluster
 
-# Test Sample workload
+# ===============================
+# Testing Sample workload
+# -------------------------------
+
 ### Deploy workload on `BUILD` cluster
 setup developer namespace
 - install-tap/70-setup-developer-namespace-build-full-cluster.sh
