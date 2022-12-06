@@ -1,7 +1,7 @@
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-## only for run cluster, full cluster
+echo "This script should run on RUN cluster"
 
 kubectl create secret generic cnrs-default-tls -n tap-install \
   -o yaml \

@@ -15,6 +15,6 @@ metadata:
 spec:
  secretName: tap-gui-cert
  dnsNames:
- - tap-gui.tap.h2o-2-2257.h2o.vmware.com
+ - tap-gui.TAP_DOMAIN
  issuerRef:
    name: ca-issuer

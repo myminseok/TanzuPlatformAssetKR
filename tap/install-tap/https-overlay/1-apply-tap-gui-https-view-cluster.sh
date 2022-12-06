@@ -1,9 +1,15 @@
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/../common-scripts/common.sh
+load_env_file $SCRIPTDIR/../tap-env
 
-## only for view cluster, full cluster
+echo "This script should run on VIEW cluster"
 
-kubectl apply -f $SCRIPTDIR/tap-gui-certificate.yaml -n tap-gui
+## replace TAP-DOMAIN
+cp $SCRIPTDIR/tap-gui-certificate.yaml.template /tmp/tap-gui-certificate.yaml
+sed -i -r "s/TAP_DOMAIN/${TAP_DOMAIN}/g" /tmp/tap-gui-certificate.yaml
+kubectl apply -f /tmp/tap-gui-certificate.yaml -n tap-gui
+
 echo "ATTENTION: wait for seconds for certificate 'tap-gui-cert' is created"
 echo "    kubectl get secret -n tap-gui tap-gui-cert"
 echo "    kubectl get app -A"
