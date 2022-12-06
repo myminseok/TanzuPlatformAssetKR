@@ -43,7 +43,7 @@ else
 fi
 
 echo "---------------------------------------------------------------------------------------"
-echo "TODO: Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
+echo "[MANUAL]: Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
 echo "---------------------------------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"
