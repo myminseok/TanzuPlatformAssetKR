@@ -244,6 +244,7 @@ function confirm_target_k8s {
       echo "Quitting"
       exit 1
     fi
+    echo ""
 }
 
 function verify_tap_env_param {
