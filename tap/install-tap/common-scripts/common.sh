@@ -44,7 +44,6 @@ function print_help_customizing {
 function run_script {
     SCRIPT_FILE=$1
     chmod +x $SCRIPT_FILE
-    echo ""
     echo "======================================================================================="
     echo "[RUN-BEGIN] $@"
     echo ""
