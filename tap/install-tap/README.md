@@ -17,7 +17,10 @@ Following scripts are compatible for TAP `1.3` and only tested on
 - Ubuntu
 - Mac OS
 
-# Setup Jumpbox
+=======================================================================================
+# Procedure
+
+## Setup Jumpbox
 To run this scripts conveniently, it would be good to have a config file.
 
 ### Prerequitest tools on Jumpbox.
@@ -26,7 +29,7 @@ To run this scripts conveniently, it would be good to have a config file.
 - cert-manager, contour will be installed as part of TAP insallation.
 
 
-## Setup TAP_ENV (01-setup-tapconfig.sh)
+### Setup TAP_ENV (01-setup-tapconfig.sh)
 
 to seperate config file from scripts, this script uses `~/.tapconfig` file and `TAP_ENV`, `TAP_ENV_DIR` environment variables
 
@@ -92,9 +95,9 @@ TAP_BIN=/data/tapbin-1.3
 and run the scripts 02-install-tanzu-tap-cli.sh.
 
 
-# Relocate TAP packages to local image repository
+## Relocate TAP packages to local image repository
 
-###  Relocate tap packages (03-relocate-images-tap.sh)
+### Relocate tap packages (03-relocate-images-tap.sh)
 do following before relocate packages (check TAP_ENV)
 - docker login registry.tanzu.vmware.com
 - docker login $IMGPKG_REGISTRY_HOSTNAME
@@ -103,7 +106,9 @@ do following before relocate packages (check TAP_ENV)
 ### Relocate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
 relocate images to image registry(check TAP_ENV)
 
-# Checks TKG cluster Readiness
+=======================================================================================
+
+## Checks TKG cluster Readiness
 run following checks for All Workload cluster (View, Build, Run, Iterate)
 
 ### check harbor access from TKG cluster
@@ -122,13 +127,12 @@ and on workload cluster
 kubectl get cm -n tkg-system kapp-controller-config -o yaml
 ```
 
-# NOTE: Changing Profile
+### NOTE: Changing Profile
 Please note that, if you want to change profile, for example one cluster already installed `build` profile and wants to change to `run` profile, then it would be safe to delete the existing tap first before installing new tap profile as SOMETIMES the CR is not properly installed.
 may use install-tap/99-delete-tap.sh.
 
 =======================================================================================
-# Install TAP on `VIEW` cluster
-
+## Install TAP on `VIEW` cluster
 
 ### locate k8s context
 
@@ -261,7 +265,7 @@ Error from server (NotFound): configmaps "config-network" not found
 open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
 
 =======================================================================================
-# Install TAP on `BUILD` cluster
+## Install TAP on `BUILD` cluster
 
 ### locate k8s context
 
@@ -357,7 +361,7 @@ all builder should be Ready status.
 
 
 =======================================================================================
-# Install TAP on `RUN` cluster
+## Install TAP on `RUN` cluster
 
 ### locate k8s context
 
@@ -446,9 +450,8 @@ kubectl delete cm config-network -n knative-serving
 ../29-reconcile-component.sh cnrs
 ```
 
-
 =======================================================================================
-# Install TAP on `ITERATE` cluster
+## Install TAP on `ITERATE` cluster
 
 ### locate k8s context
 
@@ -482,7 +485,7 @@ it will check following:
 see the the same section(`verify update and fetch data(24-verify-resources.sh`) on RUN cluster
 
 =======================================================================================
-# Testing Sample workload
+## Testing Sample workload
 
 ### Deploy workload on `BUILD` cluster
 setup developer namespace
