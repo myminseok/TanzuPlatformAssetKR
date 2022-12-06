@@ -11,7 +11,7 @@ if [[ "x$TAP_GUI_CERT" == "x" ]]; then
   echo ""
   echo "ERROR: NOT FOUND certificate 'tap-gui-cert' "
   echo "   kubectl get secret -n tap-gui tap-gui-cert"
-  echo "   check if TAP is installed"
+  echo "check if TAP is installed successfully"
   echo "   kubectl get app -A"
   exit 1
 fi

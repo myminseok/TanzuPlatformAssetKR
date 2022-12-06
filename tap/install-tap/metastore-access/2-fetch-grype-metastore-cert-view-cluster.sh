@@ -27,6 +27,8 @@ data:
 EOF
 cat /tmp/store_ca.yaml
 
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
+## By default, Supply Chain Security Tools - Store comes with read-write service account installed. This service account is cluster-wide.
 AUTH_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-store -o jsonpath="{.data.token}" | base64 -d)
 ## verify
 if [[ "x$AUTH_TOKEN" == "x" ]]; then
@@ -34,7 +36,8 @@ if [[ "x$AUTH_TOKEN" == "x" ]]; then
   echo ""
   echo "ERROR: NOT FOUND secret 'metadata-store-read-write-client' "
   echo "   kubectl get secrets metadata-store-read-write-client -n metadata-store "
-  echo ""
+  echo "check if TAP is installed successfully"
+  echo "   kubectl get app -A"
   exit 1
 fi
 echo "$AUTH_TOKEN" > /tmp/secret-metadata-store-read-write-client.txt
