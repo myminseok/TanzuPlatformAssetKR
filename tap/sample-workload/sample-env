@@ -1,6 +1,6 @@
 
 TAP_DOMAIN="tap.lab.pcfdemo.net"
-#DEVELOPER_NAMESPACE="demo-app2"
-DEVELOPER_NAMESPACE="my-space2"
+#DEVELOPER_NAMESPACE="demo-app"
+DEVELOPER_NAMESPACE="my-space"
 WORKLOAD_NAME="tanzu-java-web-app"
 
