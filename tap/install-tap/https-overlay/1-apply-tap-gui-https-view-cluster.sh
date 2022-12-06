@@ -8,7 +8,7 @@ echo "This script should run on VIEW cluster"
 ## replace TAP-DOMAIN
 cp $SCRIPTDIR/tap-gui-certificate.yaml.template /tmp/tap-gui-certificate.yaml
 sed -i -r "s/TAP_DOMAIN/${TAP_DOMAIN}/g" /tmp/tap-gui-certificate.yaml
-kubectl apply -f /tmp/tap-gui-certificate.yaml -n tap-gui
+kubectl apply -f /tmp/tap-gui-certificate.yaml -o yaml  --dry-run=client -n tap-gui  | kubectl apply -f-
 
 echo "ATTENTION: wait for seconds for certificate 'tap-gui-cert' is created"
 echo "    kubectl get secret -n tap-gui tap-gui-cert"

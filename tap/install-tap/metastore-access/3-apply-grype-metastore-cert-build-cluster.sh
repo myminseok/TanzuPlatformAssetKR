@@ -19,27 +19,15 @@ set +e
 kubectl create ns metadata-store-secrets
 set -e
 
-cat <<EOF > /tmp/store_ca.yaml
----
-apiVersion: v1
-kind: Secret
-type: Opaque
-metadata:
-  name: store-ca-cert
-  namespace: metadata-store-secrets
-data:
-  ca.crt: $CA_CERT
-EOF
-
-
 STORE_FILE_PATH="/tmp/store_ca.yaml"
 
 verify_file_exist $STORE_FILE_PATH
 
-set +e
-kubectl delete -f $STORE_FILE_PATH
-set -e
-kubectl apply -f $STORE_FILE_PATH
+# set +e
+# kubectl delete -f $STORE_FILE_PATH
+# set -e
+kubectl apply -f $STORE_FILE_PATH \
+  --dry-run=client -o yaml  | kubectl apply -f -
 
 ## comes from 2-fetch-grype-metastore-cert-view-cluster.sh on VIEW cluster
 TOKEN_FILE_PATH="/tmp/secret-metadata-store-read-write-client.txt"
@@ -58,8 +46,10 @@ if [[ "x$AUTH_TOKEN" == "x" ]]; then
   exit 1
 fi
 
-set +e
-kubectl delete secret  store-auth-token -n metadata-store-secrets
-set -e
+# set +e
+# kubectl delete secret  store-auth-token -n metadata-store-secrets
+# set -e
 kubectl create secret generic store-auth-token \
-  --from-literal=auth_token=$AUTH_TOKEN -n metadata-store-secrets
+  --from-literal=auth_token=$AUTH_TOKEN -n metadata-store-secrets \
+  --dry-run=client -o yaml  | kubectl apply -f -
+
