@@ -2,18 +2,11 @@
 export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/prepare-resources.sh $@
 
-chmod +x $SCRIPTDIR/*.sh
-chmod +x $SCRIPTDIR/../metastore-access/*.sh
+run_script "$SCRIPTDIR/grype-metastore.sh"
 
-echo "$SCRIPTDIR/grype-metastore.sh"
-$SCRIPTDIR/grype-metastore.sh
+run_script "$SCRIPTDIR/scanning-ca-overlay.sh"
 
-echo "$SCRIPTDIR/scanning-ca-overlay.sh"
-$SCRIPTDIR/scanning-ca-overlay.sh
+run_script "$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-cert-build-cluster.sh"
 
-echo "$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-cert-build-cluster.sh"
-$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-cert-build-cluster.sh
-
-echo "$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh"
-$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh
+run_script "$SCRIPTDIR/tap-gui-viewer-service-account-rbac.sh"
 
