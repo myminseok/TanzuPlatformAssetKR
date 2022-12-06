@@ -6,6 +6,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
+echo "This script should run on VIEW cluster"
+
 kubectl apply -f $SCRIPTDIR/metadata-store-read-client.yml
 echo "---------------------------------------------------------------------------------------"
 echo "[MANUAL]: Manully copy following info to VIEW cluster"

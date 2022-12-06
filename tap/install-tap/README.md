@@ -124,7 +124,9 @@ kubectl get cm -n tkg-system kapp-controller-config -o yaml
 Please note that, if you want to change profile, for example one cluster already installed `build` profile and wants to change to `run` profile, then it would be safe to delete the existing tap first before installing new tap profile as SOMETIMES the CR is not properly installed.
 may use install-tap/99-delete-tap.sh.
 
+# ===============================
 # Install TAP on `VIEW` cluster
+# ===============================
 
 ### locate k8s context
 
@@ -136,8 +138,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### 11-setup-repository-tap.sh
 
-### (optional) edit tap-values-{profile}-1st-TEMPLATE.yml
-
+### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
 $TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
@@ -168,7 +169,7 @@ run `install-tap/multi-{profile}-cluster/22-prepare-resources.sh`
 
 install-tap/multi-{profile}-cluster/22-prepare-resources.sh will run following scripts internally:
 - install-tap/https-overlay/1-apply-tap-gui-https-view-cluster.sh: will create `tap-gui-certificate` in  `tap-gui` namespace
-- install-tap/multi-view-cluster/metadata-store-read-client.sh
+- install-tap/metastore-access/metadata-store-read-client-view-cluster.sh
 - install-tap/metastore-access/2-fetch-grype-metastore-cert-view-cluster.sh:  it will creates temp files to apply `build` cluster later on : /tmp/secret-metadata-store-read-write-client.txt, /tmp/store_ca.yaml
 
 
@@ -257,7 +258,9 @@ Error from server (NotFound): configmaps "config-network" not found
 ### verify tap-gui access.
 open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
 
+# ===============================
 # Install TAP on `BUILD` cluster
+# ===============================
 
 ### locate k8s context
 
@@ -269,10 +272,13 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### 11-setup-repository-tap.sh
 
-### edit tap-values-{profile}-1st-TEMPLATE.yml
+### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
-install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
+$TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
+>  TAP_ENV_DIR: defined in  ~/.tapconfig 
+original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
+
 
 ### install tap with profile (21-install-tap.sh)
 for installing cert-manager, ingress with minimum default configuratons
@@ -301,10 +307,23 @@ in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-
 and and locate `VIEW` cluster and update the tap on `VIEW` cluster
 - install-tap/multi-view-cluster/23-update-tap.sh
 
-### Edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
 configure any changes from previous step
 ```
-install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+$TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+```
+>  TAP_ENV_DIR: defined in  ~/.tapconfig 
+
+optionally you can change supply_chanin as following.
+```
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.all
+---
+...
+#@overlay/match missing_ok=True
+supply_chain: testing_scanning # Can take testing, testing_scanning.
+...
 ```
 
 ### update tap with profile (23-update-tap.sh)
@@ -336,7 +355,9 @@ install-tap/33-status-build-service.sh
 all builder should be Ready status.
 
 
-# Install TAP on  `RUN` cluster
+# ===============================
+# Install TAP on `RUN` cluster
+# ===============================
 
 ### locate k8s context
 
@@ -348,10 +369,13 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### 11-setup-repository-tap.sh
 
-### edit tap-values-{profile}-1st-TEMPLATE.yml
+### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
-install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
+$TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 ```
+>  TAP_ENV_DIR: defined in  ~/.tapconfig 
+original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
+
 
 ### install tap with profile (21-install-tap.sh)
 for installing cert-manager, ingress with minimum default configuratons
@@ -366,30 +390,19 @@ it will run following scripts internally:
 - install-tap/https-overlay/1-apply-cnrs-default-tls-run-cluster.sh: create `cnrs-default-tls` in `tap-install` namespace
 - install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
 
-keep verify `cnrs-default-tls` by running install-tap/https-overlay/2-fetch-cnrs-run-cluster.sh
-kubectl get cm config-network -n knative-serving  resource should be configured as following:
-```
-...
-default-external-scheme: https
-  domain-template: '{{.Name}}-{{.Namespace}}.{{.Domain}}'
-  ingress.class: contour.ingress.networking.knative.dev
-kind: ConfigMap
-...
-```
-if not updated, then delete cm and wait for update
-```
-kubectl delete cm config-network -n knative-serving
-```
 #### setup RBAC access to `RUN` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
 and and locate `VIEW` cluster and update the tap on `VIEW` cluster
 - install-tap/multi-view-cluster/23-update-tap.sh
 
-### Edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
 configure any changes from previous step
 ```
-install-tap/multi-{profile}-cluster/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
+$TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
+>  TAP_ENV_DIR: defined in  ~/.tapconfig 
+
 
 ### update tap with profile (23-update-tap.sh)
 apply changes until successful.
@@ -407,6 +420,31 @@ install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 
 ## verify update and fetch data(24-verify-resources.sh)
 
+
+run `install-tap/multi-{profile}-cluster/24-verify-resources.sh`.
+it will check following:
+- check CA for app workload domain on RUN cluster. 
+- check the cnrs updates to 'config-network' configmap in knative-serving namespace.
+
+### check CA for app workload domain on RUN cluster
+CA for app workload domain on RUN cluster will be created AFTER TAP update completes with 'package_overlays'(23-update-tap.sh)
+```
+ kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+```
+
+### check the cnrs updates to 'config-network' configmap in knative-serving namespace.
+```
+kubectl get cm config-network -n knative-serving -o yaml | grep 'default-external-scheme: https'
+```
+if not updated, then
+- 1. manually delete configmap: 
+```
+kubectl delete cm config-network -n knative-serving
+```
+- 2. reconcine cnrs
+```
+../29-reconcile-component.sh cnrs
+```
 
 # Test Sample workload
 ### Deploy workload on `BUILD` cluster

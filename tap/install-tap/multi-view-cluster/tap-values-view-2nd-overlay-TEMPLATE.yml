@@ -28,7 +28,7 @@ tap_gui:
         secure: false
         headers:
           ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
-          ## metadata-store-read-client.sh
+          ## metadata-store-read-client-view-cluster.sh
           Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxCbURjTEdLZmdnX0VlRkNKX0hCVWJMZXhqUVUwQ1JSSmg2Z2RmMm5tRmcifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi10OGwydyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjZlMDZjZDk0LTdlMzQtNGIyZC05YjFmLWIyMGJhZTk3ZWVkNyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.kIdbcCjqxv-QmjRuXx0Y1RtT0N7Xqwg-lvr-Sj_L_6wCA-Q9A1-j1oaflSQmTzoxRQp6p7h-RmpvVEYHhVMxXDZlolsT_luY5NWFwnvuG-FI5FF6yJYYfqcnevFoDrgCeHxcVFkJn-rC_kZ2cJecytIMSNHzUpiV5Ip_52fue06ifW4A9ZTHhQPW4Z6a7vLyo6u_oPFgNIjT8b3Hqi-23olHu9KTWixlrKGOyhsmbTZ-gCLRCX0mOb4gLAuOZSY3Xva1zfIfSKxUfCOepus8e18EkKgozwsHhThNvyn2NwQVk77Q5wq_La2NV-zl_2DrVAWGp0Z2trPkr47OauLGUw"
           X-Custom-Source: project-star
     #@overlay/match missing_ok=True
