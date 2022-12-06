@@ -48,6 +48,6 @@ echo "--------------------------------------------------------------------------
 echo "  file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"
 echo ""
-echo "  - Fetch CA for app workload domain from RUN cluster"
+echo "  - Update CA for app workload domain from RUN cluster"
 echo "    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
 kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
