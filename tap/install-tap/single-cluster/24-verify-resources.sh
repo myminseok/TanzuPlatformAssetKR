@@ -2,9 +2,4 @@
 export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/prepare-resources.sh -y
 
-chmod +x $SCRIPTDIR/*.sh
-chmod +x $SCRIPTDIR/../https-overlay/*.sh
-
-echo "$SCRIPTDIR/../https-overlay/2-fetch-cnrs-run-cluster.sh"
-$SCRIPTDIR/../https-overlay/2-fetch-cnrs-run-cluster.sh
-
+run_script "$SCRIPTDIR/../https-overlay/2-fetch-cnrs-run-cluster.sh"
