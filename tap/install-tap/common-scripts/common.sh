@@ -43,12 +43,14 @@ function print_help_customizing {
 
 function run_script {
     SCRIPT_FILE=$1
+    chmod +x $SCRIPT_FILE
     echo ""
     echo "======================================================================================="
-    echo "* BEGIN    $SCRIPT_FILE"
-    chmod +x $SCRIPT_FILE
-    $SCRIPT_FILE
-    echo "* END $SCRIPT_FILE"
+    echo "[RUN-BEGIN] $@"
+    echo ""
+    $@
+    echo ""
+    echo "[RUN-END] $@"
 }
 
 function setup_envconfig {
