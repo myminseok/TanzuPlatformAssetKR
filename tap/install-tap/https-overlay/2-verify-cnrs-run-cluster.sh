@@ -22,7 +22,7 @@ else
   echo ""
 fi
 
-echo "  ======================================="
+echo "======================================================================================="
 
 echo "Checking if secret 'cnrs-ca' -n tanzu-system-ingress is created ..."
 echo "  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
@@ -39,9 +39,9 @@ else
 fi
 
 
-echo "==============================================================="
+echo "======================================================================================="
 echo "Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
-echo "---------------------------------------------------------------"
+echo "---------------------------------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-{PROFILE}-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"
 echo ""

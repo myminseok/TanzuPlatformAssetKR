@@ -9,18 +9,19 @@ TAP_GUI_CERT=$(kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.
 ## verify
 if [[ "x$TAP_GUI_CERT" == "x" ]]; then
   echo ""
-  echo "ERROR: certificate 'tap-gui-cert' is invalid. "
+  echo "ERROR: NOT FOUND certificate 'tap-gui-cert' "
   echo "   kubectl get secret -n tap-gui tap-gui-cert"
-  echo ""
+  echo "   check if TAP is installed"
+  echo "   kubectl get app -A"
   exit 1
 fi
 echo "$TAP_GUI_CERT" > /tmp/tap-gui-cert.txt
 echo "certificate 'tap-gui-cert' is saved to /tmp/tap-gui-cert.txt "
 
 
-echo "==============================================================="
+echo "======================================================================================="
 echo "Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster"
-echo "---------------------------------------------------------------"
+echo "---------------------------------------------------------------------------------------"
 echo "  file: $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml"
 echo "    api_auto_registration.ca_cert_data"
 echo ""
