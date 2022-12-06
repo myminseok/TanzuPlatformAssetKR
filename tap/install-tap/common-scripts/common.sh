@@ -80,7 +80,7 @@ function setup_envconfig {
 
 function _decide_tapconfig {
   if [ -f ~/.tapconfig ]; then
-    echo "[TAP_ENV] Loading env from ~/.tapconfig"
+    echo "[ENV] Loading env from ~/.tapconfig"
     source ~/.tapconfig
   fi
 
@@ -90,7 +90,7 @@ function _decide_tapconfig {
     print_help_customizing
     exit 1
   fi
-  echo "[TAP_ENV] Using env from '$TAP_ENV'"
+  echo "[ENV] Using env from '$TAP_ENV'"
   source $TAP_ENV
   export TAP_ENV=$TAP_ENV
   export TAP_ENV_DIR=$TAP_ENV_DIR
@@ -122,7 +122,7 @@ function trim_string {
 function load_env_file {
   DEFAULT_ENV_FILE=$1
   # if [ ! -z $TAP_ENV ]; then
-  #   echo "[TAP_ENV] already loaded '$TAP_ENV'"
+  #   echo "[ENV] already loaded '$TAP_ENV'"
   #   return
   # fi
   _decide_tapconfig $DEFAULT_ENV_FILE
