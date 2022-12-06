@@ -164,7 +164,7 @@ please note that the replacement only affects to the only file with filename inc
 
 verify metastore access:
 - tanzu insight plugin should be installed: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html
-- install-tap/metastore-access/1-check-metastore-health-view-cluster.sh
+- install-tap/metastore-access/1-check-metastore-health-view-cluster-manually.sh
 
 create tls for tap-gui:
 - install-tap/multi-{profile}-cluster/22-prepare-resources.sh

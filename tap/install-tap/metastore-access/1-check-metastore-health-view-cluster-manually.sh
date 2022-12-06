@@ -3,15 +3,9 @@
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
-echo "This script should run on BUILD cluster"
-echo "tanzu insight plugin should be installed."
 
-read -p "Are you sure the target cluster '$CONTEXT'? (Y/y) " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-    echo "Quitting"
-    exit 1
-fi
+echo "This script should run on VIEW cluster"
+echo "PREREQUISITES: tanzu insight plugin should be installed."
 
 kubectl get secret ingress-cert -n metadata-store -o json | jq -r '.data."ca.crt"' | base64 -d > /tmp/insight-ca.crt
 echo "metadata-store ca.crt created in /tmp/insight-ca.crt"
