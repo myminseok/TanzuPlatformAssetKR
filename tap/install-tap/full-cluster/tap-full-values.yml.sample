@@ -5,30 +5,9 @@ shared:
     username: "admin"
     password: ""
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
-  ca_cert_data: | # To be passed if using custom certificates.
-    -----BEGIN CERTIFICATE-----
-    MIID5TCCAs2gAwIBAgIJAMWKW6niC9SnMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNV
-    BAMMBG15Y2EwIBcNMjIxMTE3MTIzMjQxWhgPMjA1MDA0MDQxMjMyNDFaMG4xCzAJ
-    BgNVBAYTAktPMQ4wDAYDVQQIDAVTZW91bDEOMAwGA1UEBwwFU2VvdWwxDDAKBgNV
-    BAoMA09yZzENMAsGA1UECwwEdW5pdDEiMCAGA1UEAwwZaDJvLTItMjI1Ny5oMm8u
-    dm13YXJlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALEA9lKs
-    AuH2fktSfUvrpMfh8quStkm8wqfumRlVj0tMhs3M7tMlUl4e5bfi5gNTxoEchawG
-    jE4FWKo19XccG2uaudr43ioPd/xJmLD9RBrOIcuoiaYAZGzOLQ1rqbbRdCxSy66D
-    BGxQCvudW1rAqJhaYNsUBKDQEKfO3PCZOiZ9DyISheR7gU4b+/MzXJ+m/BIEPjHK
-    e3ver+mtotiRuIIM2FjgDSUUGksmI/bHkLAOUFwjaVhB97IpgW/gQ9L2LP3tUuyF
-    CJEuPS08Dqobl5xXeoYyKoUrYE3OKVS+ytVB50hG/EYvRc7rKZnv6SQGCbrImAjj
-    ttd+xJRdS4KVh0ECAwEAAaOB4jCB3zBKBgNVHSMEQzBBgBRgMkpJhBLDu2NuK+sy
-    fJpV93zrtqETpBEwDzENMAsGA1UEAwwEbXljYYIUO/QfKBRofjgd//5sGBVnKtCC
-    z8owCQYDVR0TBAIwADALBgNVHQ8EBAMCBDAwHQYDVR0lBBYwFAYIKwYBBQUHAwEG
-    CCsGAQUFBwMCMFoGA1UdEQRTMFGCGyouaDJvLTItMjI1Ny5oMm8udm13YXJlLmNv
-    bYIgaGFyYm9yLmgyby0yLTIyNTcuaDJvLnZtd2FyZS5jb22HBH8AAAGHBKwRAAGH
-    BArcD1owDQYJKoZIhvcNAQELBQADggEBAFl0DquGwU7GngqC9z7t9JZMWBC7g9WV
-    DYXp2R+WlUZ8/I4GgqBnCbVSTz+A7nyWInbkJfS23ej0mcjpZuTRRlgKGu2He1T/
-    0Hu2cJ03BCsbB/wLSGgJyGWiSub12jqKoyRFD4qlkU+ddxxPZo8GEpuSUz3DlkdT
-    TcUTr1zC91+yMXogSlx5Ztl+hQQQzjk31H3eAWaU7WEEuaDkyBY5FtJe5z2daShH
-    x6RtTZzJ/pp6pe9uI1Gln8xjSNcArkNvX1LnIMM3JdLj6pJ9NtrghSULXfHYWheF
-    rRZzPSE77bClb/6uGbqA2uIPxI66dZhwgYxt2PlNCv1jzeHxn3U7VVw=
-    -----END CERTIFICATE-----
+  #ca_cert_data: | # To be passed if using custom certificates.
+  #  -----BEGIN CERTIFICATE-----
+    
 ceip_policy_disclosed: true # Installation fails if this is not set to true. Not a string.
 
 #The above keys are minimum numbers of entries needed in tap-values.yaml to get a functioning TAP Full profile installation.
@@ -96,7 +75,7 @@ tap_gui:
         ## TODO 2nd tap update
         headers:
           ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
-          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImNjQ2U0eHBSZzMxdEI2Y2pFMzcwc1dINEU1RXVYMUliclFIVk5nZmVtQ1UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi1jMnh2cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQ3ZGJkYjhjLTcxMzItNDZlYi05NTY3LTBhM2UzYmEyNzJmMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.JiWBOTLaocGriDmbO7U3ixlGA6j53efJ5es4bjTfKsoiucVUJzFr5bfCuEDExaU0yuilmFLCXbNjan5ENLvpKPPvVVWlqPwUBBP-slVOjo0zZnKyD8P3M8YjtGBCGvpPnUxsVFw01a4eUpOf0QZHjEli6RlEyAqBSoa_eqSznYWQOxPkBH4zuxagF9yN_ZROiktPoxW9SqYF1yxJ3h_tQsGuJZygKNro-w6tC75zaGFensRVS-wHv1wl4l9kBTXKkig8wXO7ApTQ-ALIICkz6KWL_CMPXPlZ2my49qKK31QUtysoxajtMO4em093XHjGje2hBicBOjr0lAZeO7jwKQ"
+          Authorization: "Bearer xxx"
           X-Custom-Source: project-star
     catalog:
       locations:
@@ -179,43 +158,9 @@ api_auto_registration:
 #  k get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
 #  CA for app workload domain
 #  k get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
-  ca_cert_data: |
-    -----BEGIN CERTIFICATE-----
-    MIIC3zCCAcegAwIBAgIQfh3AvZ2SyfO0xP304IDx+TANBgkqhkiG9w0BAQsFADAA
-    MB4XDTIyMTExNzA3MDEzMFoXDTIzMDIxNTA3MDEzMFowADCCASIwDQYJKoZIhvcN
-    AQEBBQADggEPADCCAQoCggEBALqyeK/jAUA0Dng5aO5mzBqL2kFQ/QDVnwPEyaPH
-    bS64zL9A1vhw/1rpWt4CWolKmpk3tlUvAJdZqLF9ORfss6kcNVeWI79keo2z3NQR
-    XluKbKK1prdl7kdU9HzrTmbqono9ZL19V3vaU5uoA4ohzJkTGw+S9Sx2SaAmj26D
-    EAxhNNao5AZYh1rNfm7ISiVexJ6fm0bgAPacNlIL35Kc+b7HdQz+5lRs2aQutQxI
-    N04mSUCmE0VncYBoL5TgLwSvowWqs6FfGmeWMpSE2XLpw5aY5N3+i+Pb9TNxLZmP
-    8uHN1WqBxLZq/UsOZg4DAv/xPxyyilvTDZYQhexS192aGW8CAwEAAaNVMFMwDgYD
-    VR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwMwYDVR0RAQH/BCkwJ4IldGFwLWd1
-    aS50YXAuaDJvLTItMjI1Ny5oMm8udm13YXJlLmNvbTANBgkqhkiG9w0BAQsFAAOC
-    AQEAebnc/9CW9C0nvq/3d4g+LHC/CzMJwfKLbWe9+5dz94ExHbgvHIwUld90ubtK
-    BZGGzvDmtvEAyOXInriolBZf+dB3hZt01kNwqcLQnj7l3uX5fo6N2Zoj54ji3gzn
-    BSw9KvWgz5Z/f9EYKqGB8iIbBHDJK8TfVrCh9DyNClaXiflC/tLwyukAkkg8QueL
-    sppt63i+GWE52AYqvo2Cp/0UyWjx7Ye+mnl2bmOAsXE8p0ret/ZbjaQUukRw/BLk
-    SkEPRW3DueTtf1t7fSrvRD8XZXYEqBHWG8YLy+XGo/RwZ7VDuYR1vPMBJW01osuZ
-    /MmaGiovLNNMZTqf0cLsjA8G8w==
-    -----END CERTIFICATE-----
-    -----BEGIN CERTIFICATE-----
-    MIIC8DCCAdigAwIBAgIQWrbHntyH/uac36W1AUKYsDANBgkqhkiG9w0BAQsFADAS
-    MRAwDgYDVQQDEwdjbnJzLWNhMB4XDTIyMTExNzA0MjYxNloXDTIzMDIxNTA0MjYx
-    NlowEjEQMA4GA1UEAxMHY25ycy1jYTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-    AQoCggEBAMf6es2/VGBcYy+7WF6fTBCzrB8hbHjTAfpq5/ee9n6qZrJmRw92YTeV
-    hsmCKy9QZDMsrSbjwiVkewP5rlc2sT7TiYHBukjYk1LQVScLpgGV1UmZiG6IOsRr
-    uqV3YdFl2ZKzNybWAE3QZTuwm3xPWa3aj9YHZVPzj7ebq5x86kfGF4KyTyLqrVh2
-    QDVbBhJ/TfXwTePdcvIfNes9maKQgfRr38+YHJHP4TdZzrdPgyTeUwueLTXE4VbT
-    wCeIM11WsLSin+phIyAS+ox2tKe9QyXsDqyK3TTL0+KcWRyhVLgttYLhJDCn1alz
-    JgtVpRJmXdWIG7UTJyGSaGy61mPwHRcCAwEAAaNCMEAwDgYDVR0PAQH/BAQDAgKk
-    MA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFBiGfQKCYq4a6AA0HKXdF66Y1ziS
-    MA0GCSqGSIb3DQEBCwUAA4IBAQBM8IVq8WH8MTnVuxfSDg6NNY6GCLqx5yvOUq66
-    A66cKdiiQAnbD8RXvFqTlVAuwnjoLCJvwLJdTdx3pR1gBJgLRxDpBqYSon27Oww3
-    RYmhvGjB1ZnumZpzjHvItoVyZFboP3eZdFk6SxvgOIh0unO3NFYRhZper5zfnYam
-    qhhpiV4hz5PjbHpC/Ev2+86Q6MozwEHcBdTt6bSCA+7yMtSetWbdP0YHt7Ipg535
-    h3BJCyYk/IIFmY0aEf9pcVQwJo2RYObUQziElByS75igz6YBQrX0HiiLz8bzfq9X
-    VGR2RiY3r5gljy0dYMyInnrkiOjReQ/fBbyNIi07Q//LTErR
-    -----END CERTIFICATE-----
+#  ca_cert_data: |
+#    -----BEGIN CERTIFICATE-----
+    
 
 
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-app-live-view-install.html
