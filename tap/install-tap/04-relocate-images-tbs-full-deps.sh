@@ -39,15 +39,8 @@ echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 check_executable "imgpkg"
 
 ## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-VERSION=${1:-1.7.2}
+VERSION=${TBS_FULL_DEPS_VERSION:-"1.7.2"}
 
-echo "==============================================================="
-echo "[MANUAL] Make sure following prerequisites"
-echo "---------------------------------------------------------------"
-echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
-echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
-echo "PREREQUSITE create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
-echo ""
 echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$VERSION"
 
 REGISTRY_CA_PATH_ARG=""
@@ -69,6 +62,8 @@ if [ ! -z $DOWNLOAD_TAR_PATH ]; then
   mkdir -p $DOWNLOAD_DIR
   imgpkg copy -b $public_repo_url --to-tar ${DOWNLOAD_TAR_PATH} \
     --include-non-distributable-layers $REGISTRY_CA_PATH_ARG
+  echo ""
+  echo "Successfully downloaded to $DOWNLOAD_TAR_PATH"
   exit 0 
 fi
 
