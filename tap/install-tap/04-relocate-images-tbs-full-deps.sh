@@ -7,6 +7,8 @@ load_env_file $SCRIPTDIR/tap-env
 
 set -e
 
+check_executable "jq"
+
 #VERSION=1.7.2
 VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
 if [ "$VERSION" == "" ]; then

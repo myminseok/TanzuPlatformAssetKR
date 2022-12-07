@@ -71,8 +71,6 @@ function setup_envconfig {
     cp $SCRIPTDIR/tap-env.template $ABS_ENV_FILE
   fi
   copy_to_file_if_not_exist $SCRIPTDIR/tap-env.template $ABS_ENV_FILE
-  
-
 
   echo "Creating ~/.tapconfig for ABS_ENV_FILE: $ABS_ENV_FILE"
   echo "export TAP_ENV=$ABS_ENV_FILE" > ~/.tapconfig
@@ -270,7 +268,13 @@ function verify_tap_env_param {
   fi
 }
 
-
+function check_executable {
+  if ! command -v $1 &> /dev/null
+  then
+    echo "ERROR: executable not found: '$1'"
+    exit 1
+  fi
+}
 
 function generate_new_filename {
   SRC_FILE_PATH=$1

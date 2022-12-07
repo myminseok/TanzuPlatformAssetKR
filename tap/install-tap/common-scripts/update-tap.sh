@@ -17,6 +17,8 @@ if [ -z "$PROFILE" ]; then
    exit 1
 fi
 
+check_executable "ytt"
+
 ## select default yml file if no yml given with -f option
 if ! is_yml_arg_exist "$@"; then
   TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
