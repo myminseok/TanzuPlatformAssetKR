@@ -555,7 +555,7 @@ and verify resources before deploying workload
 kubectl get clusterbuilder
 kubectl get ScanPolicy -A
 kubectl get Pipeline -A
-kubectl get secret -n $DEVELOPER_NAMESPACE
+kubectl get secrets git-ssh -n $DEVELOPER_NAMESPACE
 ```
 
 deploy workload by executing `sample-workload/multi-cluster-workload/1-create-sample-workload-on-build-cluster.sh`
