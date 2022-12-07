@@ -89,6 +89,15 @@ function setup_envconfig {
 }
 
 function _decide_tapconfig {
+
+  if [ ! -f ~/.tapconfig ]; then
+    echo "Please set TAP_ENV"
+    echo "Usage: 01-setup-tapconfig.sh /path/to/tap-env-file"
+    echo " - /path/to/tap-env-file: it can be existing path to tap-env file or new path."
+    echo "   the directory will be created if not exist and tap-env.template will be copied."
+    exit 1
+  fi
+
   if [ -f ~/.tapconfig ]; then
     echo "[ENV] Loading env from ~/.tapconfig"
     source ~/.tapconfig
