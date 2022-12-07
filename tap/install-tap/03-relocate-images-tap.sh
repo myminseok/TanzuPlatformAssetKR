@@ -59,7 +59,8 @@ if [ ! -z $DOWNLOAD_TAR_PATH ]; then
 fi
 
 get_value_from_args 'UPLOAD_TAR_PATH' '--upload' $@
-if [[ ! -z $UPLOAD_TAR_PATH &&  ! -f $UPLOAD_TAR_PATH ]]; then
+if [ ! -z $UPLOAD_TAR_PATH ]; then
+  if [ ! -f $UPLOAD_TAR_PATH ]; then
     echo "ERROR: File not found: $UPLOAD_TAR_PATH "
     print_help
     exit 1

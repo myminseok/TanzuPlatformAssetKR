@@ -21,9 +21,6 @@ echo "PREREQUSITE create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
 echo ""
 echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$VERSION"
 
-set -x
-
-
 REGISTRY_CA_PATH_ARG=""
 if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
   REGISTRY_CA_PATH="/tmp/imgpkg_registry_ca.crt"
@@ -47,7 +44,8 @@ if [ ! -z $DOWNLOAD_TAR_PATH ]; then
 fi
 
 get_value_from_args 'UPLOAD_TAR_PATH' '--upload' $@
-if [[ ! -z $UPLOAD_TAR_PATH &&  ! -f $UPLOAD_TAR_PATH ]]; then
+if [ ! -z $UPLOAD_TAR_PATH ]; then
+  if [ ! -f $UPLOAD_TAR_PATH ]; then
     echo "ERROR: File not found: $UPLOAD_TAR_PATH "
     print_help
     exit 1
@@ -61,3 +59,4 @@ fi
 echo "Downloading and Uploading to $IMGPKG_REGISTRY_HOSTNAME directly."
 set -x
 imgpkg copy -b $public_repo_url --to-repo $relocated_repo_url $REGISTRY_CA_PATH_ARG
+
