@@ -5,9 +5,8 @@
 #@overlay/match missing_ok=True
 profile: full # Can take iterate, build, run, view.
 
-
 #@overlay/match missing_ok=True
-#supply_chain: testing_scanning # Can take testing, testing_scanning.
+supply_chain: testing_scanning # Can take testing, testing_scanning.
 
 #@overlay/match missing_ok=True
 ootb_supply_chain_testing: # Optional if the corresponding shared keys are provided.
