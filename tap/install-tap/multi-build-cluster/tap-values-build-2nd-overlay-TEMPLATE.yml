@@ -57,11 +57,13 @@ grype:
       name: "store-auth-token" # The name of the secret containing the auth token to connect to Store
       importFromNamespace: "metadata-store-secrets" # The namespace where the connection secrets were created (if multi-cluster)
 
-#@overlay/match missing_ok=True
-package_overlays:
-- name: "grype"
-  secrets:
-  - name: "scanning-ca-overlay"
+## @overlay/match missing_ok=True
+# package_overlays:
+## will be overlayed by common.sh>tap-values-custom-ca-overlay-template.yaml 
+## if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
+# - name: "grype"
+#   secrets:
+#   - name: "scanning-ca-overlay"
 
 # # https://github.com/x95castle1/custom-cartographer-supply-chain-examples/tree/main/github-pr
 # ootb_templates:

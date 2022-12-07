@@ -13,12 +13,14 @@ cnrs:
   default_tls_secret: tanzu-system-ingress/cnrs-default-tls
 
 
-#@overlay/match missing_ok=True
-package_overlays:
-- name: cnrs
-  secrets:
-  - name: cnrs-default-tls
+# #@overlay/match missing_ok=True
+# package_overlays:
 
+## will be overlayed by common.sh>tap-values-custom-ca-overlay-template.yaml 
+## if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
+# - name: "grype"
+#   secrets:
+#   - name: "scanning-ca-overlay"
 
 #@overlay/match missing_ok=True
 api_auto_registration:

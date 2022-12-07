@@ -46,9 +46,21 @@ tap_gui:
         #@overlay/match missing_ok=True
         headers:
           ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
-          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImNjQ2U0eHBSZzMxdEI2Y2pFMzcwc1dINEU1RXVYMUliclFIVk5nZmVtQ1UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi1jMnh2cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQ3ZGJkYjhjLTcxMzItNDZlYi05NTY3LTBhM2UzYmEyNzJmMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.JiWBOTLaocGriDmbO7U3ixlGA6j53efJ5es4bjTfKsoiucVUJzFr5bfCuEDExaU0yuilmFLCXbNjan5ENLvpKPPvVVWlqPwUBBP-slVOjo0zZnKyD8P3M8YjtGBCGvpPnUxsVFw01a4eUpOf0QZHjEli6RlEyAqBSoa_eqSznYWQOxPkBH4zuxagF9yN_ZROiktPoxW9SqYF1yxJ3h_tQsGuJZygKNro-w6tC75zaGFensRVS-wHv1wl4l9kBTXKkig8wXO7ApTQ-ALIICkz6KWL_CMPXPlZ2my49qKK31QUtysoxajtMO4em093XHjGje2hBicBOjr0lAZeO7jwKQ"
+          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxwYWktUmlQYlJqeERHQXg2TWhwam9xUm10Z3hGRHlaYkdrNnNjVm1BbHMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi1sMmc4cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjZhNzM0ZWQxLWI5Y2MtNDhhOS1iYmFkLTBhZTE2ZmQ4NWQzNyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.jq1U3gdgfCJVcRE7D_VIPHtBQUtTMzPdKN5Z7G2YhKbEopXwHV0yumTzxkeuFcjuov0eTY3J2rfK_gQ5K1xvRwrqgwM8-LfStUD6Kmi2vkYLRFKzdyTasPgBmJUwa_-OulFsopSlBpasTFgBdVkSbDE_uAh9O6GjHTloZNMcfxfBUnjUva_hbS4tjmyL3_TrasUOzw8Tn0cSlek-SIXhmabonU6qeHkjaJ_UhLXG04IYh3l_XrwQmJ2y1MoACDjILH-hFtjZcAPSOlkc57iCfE188XIFBDyWMXhWvyxeb-SPybbxWVIDzAohiERRfsmwaAjg5cIIpegyQFIYp8rcWw"
           X-Custom-Source: project-star
-
+    #@overlay/match missing_ok=True
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/blank/catalog-info.yaml
+        - type: url
+          target: https://github.com/myminseok/tap-catalog/blob/main/yelb/yelb-catalog/catalog-info.yaml
+        - type: url
+          target: https://github.com/myminseok/tanzu-java-web-app/blob/main/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/spring-sensors/blob/main/catalog-info.yaml
+        # - type: url
+        #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
 
     # github working
     # auth:
@@ -123,9 +135,14 @@ package_overlays:
   - name: cnrs-default-tls
   # ## for pvc support on knative.
   # - name: "knative-serving-overlay"
-- name: "grype"
-  secrets:
-  - name: "scanning-ca-overlay"
+
+## will be overlayed by common.sh>tap-values-custom-ca-overlay-template.yaml 
+## if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
+# - name: "grype"
+#   secrets:
+#   - name: "scanning-ca-overlay"
+
+
 # - name: ootb-templates
 #   secrets:
 #   ## for pvc support on knative.
