@@ -103,8 +103,33 @@ do following before relocate packages (check TAP_ENV)
 - docker login $IMGPKG_REGISTRY_HOSTNAME
 - create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 
+By default, if no option, Download and upload packages DIRECTLY WITHOUT saving to tar.
+```
+03-relocate-images-tap.sh
+```
+for internet-restricted env, download as tar file and upload the transfered tar laster as following.
+```
+03-relocate-images-tap.sh --download /tmp/tap-packages.tar
+```
+```
+03-relocate-images-tap.sh --upload /tmp/tap-packages.tar
+```
+
 ### Relocate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
-relocate images to image registry(check TAP_ENV)
+relocate images to image registry (check TAP_ENV)
+
+By default, if no option, Download and upload packages DIRECTLY WITHOUT saving to tar.
+```
+04-relocate-images-tbs-full-deps.sh
+```
+for internet-restricted env, download as tar file and upload the transfered tar laster as following.
+```
+04-relocate-images-tbs-full-deps.sh --download /tmp/tap-tbs-packages.tar
+```
+```
+04-relocate-images-tbs-full-deps.sh--upload /tmp/tap-tbs-packages.tar
+```
+
 
 =======================================================================================
 
