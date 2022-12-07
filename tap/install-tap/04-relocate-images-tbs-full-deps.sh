@@ -8,22 +8,34 @@ load_env_file $SCRIPTDIR/tap-env
 set -e
 
 check_executable "jq"
+check_executable "imgpkg"
 
-#VERSION=1.7.2
-VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-if [ "$VERSION" == "" ]; then
-  echo "ERROR no buildservice.tanzu.vmware.com found"
-  exit 1
-fi
-echo $VERSION
+VERSION=${1:-1.7.2}
+# if [ "x$VERSION" == "x" ]; then
+#   set +e   
+#   VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
+#   set -e
+#   if [ "x$VERSION" == "x" ]; then
+#     echo ""
+#     echo "ERROR no buildservice.tanzu.vmware.com found. check k8s tanzu package list."
+#     echo "you may specify buildservice.tanzu.vmware.com version"
+#     echo " Usage: $0 [buildservice.tanzu.vmware.com version]"
+#     echo "        $0 1.7.2"
+#     exit 1
+#   fi
+# fi
+
+
 
 
 echo "==============================================================="
-echo "[MANUAL] PREREQUSITE "
+echo "[MANUAL] Make sure following prerequisites"
 echo "---------------------------------------------------------------"
 echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
 echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
 echo "PREREQUSITE create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
+echo ""
+echo "Relocating buildservice.tanzu.vmware.com version:$VERSION"
 
 set -x
 
