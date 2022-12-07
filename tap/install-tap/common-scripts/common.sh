@@ -8,9 +8,7 @@ for i in "$@"; do
     DEBUG="y"
     set -x
   fi
-  
 done
-
 
 function print_debug {
   if [ "$DEBUG" == "y" ]; then
@@ -26,7 +24,7 @@ function print_help {
   echo "  -y,--yes) optioanl. verify the target cluster before proceeding"
   echo "  additional options will NOT be passed to the target program"
   echo "  if multiple options, then last option wins"
-  echo "  '=' in --key=value option is optional"
+  echo "  '=' in --key=value is optional"
   echo ""
 }
 
@@ -151,18 +149,6 @@ function load_env_file {
   source $TAP_ENV
 }
 
-function is_yml_arg_exist {
-  for i in "$@"; do
-    case $i in
-      -f=*|--file=*|-f|--file)
-        print_debug "$i"
-        return 0
-      ;;
-    esac
-  done
-  return 1
-}
-
 
 function exit_if_not_valid_yml {
   YML=$1
@@ -180,6 +166,93 @@ function exit_if_not_valid_yml {
     exit 1
   fi
 }
+
+## see if -f key exists in arg list
+## return 0(true) if exist.
+function is_yml_arg_exist {
+  for i in "$@"; do
+    case $i in
+      -f=*|--file=*|-f|--file)
+        print_debug "$i"
+        return 0
+      ;;
+    esac
+  done
+  return 1
+}
+
+## see if key exists in arg list
+## return 0(true) if exist.
+## RESULT=$(is_arg_exist 'key_to_look_for' $@)
+function is_arg_exist {
+  ARGS_TO_PARSE=($@)
+  LOOKUP_KEY=${ARGS_TO_PARSE[0]}
+  for i in "${!ARGS_TO_PARSE[@]}"; do
+    if (( $i == 0 )); then ## skip the first args as it is key to look for.
+      continue
+    fi
+    case ${ARGS_TO_PARSE[$i]} in
+      *)
+        # index=$i
+        # key=$(echo ${ARGS_TO_PARSE[$i]}| cut -d'=' -f1)
+        # value=$(echo ${ARGS_TO_PARSE[$i]}| cut -d'=' -f2-)
+        #echo "$index/ $key/ $value"
+        if [ "${LOOKUP_KEY}" == "$key" ]; then
+          return 0
+        fi
+      ;;
+    esac
+  done
+  return 1
+}
+
+## get value from the input args that matches with the given key.
+## RESULT=$(get_value_from_args 'key_to_look_for' $@)
+function get_value_from_args {
+  ARGS_TO_PARSE=($@) ## arg list to look for $LOOKUP_KEY
+  RETURN_ENV=${ARGS_TO_PARSE[0]} ## ENV variable name to return the result to this function caller.
+  LOOKUP_KEY=${ARGS_TO_PARSE[1]} ## any form of key name to look for such as '--download'
+  KEY_TO_EXPECT_VALUE=""  ## use for arg with no '=', to track next value for the key. such as '--download /my/file'
+  FOUND_VALUE="" ## found value for the $LOOKUP_KEY
+  #DEBUG="y"
+  for i in "${!ARGS_TO_PARSE[@]}"; do
+    if (( $i <= 1 )); then ## skip the first args as it is key to look for.
+      continue
+    fi
+    case ${ARGS_TO_PARSE[$i]} in
+      $LOOKUP_KEY=*)
+        print_debug "case $LOOKUP_KEY=*) ${ARGS_TO_PARSE[$i]}"
+        #key=$(echo ${ARGS_TO_PARSE[$i]}| cut -d'=' -f1)
+        value="${ARGS_TO_PARSE[$i]#*=}"
+        FOUND_VALUE="$value"
+        shift # past argument=value
+      ;;
+
+      $LOOKUP_KEY)
+        print_debug "case $LOOKUP_KEY) ${ARGS_TO_PARSE[$i]}"
+        KEY_TO_EXPECT_VALUE="FOUND_VALUE"
+        shift # past argument=value
+      ;;
+      *)
+        print_debug "case *) ${ARGS_TO_PARSE[$i]}"
+        if [ "$KEY_TO_EXPECT_VALUE" == "" ]; then
+          continue # ignore
+        fi
+        value="${ARGS_TO_PARSE[$i]}"
+        cmd="$KEY_TO_EXPECT_VALUE=\$value" ## set value to $KEY_TO_EXPECT_VALUE
+        print_debug $cmd
+        eval "$cmd"
+        EXPECTED_KEY=""
+      ;;
+    esac
+    print_debug "=== FINAL RESULT ==="
+    print_debug "FOUND_VALUE:$FOUND_VALUE"
+    print_debug "===================="
+  done
+  eval "export $RETURN_ENV=\$FOUND_VALUE"
+}
+
+
 
 function parse_args {
   ## takes the first arg.
