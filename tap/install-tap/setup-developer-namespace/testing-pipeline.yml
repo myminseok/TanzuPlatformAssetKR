@@ -24,9 +24,8 @@ spec:
           - name: source-revision
         steps:
           - name: test
-            image: infra-harbor2.lab.pcfdemo.net/library/gradle:latest
+            image: gradle:latest
             script: |-
-              #nslookup www.google.com
               cd `mktemp -d`
               wget -qO- $(params.source-url) | tar xvz -m
-              # ./mvnw test
+              ./mvnw test

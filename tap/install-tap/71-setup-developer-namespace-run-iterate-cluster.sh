@@ -10,6 +10,12 @@ verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_H
 verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_USERNAME"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_PASSWORD", "$BUILDSERVICE_REGISTRY_PASSWORD"
 
+echo "==============================================================="
+echo "[MANUAL] update files before applying changes"
+echo "---------------------------------------------------------------"
+echo "$TAP_ENV_DIR/git-ssh-secret-basic.yml"
+echo ""
+
 print_current_k8s
 
 parse_args "$@"
@@ -22,19 +28,15 @@ kubectl create ns $DEVELOPER_NAMESPACE
 set -e
 
 set -x
+
+set +e
 tanzu secret registry delete registry-credentials -n $DEVELOPER_NAMESPACE -y
+set -e
 tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace $DEVELOPER_NAMESPACE
 kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace.yml -n $DEVELOPER_NAMESPACE
 
-## TODO: only for pvc testing...
-# kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
-set +x
+set +e
+kubectl delete -f $TAP_ENV_DIR/git-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
+set -e
+kubectl apply -f $TAP_ENV_DIR/git-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
 
-echo "==============================================================="
-echo "[MANUAL] create GITOPS secret ..."
-echo "---------------------------------------------------------------"
-echo "cp $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.template $TAP_ENV_DIR/gitops-ssh-secret-basic.yml"
-echo "edit the yml by refering $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-basic.yml.sample"
-echo "kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE"
-echo "use the secret on workload.yml"
-echo ""

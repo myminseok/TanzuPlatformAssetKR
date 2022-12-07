@@ -1,6 +1,6 @@
-tap_gui_url: https://tap-gui.tap.lab.pcfdemo.net
+tap_gui_url: https://tap-gui.tap.example.com
 cluster_name: view
-## CA for tap-gui.tap.lab.pcfdemo.net
+## CA for tap-gui.TAP_DOMAIN
 ## CA for app workload domain
 ## k get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
 ## k get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d

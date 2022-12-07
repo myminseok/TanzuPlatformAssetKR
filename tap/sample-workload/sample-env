@@ -1,5 +1,5 @@
 
-TAP_DOMAIN="tap.lab.pcfdemo.net"
+TAP_DOMAIN="tap.example.com"
 #DEVELOPER_NAMESPACE="demo-app"
 DEVELOPER_NAMESPACE="my-space"
 WORKLOAD_NAME="tanzu-java-web-app"

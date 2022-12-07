@@ -519,51 +519,56 @@ see the the same section(`verify update and fetch data(24-verify-resources.sh`) 
 ## Testing Sample workload
 
 ### Deploy workload on `BUILD` cluster
-setup developer namespace
-- install-tap/70-setup-developer-namespace-build-full-cluster.sh
+
+`01-setup-tapconfig.sh` created following files to $TAP_ENV_DIR. edit followiing files
+- testing-pipeline.yml
+- scan-policy.yml
+- git-ssh-secret-basic.yml
+
+edit `$TAP_ENV_DIR/testing-pipeline.yml`.  update image `gradle` location accessible from k8s cluster
+```
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+...
+spec:
+  ...
+        steps:
+          - name: test
+            image: gradle:latest
+            script: |-
+              cd `mktemp -d`
+              wget -qO- $(params.source-url) | tar xvz -m
+              ./mvnw test
+```
+
+edit `$TAP_ENV_DIR/scan-policy.yml`
+edit `$TAP_ENV_DIR/git-ssh-secret-basic.yml`
+
+setup developer namespace by executing `install-tap/70-setup-developer-namespace-build-full-cluster.sh`
 it will create 
 - scan policy 
 - testing pipeline
+- gitops secret
 
 and verify resources before deploying workload
 ```
 kubectl get clusterbuilder
 kubectl get ScanPolicy -A
 kubectl get Pipeline -A
+kubectl get secret -n $DEVELOPER_NAMESPACE
 ```
 
-generate git token and gitops secrets
-```
-cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template \
-  /any/path/gitops-ssh-secret-basic.yml"
-edit /any/path/gitops-ssh-secret-basic.yml
-
-kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
-```
-
-deploy workload
-- sample-workload/multi-cluster-workload/1-create-sample-workload-on-build-cluster.sh
+deploy workload by executing `sample-workload/multi-cluster-workload/1-create-sample-workload-on-build-cluster.sh`
 check workload from tap-gui and fetch `deliverable`:
 - sample-workload/multi-cluster-workload/2-fetch-deliverable-from-build-cluster.sh
 it will create files on /tmp folder
 - /tmp/${WORKLOAD_NAME}-delivery.yml
 
 ### Deploy workload on `RUN` cluster
-setup developer namespace
-- install-tap/71-setup-developer-namespace-run-iterate-cluster.sh
+setup developer namespace by executing `install-tap/71-setup-developer-namespace-run-iterate-cluster.sh`
 
-apply gitops secrets (the same from previous step)
-```
-cp setup-developer-namespace/gitops-ssh-secret-basic.yml.template \
-  /any/path/gitops-ssh-secret-basic.yml"
-edit /any/path/gitops-ssh-secret-basic.yml
-kubectl apply -f /any/path/gitops-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
-```
-
-apply the delivery 
-- sample-workload/multi-cluster-workload/3-apply-deliverable-to-run-cluster.sh
-
-it will apply 
+apply the delivery copied from `BUILD` cluster by executing `sample-workload/multi-cluster-workload/3-apply-deliverable-to-run-cluster.sh`
+it will does
 ```
 kubectl -n ${DEVELOPER_NAMESPACE} apply -f /tmp/${WORKLOAD_NAME}-deliverable.yml
 ```
@@ -577,8 +582,7 @@ and verify access
 - sample-workload/multi-cluster-workload/4-verify.sh
 
 ### Deploy workload on `ITERATE` cluster
-setup developer namespace
-- install-tap/71-setup-developer-namespace-run-iterate-cluster.sh
+setup developer namespace by executing `install-tap/71-setup-developer-namespace-run-iterate-cluster.sh`
 
 
 

@@ -74,7 +74,7 @@ grype:
 api_auto_registration:
   tap_gui_url: https://tap-gui.TAP_DOMAIN
   cluster_name: full-cluster
-  ##  CA for tap-gui.tap.lab.pcfdemo.net
+  ##  CA for tap-gui.tTAP_DOMAIN
   ##  kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
   ##  CA for app workload domain
   ##  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
