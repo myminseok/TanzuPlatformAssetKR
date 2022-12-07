@@ -77,6 +77,7 @@ function setup_envconfig {
   echo "Creating ~/.tapconfig for ABS_ENV_FILE: $ABS_ENV_FILE"
   echo "export TAP_ENV=$ABS_ENV_FILE" > ~/.tapconfig
   echo "export TAP_ENV_DIR=$ABS_ENV_DIR" >> ~/.tapconfig
+  echo "Created ~/.tapconfig"
   cat ~/.tapconfig
   echo ""
   echo "Coping tap-values templates to ABS_ENV_DIR: $ABS_ENV_DIR"
@@ -86,6 +87,9 @@ function setup_envconfig {
     chmod +x $file
     $file
   done
+  echo ""
+  echo "Files to $ABS_ENV_DIR:"
+  ls -al $ABS_ENV_DIR
 }
 
 function _decide_tapconfig {
