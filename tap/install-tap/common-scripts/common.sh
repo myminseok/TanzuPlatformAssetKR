@@ -187,19 +187,18 @@ function is_yml_arg_exist {
 function is_arg_exist {
   ARGS_TO_PARSE=($@)
   LOOKUP_KEY=${ARGS_TO_PARSE[0]}
+  # DEBUG="y"
   for i in "${!ARGS_TO_PARSE[@]}"; do
     if (( $i == 0 )); then ## skip the first args as it is key to look for.
       continue
     fi
     case ${ARGS_TO_PARSE[$i]} in
+      $LOOKUP_KEY)
+        print_debug "case $LOOKUP_KEY) ${ARGS_TO_PARSE[$i]}"
+        return 0
+        ;;
       *)
-        # index=$i
-        # key=$(echo ${ARGS_TO_PARSE[$i]}| cut -d'=' -f1)
-        # value=$(echo ${ARGS_TO_PARSE[$i]}| cut -d'=' -f2-)
-        #echo "$index/ $key/ $value"
-        if [ "${LOOKUP_KEY}" == "$key" ]; then
-          return 0
-        fi
+        continue
       ;;
     esac
   done

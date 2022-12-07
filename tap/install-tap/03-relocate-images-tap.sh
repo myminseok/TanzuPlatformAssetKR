@@ -7,7 +7,6 @@ load_env_file $SCRIPTDIR/tap-env
 function print_help {
   echo ""
   echo "Download/Upload packages."
-
   echo "Usage: $0 [--download /path/to/tar] [--upload /path/to/tar]"
   echo "  By default, if no option, Download and upload packages DIRECTLY WITHOUT saving to tar."
   echo "  --download) optional. download packages and save to tar. folder will be created if not exist"
@@ -15,6 +14,7 @@ function print_help {
   echo "  note that, '=' in --key=value is optional"
   echo ""
 }
+
 if is_arg_exist '-h' $@; then
   print_help
   exit 0
@@ -26,7 +26,6 @@ verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
 verify_tap_env_param "IMGPKG_REPO", "$IMGPKG_REPO"
 verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
 
-
 echo "==============================================================="
 echo "[MANUAL] PREREQUSITE "
 echo "---------------------------------------------------------------"
@@ -34,6 +33,7 @@ echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
 echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
 echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
 
+check_executable "imgpkg"
 
 REGISTRY_CA_PATH_ARG=""
 if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then

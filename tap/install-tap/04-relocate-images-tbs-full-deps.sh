@@ -7,6 +7,35 @@ load_env_file $SCRIPTDIR/tap-env
 
 set -e
 
+function print_help {
+  echo ""
+  echo "Download/Upload packages."
+  echo "Usage: $0 [--download /path/to/tar] [--upload /path/to/tar]"
+  echo "  By default, if no option, Download and upload packages DIRECTLY WITHOUT saving to tar."
+  echo "  --download) optional. download packages and save to tar. folder will be created if not exist"
+  echo "  --upload  ) optional. upload packages from the tar."
+  echo "  note that, '=' in --key=value is optional"
+  echo ""
+}
+
+if is_arg_exist '-h' $@; then
+  print_help
+  exit 0
+fi
+
+verify_tap_env_param "IMGPKG_REGISTRY_HOSTNAME", "$IMGPKG_REGISTRY_HOSTNAME"
+verify_tap_env_param "IMGPKG_REGISTRY_USERNAME", "$IMGPKG_REGISTRY_USERNAME"
+verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
+verify_tap_env_param "IMGPKG_REPO", "$IMGPKG_REPO"
+verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
+
+echo "==============================================================="
+echo "[MANUAL] PREREQUSITE "
+echo "---------------------------------------------------------------"
+echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
+echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
+echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
+
 check_executable "imgpkg"
 
 ## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
