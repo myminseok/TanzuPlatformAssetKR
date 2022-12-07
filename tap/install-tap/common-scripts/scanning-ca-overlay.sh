@@ -8,14 +8,18 @@ echo "This script should run on BUILD cluster"
 set +e
 kubectl create ns $DEVELOPER_NAMESPACE
 set -e
+
+if [ -z $BUILDSERVICE_REGISTRY_CA_CERTIFICATE ]; then
+  echo "WARNING: Skipping to overlay Scanning CA. ENV `BUILDSERVICE_REGISTRY_CA_CERTIFICATE` not found"
+  echo ""
+  exit 0
+fi
+
 ## create configmap
 CONFIG_MAP_NAME="scanning-harbor-ca-overlay-cm"
 REGISTRY_CA_FILE="harbor.crt"
 REGISTRY_CA_FILE_PATH="/tmp/$REGISTRY_CA_FILE"
-if [ -z $BUILDSERVICE_REGISTRY_CA_CERTIFICATE ]; then
-  echo "ERROR: ENV `BUILDSERVICE_REGISTRY_CA_CERTIFICATE` not found"
-  exit 1
-fi
+
 
 echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
 

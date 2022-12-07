@@ -34,7 +34,7 @@ REGISTRY_CA_FILE_PATH="/tmp/tap_registry_ca.crt"
 ## filename should be *TEMPLATE.yml for function 'replace_key_if_template_yml' later.
 ## /tmp/tap-values-OVERLAYED-{FILENAME}
 OVERLAYED_YML="/tmp/$(generate_new_filename $YML 'OVERLAYED')"
-overlay_custom_ca_to_yml $YML $REGISTRY_CA_FILE_PATH $OVERLAYED_YML
+overlay_custom_ca_if_template_yml $YML $REGISTRY_CA_FILE_PATH $OVERLAYED_YML
 
 FINAL_YML="/tmp/$(generate_new_filename $OVERLAYED_YML 'FINAL')"
 replace_key_if_template_yml $OVERLAYED_YML $FINAL_YML 

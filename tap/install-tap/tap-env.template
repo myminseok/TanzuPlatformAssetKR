@@ -11,16 +11,17 @@ IMGPKG_REGISTRY_HOSTNAME="my-image-registry.example.com"
 IMGPKG_REPO="tap"
 IMGPKG_REGISTRY_USERNAME="admin"
 IMGPKG_REGISTRY_PASSWORD=''
-## install-tap/02-relocate-images-tap.sh
-## cat install-harbor.crt | base6d -w0
-IMGPKG_REGISTRY_CA_CERTIFICATE="LS0xxxx="
 
+## optional) custom CA. cat harbor.crt | base6d -w0
+IMGPKG_REGISTRY_CA_CERTIFICATE="LS0xxxx="
 
 BUILDSERVICE_REGISTRY_HOSTNAME="my-image-registry.example.com"
 BUILDSERVICE_REGISTRY_USERNAME="admin"
 BUILDSERVICE_REGISTRY_PASSWORD=''
-## install-tap/common-scripts/scanning-ca-overlay.sh
+
+## optional) custom CA. cat harbor.crt | base6d -w0
 BUILDSERVICE_REGISTRY_CA_CERTIFICATE="LS0xxxx="
+
 ## any path for operational preference.
 BUILDSERVICE_REPO="tap/my-build-service"
 

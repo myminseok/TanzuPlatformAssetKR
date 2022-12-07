@@ -301,27 +301,26 @@ function _extract_custom_ca_file_from_env {
 ## fetch IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE from the tap-env file $TAP_ENV
 ## overlay to tap values RESULT_YTT_YML
 ## if no IMGPKG_REGISTRY_CA_CERTIFICATE, copy YML_1st to RESULT_YTT_YML
-function overlay_custom_ca_to_yml {
+function overlay_custom_ca_if_template_yml {
   YML_1st=$1
   REGISTRY_CA_FILE_PATH=$2
   RESULT_YTT_YML=$3
 
   if [[ ! "$YML_1st" == *"TEMPLATE"* ]]; then
     ## it is not template yml. 
-    echo "[WARNING][YML] NO Params Replacement as the filename doesn't include 'TEMPLATE'. $YML_1st"
+    echo "[WARNING][YML] NO Params Replacement as the filename doesn't include 'TEMPLATE'.$YML_1st"
     cp $YML_1st $RESULT_YTT_YML
     return 
   fi
 
 
   if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "[YML] Not Overlaying as IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found"
+    echo "[YML] Skip Overlaying. IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found from $TAP_ENV"
     cp $YML_1st $RESULT_YTT_YML
     return
   fi
   
   _extract_custom_ca_file_from_env $REGISTRY_CA_FILE_PATH
-  
    echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
    YML_1st=$YML
    YML_2nd=$COMMON_SCRIPTDIR/tap-values-custom-ca-overlay-template.yaml
