@@ -112,8 +112,13 @@ for internet-restricted env, download as tar file and upload the transfered tar 
 03-relocate-images-tap.sh --download /tmp/tap-packages.tar
 ```
 ```
+ls -alh /tmp/*.tar
+-rw-r--r-- 1 root root 7.0G Dec  7 07:51 /tmp/tap-packages.tar
+```
+```
 03-relocate-images-tap.sh --upload /tmp/tap-packages.tar
 ```
+
 
 ### Relocate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
 relocate images to image registry (check TAP_ENV)
@@ -125,6 +130,10 @@ By default, if no option, Download and upload packages DIRECTLY WITHOUT saving t
 for internet-restricted env, download as tar file and upload the transfered tar laster as following.
 ```
 04-relocate-images-tbs-full-deps.sh --download /tmp/tap-tbs-packages.tar
+```
+```
+ls -alh /tmp/*.tar
+-rw-r--r-- 1 root root 9.6G Dec  7 08:17 /tmp/tap-tbs-packages.tar
 ```
 ```
 04-relocate-images-tbs-full-deps.sh--upload /tmp/tap-tbs-packages.tar
