@@ -23,6 +23,8 @@ if [  "x$DATA" == "x" ]; then
   echo "   ../29-reconcile-component.sh cnrs"
 else
   echo "  [OK] applied the cnrs updates to 'config-network' -n knative-serving"
+  echo "    kubectl get cm config-network -n knative-serving -o yaml | grep 'default-external-scheme: https'"
+  echo ""
 fi
 
 echo "---------------------------------------------------------------------------------------"
@@ -39,6 +41,7 @@ if [ "x$DATA" == "x" ]; then
   echo ""
 else
   echo "  [OK] secret 'cnrs-ca' -n tanzu-system-ingress is created "
+  echo "  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
   echo ""
 fi
 
