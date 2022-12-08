@@ -1,6 +1,7 @@
 
 Injecting CA to workload pod with supply chain.
 it uses ootb-templates overlay and knative serving overlay. it doesn't use workload.yml
+that the injected ca is 'root' access that should be find in normal cases.
 
 ### procedure
 
