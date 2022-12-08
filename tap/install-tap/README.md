@@ -25,6 +25,7 @@ To run this scripts conveniently, it would be good to have a config file.
 
 ### Prerequitest tools on Jumpbox.
 - ytt
+- jq
 - [cluster essentials](https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.3/cluster-essentials/GUID-deploy.html) installed if it is not TKG
 - cert-manager, contour will be installed as part of TAP insallation.
 
