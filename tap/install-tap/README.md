@@ -23,12 +23,9 @@ Following scripts are compatible for TAP `1.3` and only tested on
 ## Setup Jumpbox
 To run this scripts conveniently, it would be good to have a config file.
 
-### Prerequitest tools on Jumpbox.
+### Prerequites tools on Jumpbox.
 - ytt
 - jq
-- [cluster essentials](https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.3/cluster-essentials/GUID-deploy.html) installed if it is not TKG
-- cert-manager, contour will be installed as part of TAP insallation.
-
 
 ### Setup TAP_ENV (01-setup-tapconfig.sh)
 
@@ -144,6 +141,11 @@ ls -alh /tmp/*.tar
 =======================================================================================
 
 ## Checks TKG cluster Readiness
+
+### Prerequites
+- [cluster essentials](https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.3/cluster-essentials/GUID-deploy.html) installed if it is not TKG
+- remove pre-installed cert-manager, contour (they will be installed as part of TAP insallation otherwise conflicted)
+
 run following checks for All Workload cluster (View, Build, Run, Iterate)
 
 ### check harbor access from TKG cluster
