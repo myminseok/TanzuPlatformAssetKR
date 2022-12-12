@@ -71,11 +71,13 @@ spec:
 > params.volumeMounts: will be the `spec.containers.volumeMounts` section in the workload deployment.  `subPath` is the key in the secret that has ca certificate contents. 
 > refer to k8s doc for the spec. https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-files-from-a-pod
 
-run `sample-create-file.sh`. it will do create secret
+run `sample-create-file.sh`. it will do create secret and deploy workload.yml
 ```
 kubectl create secret generic workload-ca-secret  -n $DEVELOPER_NAMESPACE --from-file workload-ca.crt
 ```
-and deploy workload.yml
+```
+tanzu apps workload create -f $SCRIPTDIR/workload-tanzu-java-web-app-ca.yaml --yes  -n ${DEVELOPER_NAMESPACE}
+```
 
 7. check the volume from the secret on the workload pod.
 ```
