@@ -1,6 +1,7 @@
 
 Injecting CA to workload pod with supply chain.
 it uses ootb-templates overlay and knative serving overlay. it doesn't use workload.yml
+that the injected ca is 'root' access that should be find in normal cases.
 
 ### procedure
 
@@ -105,6 +106,11 @@ tanzu-java-web-app2-pdmzj-test-pod                      0/1     Completed   0   
 
 ```
 kubectl get po -n my-space  exec -it tanzu-java-web-app-00001-deployment-6fd7597dc-76979 -n my-space bash
+
+kubectl exec [POD] [COMMAND] is DEPRECATED and will be removed in a future version. Use kubectl exec [POD] -- [COMMAND] instead.
+Defaulted container "workload" out of: workload, queue-proxy
+cnb@tanzu-java-web-app-00001-deployment-6fd7597dc-76979:/workspace$ id
+uid=1000(cnb) gid=1000(cnb) groups=1000(cnb)
 
 cnb@tanzu-java-web-app-00001-deployment-6fd7597dc-76979:/etc/ssl/certs$ ls -al workload-ca.crt
 -rw-r--r-- 1 root root 1383 Dec  8 05:18 workload-ca.crt
