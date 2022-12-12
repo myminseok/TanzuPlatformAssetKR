@@ -68,7 +68,9 @@ spec:
 
 ```
 > params.volumes: will be the `spec.volumes` section in the workload deployment. set secret name the will be created in the developer namespace manually in the following step.
+> 
 > params.volumeMounts: will be the `spec.containers.volumeMounts` section in the workload deployment.  `subPath` is the key in the secret that has ca certificate contents. 
+> 
 > refer to k8s doc for the spec. https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-files-from-a-pod
 
 run `sample-create-file.sh`. it will do create secret and deploy workload.yml
