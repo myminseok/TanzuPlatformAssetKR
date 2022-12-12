@@ -3,7 +3,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
-read -p "EXPERIMENTAL: Are you sure the target cluster '$CONTEXT'? (Y/y) " -n 1 -r
+CURRENT_CONTEXT=$(kubectl config current-context)
+read -p "EXPERIMENTAL: Are you sure the target cluster '$CURRENT_CONTEXT'? (Y/y) " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
     echo "Quitting"

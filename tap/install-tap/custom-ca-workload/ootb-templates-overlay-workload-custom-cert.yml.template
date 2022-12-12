@@ -92,17 +92,9 @@ stringData:
                   #@ end
                   #@ if/end hasattr(data.values.workload.spec, "resources"):
                   resources: #@ data.values.workload.spec["resources"]
-
-                  volumeMounts:
-                    #@overlay/append
-                    - name: workload-ca
-                      mountPath: /etc/ssl/certs/workload-ca.crt
-                      subPath: CONFIG_MAP_SUBPATH #! key pointing to ca certificate. ie) workload-ca.crt
-              volumes: 
-                #@overlay/append
-                - name: workload-ca
-                  configMap:
-                    name: CONFIG_MAP_NAME  #! name of the configmap created that contains ca. ie) workload-ca-overlay-cm
-            
+                  #@ if/end workload_param("volumeMounts"):
+                  volumeMounts: #@ workload_param("volumeMounts")
+              #@ if/end workload_param("volumes"):
+              volumes: #@ workload_param("volumes")
 
 

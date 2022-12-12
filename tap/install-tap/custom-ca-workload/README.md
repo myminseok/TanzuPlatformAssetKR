@@ -8,21 +8,15 @@ it uses ootb-templates overlay and knative serving overlay. it doesn't use workl
 
 2. check TAP_ENV
 
-3. define WORLOAD_CA_CERTIFICATE in tap-env file.
-vi $TAP_ENV/tap-env
-```
-## EXPERIMENTAL: optional) custom CA to be injected to workload pod via ootb-template overlay. (without using workload.yml)
-## used by install-tap/custom-ca-workload/apply.sh
-## cat harbor.crt | base6d -w0
-## harbor.nestedlab.pcfdemo.net. 
-WORLOAD_CA_CERTIFICATE="LSxxxK..."
-```
-3. apply.sh
-ootb-templates-overlay and knative-serving-overlay should be created.
+3. create ootb-templates-overlay on tap-install namespace.
 
-4. update tap
+```
+install-tap/custom-ca-workload/apply.sh
+```
+
+4. update "ootb-templates-overlay" on tap.
+
 vi $TAP_ENV/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
-
 ```
 ...
 #@overlay/match missing_ok=True
@@ -37,27 +31,19 @@ package_overlays:
   ## for workload ca on knative.
   - name: "ootb-templates-overlay"
 ```
-
-
-run tap/install-tap/full-cluster/23-update-tap.sh
+and run
+```
+install-tap/full-cluster/23-update-tap.sh
+```
 or
-
-run tap/install-tap/multi-{profile}-cluster/23-update-tap.sh
-
-5. check.sh
-
-run tap/install-tap/custom-ca-workload/check.sh
 ```
-➜  custom-ca-workload git:(main) ✗ ./check.sh
-[ENV] Loading env from ~/.tapconfig
-[ENV] Using env from '/Users/kminseok/_dev/tanzu-main/nested-lab/tap/tap-env'
----------------------------------------------------------------------------------------
-Checking cnrs updates(persistent volume) to 'config-network' -n knative-serving
-  [OK] applied the cnrs updates to 'config-network' -n knative-serving
-    kubectl get cm config-features -n knative-serving -o yaml | grep 'persistent-volume' | grep 'enabled'
+install-tap/multi-{profile}-cluster/23-update-tap.sh
 ```
 
-6. deploy sample workload
+5. create custom CA secret and deploy workload
+
+prepare workload-ca.crt
+and edit workload-tanzu-java-web-app-ca.yaml
 ```
 apiVersion: carto.run/v1alpha1
 kind: Workload
@@ -76,11 +62,34 @@ spec:
       url: https://github.com/myminseok/tanzu-java-web-app
       ref:
         branch: main
+spec:
+  source:
+    git:
+      url: https://github.com/myminseok/tanzu-java-web-app
+      ref:
+        branch: main
+  params:
+    - name: volumes
+      value: 
+      - name: workload-ca-secret
+        secret:
+          secretName: workload-ca-secret #<-- name of the secret that contains ca. ie) workload-ca-secret
+    - name: volumeMounts
+      value: 
+      - name: workload-ca-secret
+        mountPath: /etc/ssl/certs/workload-ca.crt
+        subPath: workload-ca.crt      #<-- key in the secret that is pointing to ca certificate. 
+
+```
+run
+```
+sample-create-file.sh
 ```
 
-7. check pods.
+7. check the volume from the secret on the workload pod.
 ```
 kubectl get po -n my-space
+
 NAME                                                    READY   STATUS      RESTARTS   AGE
 tanzu-java-web-app-00001-deployment-6fd7597dc-76979     2/2     Running     0          7m
 tanzu-java-web-app-build-1-build-pod                    0/1     Completed   0          13m

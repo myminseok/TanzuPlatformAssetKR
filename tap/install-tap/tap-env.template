@@ -36,9 +36,3 @@ TAP_DOMAIN="tap.example.com"
 #DEVELOPER_NAMESPACE="demo-app"
 DEVELOPER_NAMESPACE="my-space"
 WORKLOAD_NAME="tanzu-java-web-app"
-
-## EXPERIMENTAL: optional) custom CA to be injected to workload pod via ootb-template overlay. (without using workload.yml)
-## used by install-tap/custom-ca-workload/apply.sh
-## cat harbor.crt | base6d -w0
-## harbor.nestedlab.pcfdemo.net. 
-WORLOAD_CA_CERTIFICATE="LSxxxK..."
