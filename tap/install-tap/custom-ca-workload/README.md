@@ -43,49 +43,39 @@ install-tap/multi-{profile}-cluster/23-update-tap.sh
 
 5. create custom CA secret and deploy workload
 
-prepare workload-ca.crt
-and edit workload-tanzu-java-web-app-ca.yaml
+
+
+and set the secret in the workload.yml. (see workload-tanzu-java-web-app-ca.yaml).
 ```
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
   name: tanzu-java-web-app
-  labels:
-    apps.tanzu.vmware.com/workload-type: web
-    app.kubernetes.io/part-of: tanzu-java-web-app
-    apps.tanzu.vmware.com/has-tests: true
-    apis.apps.tanzu.vmware.com/register-api: "true"
-  annotations:
-    autoscaling.knative.dev/minScale: "1"
+  ...
 spec:
-  source:
-    git:
-      url: https://github.com/myminseok/tanzu-java-web-app
-      ref:
-        branch: main
-spec:
-  source:
-    git:
-      url: https://github.com/myminseok/tanzu-java-web-app
-      ref:
-        branch: main
+  ...
   params:
     - name: volumes
       value: 
       - name: workload-ca-secret
         secret:
-          secretName: workload-ca-secret #<-- name of the secret that contains ca. ie) workload-ca-secret
+          secretName: workload-ca-secret 
     - name: volumeMounts
       value: 
       - name: workload-ca-secret
         mountPath: /etc/ssl/certs/workload-ca.crt
-        subPath: workload-ca.crt      #<-- key in the secret that is pointing to ca certificate. 
+        subPath: workload-ca.crt    
 
 ```
-run
+> params.volumes: will be the `spec.volumes` section in the workload deployment. set secret name the will be created in the developer namespace manually in the following step.
+> params.volumeMounts: will be the `spec.containers.volumeMounts` section in the workload deployment.  `subPath` is the key in the secret that has ca certificate contents. 
+> refer to k8s doc for the spec. https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-files-from-a-pod
+
+run `sample-create-file.sh`. it will do create secret
 ```
-sample-create-file.sh
+kubectl create secret generic workload-ca-secret  -n $DEVELOPER_NAMESPACE --from-file workload-ca.crt
 ```
+and deploy workload.yml
 
 7. check the volume from the secret on the workload pod.
 ```
