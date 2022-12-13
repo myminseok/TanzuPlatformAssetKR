@@ -20,11 +20,7 @@ vi $TAP_ENV/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ...
 #@overlay/match missing_ok=True
 package_overlays:
-- name: cnrs
-  secrets:
-  - name: cnrs-default-tls
-  ## for workload ca on knative.
-  - name: "knative-serving-overlay"
+...
 - name: ootb-templates
   secrets:
   ## for workload ca on knative.
