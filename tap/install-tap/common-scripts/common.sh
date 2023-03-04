@@ -240,8 +240,8 @@ function get_value_from_args {
         value="${ARGS_TO_PARSE[$i]}"
         cmd="$KEY_TO_EXPECT_VALUE=\$value" ## set value to $KEY_TO_EXPECT_VALUE
         print_debug $cmd
-        eval "$cmd"
-        EXPECTED_KEY=""
+        eval "$cmd" ## export the key=value
+        KEY_TO_EXPECT_VALUE="" ## clear up.
       ;;
     esac
     print_debug "=== FINAL RESULT ==="
