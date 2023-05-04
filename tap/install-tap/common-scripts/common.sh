@@ -267,7 +267,7 @@ function parse_args {
         shift # past argument=value
         ;;
       -f|--file)
-        print_debug "case -p)"
+        print_debug "case -f)"
         EXPECTED_KEY="YML"
         shift # past argument=value
         ;;

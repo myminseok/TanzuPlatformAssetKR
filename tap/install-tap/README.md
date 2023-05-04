@@ -178,10 +178,22 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### 11-setup-repository-tap.sh
+run the script and check status by running:
+```
+tanzu package repository get tanzu-tap-repository --namespace tap-install
 
+NAMESPACE:               tap-install
+NAME:                    tanzu-tap-repository
+SOURCE:                  (imgpkg) infra-harbor2.lab.pcfdemo.net/tap/tap-packages:1.5.0
+STATUS:                  Reconcile succeeded
+CONDITIONS:              - type: ReconcileSucceeded
+  status: "True"
+  reason: ""
+  message: ""
+```
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
-$TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
+vi $TAP_ENV_DIR/tap-values-{profile}-1st-TEMPLATE.yml
 ```
 >  TAP_ENV_DIR: defined in  ~/.tapconfig 
 original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
@@ -342,7 +354,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
-$TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
+$TAP_ENV_DIR/tap-values-{profile}-1st-TEMPLATE.yml
 ```
 >  TAP_ENV_DIR: defined in  ~/.tapconfig 
 original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
@@ -438,7 +450,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
-$TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
+$TAP_ENV_DIR/tap-values-{profile}-1st-TEMPLATE.yml
 ```
 >  TAP_ENV_DIR: defined in  ~/.tapconfig 
 original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`

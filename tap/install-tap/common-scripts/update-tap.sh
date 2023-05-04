@@ -63,4 +63,4 @@ if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
 
-tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install -f $FINAL_YML 
+tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML 
