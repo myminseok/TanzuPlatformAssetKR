@@ -99,6 +99,14 @@ do following before relocate packages (check TAP_ENV)
 - create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 
 By default, if no option, Download and upload packages DIRECTLY $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO WITHOUT saving to tar.
+
+```
+imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
+```
+the `tap-env` file
+```
+TAP_VERSION=1.5.0
+```
 ```
 03-relocate-images-tap.sh
 ```
@@ -117,6 +125,13 @@ ls -alh /tmp/*.tar
 
 ### Relocate tap `tbs full deps` dependencies (04-relocate-images-tbs-full-deps.sh)
 relocate images to image registry (check TAP_ENV)
+```
+tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
+```
+the `tap-env` file
+```
+TBS_FULL_DEPS_VERSION=1.10.8
+```
 
 By default, if no option, Download and upload packages DIRECTLY to $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO WITHOUT saving to tar.
 ```
@@ -133,7 +148,6 @@ ls -alh /tmp/*.tar
 ```
 04-relocate-images-tbs-full-deps.sh--upload /tmp/tap-tbs-packages.tar
 ```
-
 
 =======================================================================================
 

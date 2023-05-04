@@ -6,7 +6,7 @@
 ## imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
 export TAP_VERSION=1.5.0
 ## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
-TBS_FULL_DEPS_VERSION=1.7.2
+TBS_FULL_DEPS_VERSION=1.10.8
 
 IMGPKG_REGISTRY_HOSTNAME="my-image-registry.example.com"
 ## any path for operational preference. it should be PUBLIC.
