@@ -1,0 +1,7 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+#@overlay/match by=overlay.all
+---
+shared:
+  #@overlay/match missing_ok=True
+  ca_cert_data: #@ data.read("tap_IMGPKG_REGISTRY_CA_CERTIFICATE.crt")

@@ -358,43 +358,13 @@ function generate_new_filename {
 }
 
 
-## fetch IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE 
-## in the tap-env file $TAP_ENV
-## and save to REGISTRY_CA_FILE_PATH="/tmp/tap_registry_ca.crt" 
-function _extract_custom_ca_file_from_env {
-  REGISTRY_CA_FILE_PATH=$1
-  rm -rf $REGISTRY_CA_FILE_PATH
-  if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "[YML] Not Overlaying as IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found"
-    return
-  fi
-  echo "[YML] Extracting Custom CA from $TAP_ENV to $REGISTRY_CA_FILE_PATH"
-
-  if [ -n "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "$IMGPKG_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
-  fi
-
-  if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
-    if [ "$IMGPKG_REGISTRY_CA_CERTIFICATE" != "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
-      echo "" >> $REGISTRY_CA_FILE_PATH
-      echo "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" | base64 -d >> $REGISTRY_CA_FILE_PATH
-    fi
-  fi
-
-  if [ ! -f "$REGISTRY_CA_FILE_PATH" ]; then
-    echo "ERROR [YML] Extracted Custom CA file is not found. $REGISTRY_CA_FILE_PATH"
-    echo "  check IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE in the tap-env file:$TAP_ENV"
-    exit 1
-  fi
-}
-
-## fetch IMGPKG_REGISTRY_CA_CERTIFICATE, BUILDSERVICE_REGISTRY_CA_CERTIFICATE from the tap-env file $TAP_ENV
-## overlay to tap values RESULT_YTT_YML
+## overlay to tap values RESULT_YTT_YML if IMGPKG_REGISTRY_CA_CERTIFICATE in the tap-env
 ## if no IMGPKG_REGISTRY_CA_CERTIFICATE, copy YML_1st to RESULT_YTT_YML
-function overlay_custom_ca_if_template_yml {
+function overlay_IMGPKG_REGISTRY_CA_CERTIFICATE {
   YML_1st=$1
-  REGISTRY_CA_FILE_PATH=$2
-  RESULT_YTT_YML=$3
+  RESULT_YTT_YML=$2
+  ### filename should be 'tap_IMGPKG_REGISTRY_CA_CERTIFICATE.crt' which matches with tap-values-overlay-shared-ca.yaml contents.\
+  REGISTRY_CA_FILE_PATH="/tmp/tap_IMGPKG_REGISTRY_CA_CERTIFICATE.crt"  
 
   if [[ ! "$YML_1st" == *"TEMPLATE"* ]]; then
     ## it is not template yml. 
@@ -403,17 +373,19 @@ function overlay_custom_ca_if_template_yml {
     return 
   fi
 
-
   if [ -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
     echo "[YML] Skip Overlaying. IMGPKG_REGISTRY_CA_CERTIFICATE env NOT found from $TAP_ENV"
     cp $YML_1st $RESULT_YTT_YML
     return
   fi
   
-  _extract_custom_ca_file_from_env $REGISTRY_CA_FILE_PATH
+ if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+    echo "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
+  fi
+
   echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
   YML_1st=$YML
-  YML_2nd=$COMMON_SCRIPTDIR/tap-values-custom-ca-overlay-template.yaml
+  YML_2nd=$COMMON_SCRIPTDIR/tap-values-overlay-shared-ca.yaml
   rm -rf $RESULT_YTT_YML
   set -ex
   ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd -f $REGISTRY_CA_FILE_PATH > $RESULT_YTT_YML
@@ -421,9 +393,10 @@ function overlay_custom_ca_if_template_yml {
 
 }
 
-function create_scanning-ca-overlay_if_defined {
-  if [ ! -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "creating scanning-ca-overlay. IMGPKG_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV"
+
+function create_resource_scanning_ca_overlay_BUILDSERVICE_REGISTRY_CA_CERTIFICATE {
+  if [ ! -z "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+    echo "creating scanning-ca-overlay. BUILDSERVICE_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV"
     run_script "$SCRIPTDIR/../common-scripts/scanning-ca-overlay.sh"
   fi
 }

@@ -6,6 +6,8 @@ load_env_file $SCRIPTDIR/../tap-env
 
 echo "This script should run on VIEW cluster"
 echo "PREREQUISITES: tanzu insight plugin should be installed."
+echo "  tanzu plugin install insight --local cli"
+echo "  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-installation.html"
 
 kubectl get secret ingress-cert -n metadata-store -o json | jq -r '.data."ca.crt"' | base64 -d > /tmp/insight-ca.crt
 echo "metadata-store ca.crt created in /tmp/insight-ca.crt"

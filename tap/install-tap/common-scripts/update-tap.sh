@@ -36,31 +36,38 @@ fi
 
 exit_if_not_valid_yml "$YML"
 
-## processing custom CA.
-## filename should be 'tap_registry_ca.crt' that matches with  tap-values-custom-ca-overlay-template.yaml contents.
-REGISTRY_CA_FILE_PATH="/tmp/tap_registry_ca.crt" 
-## filename should be *TEMPLATE.yml for function 'replace_key_if_template_yml' later.
-## /tmp/tap-values-OVERLAYED-{FILENAME}
-OVERLAYED_YML="/tmp/$(generate_new_filename $YML 'OVERLAYED')"
-overlay_custom_ca_if_template_yml $YML $REGISTRY_CA_FILE_PATH $OVERLAYED_YML
+OVERLAYED_CA_SHARED_YML="/tmp/$(generate_new_filename $YML 'OVERLAYED_CA_SHARED_YML')"
+overlay_IMGPKG_REGISTRY_CA_CERTIFICATE $YML $OVERLAYED_CA_SHARED_YML
 
-FINAL_YML="/tmp/$(generate_new_filename $OVERLAYED_YML 'FINAL')"
-replace_key_if_template_yml $OVERLAYED_YML $FINAL_YML 
+FINAL_YML="/tmp/$(generate_new_filename $YML 'FINAL')"
+replace_key_if_template_yml $OVERLAYED_CA_SHARED_YML $FINAL_YML 
 
 echo "[YML] Final '$FINAL_YML'"
 echo "================================"
 cat $FINAL_YML
-echo "--------------------------------"
+if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
+ echo "================================"
+ echo ""
+ echo "secret/scanning-ca-overlay resource will be created as profile is '$PROFILE'"
+ echo "configmap/scanning-harbor-ca-overlay-cm created as profile is '$PROFILE'"
+fi
+echo "================================"
+echo ""
+echo "[YML] Final '$FINAL_YML'"
 echo "To Update YML, edit the template file from TAP_ENV_DIR:$TAP_ENV_DIR "
 echo "  - $TAP_ENV_DIR/tap-values-${PROFILE}-1st-TEMPLATE.yml"
 echo "  - $TAP_ENV_DIR/tap-values-${PROFILE}-2nd-overlay-TEMPLATE.yml"
 echo ""
 echo "or use custom yml:  23-update-tap.sh -f /path/to/YML"
 echo ""
+echo "================================"
 print_current_k8s
 
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
-create_scanning-ca-overlay_if_defined
+
+if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
+ create_resource_scanning_ca_overlay_BUILDSERVICE_REGISTRY_CA_CERTIFICATE
+fi
 tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML 

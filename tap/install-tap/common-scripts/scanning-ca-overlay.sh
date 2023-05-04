@@ -20,7 +20,6 @@ CONFIG_MAP_NAME="scanning-harbor-ca-overlay-cm"
 REGISTRY_CA_FILE="harbor.crt"
 REGISTRY_CA_FILE_PATH="/tmp/$REGISTRY_CA_FILE"
 
-
 echo $BUILDSERVICE_REGISTRY_CA_CERTIFICATE | base64 -d > $REGISTRY_CA_FILE_PATH
 
 set +e

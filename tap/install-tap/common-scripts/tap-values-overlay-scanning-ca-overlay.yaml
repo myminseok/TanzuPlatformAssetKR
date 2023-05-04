@@ -2,13 +2,9 @@
 #@ load("@ytt:data", "data")
 #@overlay/match by=overlay.all
 ---
-shared:
-  #@overlay/match missing_ok=True
-  ca_cert_data: #@ data.read("tap_registry_ca.crt")
-
 #@overlay/match missing_ok=True
 package_overlays:
-## will be overlayed by common.sh>tap-values-custom-ca-overlay-template.yaml 
+## will be overlayed by common.sh> tap-values-overlay-scanning-ca-overlay.yaml
 ## if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
 - name: "grype"
   secrets:

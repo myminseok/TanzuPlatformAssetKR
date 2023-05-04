@@ -282,11 +282,6 @@ api_auto_registration.ca_cert_data"
 kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
 ```
 
-you may ignore the k8s context confirm with `-y` option.
-```
-install-tap/multi-{profile}-cluster/22-prepare-resources.sh -y
-```
-
 ### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
 configure any changes from previous step
