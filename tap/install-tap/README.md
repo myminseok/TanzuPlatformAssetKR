@@ -1,15 +1,15 @@
 # Motivation
 
- [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is inteneded to provide following benefits
+ [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is intended to provide following benefits
 - provide comprehensive scripts that *"suggest clear install/update steps"* by following exact the same procedure from TAP public docs.
 - cover single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile(full,view,build,run) based scripts
 - provide scripts that requires minimal typing and confirm steps that *"lower human mistakes"*
-- can *"seperate sensitive config files from scripts"*
-- considered internet-ristricted environment.
-- straight forward project sturcture and file naming to follow installation steps.
+- can *"separate sensitive config files from scripts"*
+- considered internet-restricted environment.
+- straight forward project structure and file naming to follow installation steps.
 - easy to modify scripts for the future change with minimal efforts with shared structure.
 
-This Scripts is not intened to 
+This Scripts is not intended to 
 - provides Gitops model based TAP installation.
 
 Following scripts are compatible for TAP `1.3` and only tested on
@@ -98,11 +98,11 @@ do following before relocate packages (check TAP_ENV)
 - docker login $IMGPKG_REGISTRY_HOSTNAME
 - create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC
 
-By default, if no option, Download and upload packages DIRECTLY WITHOUT saving to tar.
+By default, if no option, Download and upload packages DIRECTLY $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO WITHOUT saving to tar.
 ```
 03-relocate-images-tap.sh
 ```
-for internet-restricted env, download as tar file and upload the transfered tar laster as following.
+for internet-restricted env, download as tar file and upload the transferred tar laster as following.
 ```
 03-relocate-images-tap.sh --download /tmp/tap-packages.tar
 ```
@@ -115,14 +115,14 @@ ls -alh /tmp/*.tar
 ```
 
 
-### Relocate tap `tbs full deps` depencencies (04-relocate-images-tbs-full-deps.sh)
+### Relocate tap `tbs full deps` dependencies (04-relocate-images-tbs-full-deps.sh)
 relocate images to image registry (check TAP_ENV)
 
-By default, if no option, Download and upload packages DIRECTLY WITHOUT saving to tar.
+By default, if no option, Download and upload packages DIRECTLY to $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO WITHOUT saving to tar.
 ```
 04-relocate-images-tbs-full-deps.sh
 ```
-for internet-restricted env, download as tar file and upload the transfered tar laster as following.
+for internet-restricted env, download as tar file and upload the transferred tar laster as following.
 ```
 04-relocate-images-tbs-full-deps.sh --download /tmp/tap-tbs-packages.tar
 ```
@@ -139,9 +139,9 @@ ls -alh /tmp/*.tar
 
 ## Checks TKG cluster Readiness
 
-### Prerequites
+### Prerequisites
 - [cluster essentials](https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/1.3/cluster-essentials/GUID-deploy.html) installed if it is not TKG
-- remove pre-installed cert-manager, contour (they will be installed as part of TAP insallation otherwise conflicted)
+- remove pre-installed cert-manager, contour (they will be installed as part of TAP installation otherwise conflicted)
 
 run following checks for All Workload cluster (View, Build, Run, Iterate)
 
@@ -187,7 +187,7 @@ $TAP_ENV_DIR/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml
 original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
 
 ### install tap with profile (21-install-tap.sh)
-for installing cert-manager, ingress with minimum default configuratons
+for installing cert-manager, ingress with minimum default configurations
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
@@ -349,7 +349,7 @@ original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1s
 
 
 ### install tap with profile (21-install-tap.sh)
-for installing cert-manager, ingress with minimum default configuratons
+for installing cert-manager, ingress with minimum default configurations
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
@@ -368,7 +368,7 @@ it will run following scripts internally:
 - install-tap/multi-build-cluster/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
 - install-tap/common-scripts/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
 - install-tap/metastore-access/3-apply-grype-metastore-cert-build-cluster.sh: apply metastore config
-- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
+- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `BUILD` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
@@ -383,7 +383,7 @@ $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
 >  TAP_ENV_DIR: defined in  ~/.tapconfig 
 
-optionally you can change supply_chanin as following.
+optionally you can change supply_chain as following.
 ```
 #@ load("@ytt:overlay", "overlay")
 #@overlay/match by=overlay.all
@@ -408,7 +408,7 @@ or you may specify other file:
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 
-### install tap `tbs full deps` depencencies (31-setup-repository-tbs-full-deps.sh)
+### install tap `tbs full deps` dependencies (31-setup-repository-tbs-full-deps.sh)
 
 switch context to `build` and install package.
 ```
@@ -445,7 +445,7 @@ original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1s
 
 
 ### install tap with profile (21-install-tap.sh)
-for installing cert-manager, ingress with minimum default configuratons
+for installing cert-manager, ingress with minimum default configurations
 ```
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
@@ -455,7 +455,7 @@ install-tap/multi-{profile}-cluster/21-install-tap.sh
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
 - install-tap/https-overlay/1-apply-cnrs-default-tls-run-cluster.sh: create `cnrs-default-tls` in `tap-install` namespace
-- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service accout to access `BUILD` cluster from Tap-gui on view cluster.
+- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `RUN` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
@@ -510,7 +510,7 @@ if not updated, then
 ```
 kubectl delete cm config-network -n knative-serving
 ```
-- 2. reconcine cnrs
+- 2. reconcile cnrs
 ```
 ../29-reconcile-component.sh cnrs
 ```
@@ -554,7 +554,7 @@ see the the same section(`verify update and fetch data(24-verify-resources.sh`) 
 
 ### Deploy workload on `BUILD` cluster
 
-`01-setup-tapconfig.sh` created following files to $TAP_ENV_DIR. edit followiing files
+`01-setup-tapconfig.sh` created following files to $TAP_ENV_DIR. edit following files
 - testing-pipeline.yml
 - scan-policy.yml
 - git-ssh-secret-basic.yml
