@@ -23,13 +23,28 @@ Following scripts are compatible for TAP `1.3` and only tested on
 ## Setup Jumpbox
 To run this scripts conveniently, it would be good to have a config file.
 
-### Prerequites tools on Jumpbox.
+#### Prerequites tools on Jumpbox.
 - ytt
 - jq
 
-### Setup TAP_ENV (01-setup-tapconfig.sh)
+#### Setup TAP_ENV (01-setup-tapconfig.sh)
 
-to seperate config file from scripts, this script uses `~/.tapconfig` file and `TAP_ENV`, `TAP_ENV_DIR` environment variables
+run following script with existing tap-env file or new file path.
+```
+01-setup-tapconfig.sh ~/tap-config/tap-env
+```
+> it will create the given target folder(`~/.tapconfig`) if not exists
+> it will copy `tap/install-tap/tap-env.template` as `tap-env` under the target folder if not exists
+> it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
+
+`tap-env` file will be created as following.
+```
+export TAP_ENV=/home/ubuntu/tap-config/tap-env
+export TAP_ENV_DIR=/home/ubuntu/tap-config
+```
+
+##### how `TAP_ENV` works
+to separate config file from scripts, this script uses `~/.tapconfig` file and `TAP_ENV`, `TAP_ENV_DIR` environment variables
 
 `~/.tapconfig` simply points to TAP_ENV file path
 ```
@@ -58,40 +73,22 @@ shared:
 ```
 please note that the replacement only affects to the only file with filename included `*TEMPLATE*` such as `tap-values-{profile}-1st-TEMPLATE.yml`.
 
-### how to create TAP_ENV
-run following script with existing tap-env file or new file path.
-```
-01-setup-tapconfig.sh ~/tap-config/tap-env
-```
-it will `~/.tapconfig` will be created as following.
-```
-export TAP_ENV=/home/ubuntu/tap-config/tap-env
-export TAP_ENV_DIR=/home/ubuntu/tap-config
-```
-and do following:
-- if the given diretory is not exist, it will be created. 
-- if the given file is not exist, then it will be copied from tap/install-tap/tap-env.template 
-- it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
 
 ### install-tanzu-cli (02-install-tanzu-tap-cli.sh)
 to install the tap cli 
 
 download the following file to target folder 
 ```
-mkdir /data/tapbin-1.3
+mkdir /data/tapbin-1.5
 
 ls -al 
 tanzu-framework-linux-amd64.tar
 ```
 
-and edit 02-install-tanzu-tap-cli.sh 
-```
-...
-TAP_BIN=/data/tapbin-1.3
-...
-```
 and run the scripts 02-install-tanzu-tap-cli.sh.
-
+```
+./02-install-tanzu-tap-cli.sh ~/Downloads/tapbin-1.5
+```
 
 ## Relocate TAP packages to local image repository
 
