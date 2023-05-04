@@ -1,6 +1,6 @@
 # Motivation
 
- [TAP `1.3` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is intended to provide following benefits
+ [TAP `1.5` installation procedures](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-intro.html) are really complicated and easy to make *"human mistakes"*. This projects is intended to provide following benefits
 - provide comprehensive scripts that *"suggest clear install/update steps"* by following exact the same procedure from TAP public docs.
 - cover single cluster and [multi cluster installation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-multicluster-about.html) by profile(full,view,build,run) based scripts
 - provide scripts that requires minimal typing and confirm steps that *"lower human mistakes"*
@@ -160,7 +160,21 @@ ls -alh /tmp/*.tar
 run following checks for All Workload cluster (View, Build, Run, Iterate)
 
 ### check harbor access from TKG cluster
-00-manual-check-custom-harbor-access-from-TKG-node.sh
+run 
+```
+./00-manual-check-custom-harbor-access-from-TKG-node.sh
+```
+and deploy sample pod
+```
+docker pull hello-world:latest
+docker tag hello-world:latest $IMGPKG_REGISTRY_HOSTNAME/library/hello-world:latest
+docker push $IMGPKG_REGISTRY_HOSTNAME/hello-world:latest
+kubectl run hello-world --image=$IMGPKG_REGISTRY_HOSTNAME/library/hello-world:latest
+kubectl describe pod hello-world
+kubectl logs hello-world
+```
+
+if there is custom CA errors, then check `KubeadmControlPlane` and `KubeadmConfigTemplate` resource for the `/etc/ssl/certs/tkg-custom-ca.pem` setting.
 
 ### check kapp-controller-config from mgmt-cluster
 on workload cluster. kapp controller init might fails if there is no proper config such as CA in kapp-controller-config in mgmt cluster.

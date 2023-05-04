@@ -62,5 +62,5 @@ print_current_k8s
 if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
-
+create_scanning-ca-overlay_if_defined
 tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML 

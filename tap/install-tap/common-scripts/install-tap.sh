@@ -56,5 +56,8 @@ if [ "$YES" != "y" ]; then
 fi
 
 set -x
+
+create_scanning-ca-overlay_if_defined
+
 tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML
 

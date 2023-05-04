@@ -411,16 +411,22 @@ function overlay_custom_ca_if_template_yml {
   fi
   
   _extract_custom_ca_file_from_env $REGISTRY_CA_FILE_PATH
-   echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
-   YML_1st=$YML
-   YML_2nd=$COMMON_SCRIPTDIR/tap-values-custom-ca-overlay-template.yaml
-   rm -rf $RESULT_YTT_YML
-   set -ex
-   ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd -f $REGISTRY_CA_FILE_PATH > $RESULT_YTT_YML
-   set +x
+  echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
+  YML_1st=$YML
+  YML_2nd=$COMMON_SCRIPTDIR/tap-values-custom-ca-overlay-template.yaml
+  rm -rf $RESULT_YTT_YML
+  set -ex
+  ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd -f $REGISTRY_CA_FILE_PATH > $RESULT_YTT_YML
+  set +x
 
 }
 
+function create_scanning-ca-overlay_if_defined {
+  if [ ! -z "$IMGPKG_REGISTRY_CA_CERTIFICATE" ]; then
+    echo "creating scanning-ca-overlay. IMGPKG_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV"
+    run_script "$SCRIPTDIR/../common-scripts/scanning-ca-overlay.sh"
+  fi
+}
 
 
 ## replace template with "tap-env" and
