@@ -82,9 +82,10 @@ cnrs:
 
 metadata_store:
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-scan-upgrading.html
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-upgrading.html
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html#full-profile-3
   ns_for_export_app_cert: "*"
-  app_service_type: LoadBalancer
-  #app_service_type: ClusterIP
+  app_service_type: ClusterIP # Defaults to LoadBalancer. If shared.ingress_domain is set earlier, this must be set to ClusterIP.
 
 api_portal:
   apiPortalServer:
