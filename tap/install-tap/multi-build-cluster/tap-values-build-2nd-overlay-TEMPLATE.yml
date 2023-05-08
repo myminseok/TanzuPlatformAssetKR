@@ -39,6 +39,7 @@ ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys 
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html
 ## metastore-access/1-verify-metastore-cert-view-cluster.sh
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-scan-upgrading.html
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-upgrading.html
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-scan-install-scst-scan.html#install-grype
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-store-multicluster-setup.html
 ## metastore-access/2-fetch-grype-metastore-cert-view-cluster.sh
