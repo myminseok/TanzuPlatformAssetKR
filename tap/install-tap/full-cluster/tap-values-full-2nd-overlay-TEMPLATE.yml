@@ -147,7 +147,7 @@ package_overlays:
 #   ## for pvc support on knative.
 #   - name: "ootb-templates-overlay"
 
-
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-application-accelerator-configuration.html
 #@overlay/match missing_ok=True
 accelerator:
   server:
