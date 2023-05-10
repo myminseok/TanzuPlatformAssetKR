@@ -3,7 +3,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 load_env_file $SCRIPTDIR/tap-env
 
-echo "This script should run on RUN cluster"
+
+
 
 verify_tap_env_param "DEVELOPER_NAMESPACE", "$DEVELOPER_NAMESPACE"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
@@ -11,12 +12,17 @@ verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_U
 verify_tap_env_param "BUILDSERVICE_REGISTRY_PASSWORD", "$BUILDSERVICE_REGISTRY_PASSWORD"
 
 echo "==============================================================="
-echo "[MANUAL] update files before applying changes"
+echo "[MANUAL] update following files before running this script"
 echo "---------------------------------------------------------------"
 echo "$TAP_ENV_DIR/git-ssh-secret-basic.yml"
 echo ""
-
+echo "---------------------------------------------------------------"
+echo "This script should run on RUN cluster"
 print_current_k8s
+echo ""
+echo "DEVELOPER_NAMESPACE: $DEVELOPER_NAMESPACE"
+
+
 
 parse_args "$@"
 if [ "$YES" != "y" ]; then
@@ -24,7 +30,9 @@ if [ "$YES" != "y" ]; then
 fi
 
 set +e
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-customize-installation.html#con-label-selector
 kubectl create ns $DEVELOPER_NAMESPACE 
+kubectl label namespace "$DEVELOPER_NAMESPACE" apps.tanzu.vmware.com/tap-ns=$DEVELOPER_NAMESPACE
 set -e
 
 set -x

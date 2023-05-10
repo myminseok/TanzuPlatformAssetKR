@@ -1,0 +1,10 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-samples-blob.html
+---
+apiVersion: scanning.apps.tanzu.vmware.com/v1beta1
+kind: SourceScan
+metadata:
+  name: public-blob-source-example
+spec:
+  blob:
+    url: "https://gitlab.com/nina-data/ckan/-/archive/master/ckan-master.tar.gz"
+  scanTemplate: blob-source-scan-template

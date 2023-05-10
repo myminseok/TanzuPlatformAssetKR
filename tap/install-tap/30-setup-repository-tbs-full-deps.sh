@@ -13,6 +13,9 @@ fi
 
 set -x
 
+set +e
 tanzu package repository delete tbs-full-deps-repository -n tap-install -y
+set -e
+
 tanzu package repository add tbs-full-deps-repository \
   --url ${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps -n tap-install

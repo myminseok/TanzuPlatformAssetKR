@@ -36,10 +36,15 @@ tap_gui:
         # - type: url
         #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
 
-## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-app-live-view-install.html
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/app-live-view-install.html
 appliveview:
   ingressEnabled: true
-  #sslDisabled: false
+
+appliveview_connector:
+  backend:
+    ingressEnabled: true
+    host: appliveview.TAP_DOMAIN
+    sslDeactivated: true
 
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error

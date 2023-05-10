@@ -1,9 +1,9 @@
-## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-install-air-gap.html
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html
 ## the KEY=VALUE will be used to tap-values.yml while installing and updating tap later on. 
 ## for example, the script TanzuPlatformAssetKR/tap/install-tap/multi-build-cluster/21-install-tap.sh wil use the KEY in tap-env file 
 ## and generates tap-values.yml from the TanzuPlatformAssetKR/tap/install-tap/multi-build-cluster/tap-values-build-1st-TEMPLATE.yml by replacing the value.
 
-## imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
+## takes long time: imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
 export TAP_VERSION=1.5.0
 ## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
 TBS_FULL_DEPS_VERSION=1.10.8

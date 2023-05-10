@@ -3,7 +3,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
 load_env_file $SCRIPTDIR/tap-env
 
-echo "This script should run on BUILD/FULL cluster"
+
+
 
 verify_tap_env_param "DEVELOPER_NAMESPACE", "$DEVELOPER_NAMESPACE"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
@@ -11,14 +12,19 @@ verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_U
 verify_tap_env_param "BUILDSERVICE_REGISTRY_PASSWORD", "$BUILDSERVICE_REGISTRY_PASSWORD"
 
 echo "==============================================================="
-echo "[MANUAL] edit followiing files before running this script"
+echo "[MANUAL] update following files before running this script"
 echo "---------------------------------------------------------------"
 echo "$TAP_ENV_DIR/scan-policy.yml"
 echo "$TAP_ENV_DIR/testing-pipeline.yml"
 echo "$TAP_ENV_DIR/git-ssh-secret-basic.yml"
 echo ""
-
+echo "---------------------------------------------------------------"
+echo "This script should run on BUILD/FULL cluster"
 print_current_k8s
+echo ""
+echo "DEVELOPER_NAMESPACE: $DEVELOPER_NAMESPACE"
+
+
 
 parse_args "$@"
 if [ "$YES" != "y" ]; then
@@ -26,8 +32,20 @@ if [ "$YES" != "y" ]; then
 fi
 
 set +e
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-customize-installation.html#con-label-selector
 kubectl create ns $DEVELOPER_NAMESPACE 
+kubectl label namespace "$DEVELOPER_NAMESPACE" apps.tanzu.vmware.com/tap-ns=$DEVELOPER_NAMESPACE
 set -e
+
+
+# #kubectl apply -f $TAP_ENV_DIR/namespace-provisioning.yml
+
+if [ ! -z "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+  echo "creating scanning-ca-overlay. (BUILDSERVICE_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV)"
+  run_script "$SCRIPTDIR/scanning-overlay/scanning-ca-overlay.sh"
+fi
+
+
 
 set -x
 
@@ -47,4 +65,3 @@ kubectl apply -f $TAP_ENV_DIR/git-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
 
 ## TODO: only for pvc testing...
 # kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
-

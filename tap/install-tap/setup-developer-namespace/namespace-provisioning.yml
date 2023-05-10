@@ -1,0 +1,19 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-about.html#nsp-controller
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: desired-namespaces
+    namespace: tap-namespace-provisioning
+    annotations:
+        kapp.k14s.io/create-strategy: fallback-on-update
+        namespace-provisioner.apps.tanzu.vmware.com/no-overwrite: "" #! This annotation tells the provisioner app to not override this configMap as this is your desired state.
+data:
+    namespaces.yaml: |
+        #@data/values
+        ---
+        namespaces:
+        - name: demo-app
+        # additional parameters about dev-ns1 added via label/annotations or GitOps
+        - name: my-space2
+        # additional parameters about dev-ns1 added via label/annotations or GitOps

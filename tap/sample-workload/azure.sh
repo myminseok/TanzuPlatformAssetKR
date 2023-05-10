@@ -1,0 +1,13 @@
+tanzu apps workload apply tanzu-java-web-app \
+  --app tanzu-java-web-app \
+  --git-repo https://github.com/myminseok/tanzu-java-web-app \
+  --git-branch main \
+  --type web \
+  --service-account workload-sa \
+  --label apps.tanzu.vmware.com/has-tests=true \
+  --annotation autoscaling.knative.dev/minScale=1 \
+  --param-yaml testing_pipeline_matching_labels='{"apps.tanzu.vmware.com/pipeline":"test", "apps.tanzu.vmware.com/language":"java"}' \
+  --request-memory 1024Mi \
+  --namespace min \
+  --yes \
+  --tail

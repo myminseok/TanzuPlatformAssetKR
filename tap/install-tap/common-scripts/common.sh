@@ -285,6 +285,10 @@ function parse_args {
         YES="y"
         shift
         ;;
+      --update)
+        UPDATE="y"
+        shift
+        ;;
       -h|--help)
         print_help
         print_help_customizing
@@ -322,6 +326,8 @@ function print_current_k8s {
 
 function confirm_target_k8s {
     CONTEXT=$(kubectl config current-context)
+
+    echo ""
     read -p "Are you sure the target cluster '$CONTEXT'? (Y/y) " -n 1 -r
     if [[ ! $REPLY =~ ^[Yy]$ ]]
     then
@@ -379,10 +385,6 @@ function overlay_IMGPKG_REGISTRY_CA_CERTIFICATE {
     return
   fi
   
- if [ -n "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
-  fi
-
   echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
   YML_1st=$YML
   YML_2nd=$COMMON_SCRIPTDIR/tap-values-overlay-shared-ca.yaml
@@ -394,11 +396,33 @@ function overlay_IMGPKG_REGISTRY_CA_CERTIFICATE {
 }
 
 
-function create_resource_scanning_ca_overlay_BUILDSERVICE_REGISTRY_CA_CERTIFICATE {
-  if [ ! -z "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
-    echo "creating scanning-ca-overlay. BUILDSERVICE_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV"
-    run_script "$SCRIPTDIR/../common-scripts/scanning-ca-overlay.sh"
+function overlay_BUILDSERVICE_REGISTRY_CA_CERTIFICATE {
+  YML_1st=$1
+  RESULT_YTT_YML=$2
+
+  if [ -z "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+    return
   fi
+
+  echo "[YML] Overlaying BUILDSERVICE_REGISTRY_CA_CERTIFICATE from $TAP_ENV to $RESULT_YTT_YML"
+  echo "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
+
+  YML_1st=$YML
+  YML_2nd=$COMMON_SCRIPTDIR/../scanning-overlay/tap-values-overlay-scanning-ca-overlay.yaml
+  rm -rf $RESULT_YTT_YML
+  set -ex
+  ytt --ignore-unknown-comments -f $YML_1st -f $YML_2nd -f $REGISTRY_CA_FILE_PATH > $RESULT_YTT_YML
+  set +x
+
+}
+
+
+function create_k8s_resources_BUILDSERVICE_REGISTRY_CA_CERTIFICATE {
+  if [ -z "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
+    return
+  fi
+  echo "creating scanning-ca-overlay. (BUILDSERVICE_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV)"
+  run_script "$SCRIPTDIR/../scanning-overlay/scanning-ca-overlay.sh"
 }
 
 

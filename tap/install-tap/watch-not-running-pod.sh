@@ -1,3 +1,3 @@
 #!/bin/bash
 
-watch -n 5 kubectl get po --field-selector=status.phase!=Running -A
+watch -n 5 kubectl get po --field-selector=status.phase!=Running -A -o wide

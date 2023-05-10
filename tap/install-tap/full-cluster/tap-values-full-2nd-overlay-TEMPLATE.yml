@@ -29,14 +29,15 @@ ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys 
 tap_gui:
   #@overlay/match missing_ok=True
   tls:
-   namespace: tap-gui
-   secretName: tap-gui-cert
+    namespace: tap-gui
+    secretName: tap-gui-cert
   service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
   app_config:
     customize:
       custom_name: "Developer Portal"
     organization:
       name: "DevOps Team"
+    #@overlay/match missing_ok=True
     proxy:
       /metadata-store:
         target: https://metadata-store-app.metadata-store:8443/api/v1
@@ -44,22 +45,12 @@ tap_gui:
         secure: false
         #@overlay/match missing_ok=True
         headers:
+          ## IMPORTANT: Authorization is required even if full cluster.
           ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
-          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxwYWktUmlQYlJqeERHQXg2TWhwam9xUm10Z3hGRHlaYkdrNnNjVm1BbHMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudC10b2tlbi1sMmc4cyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjZhNzM0ZWQxLWI5Y2MtNDhhOS1iYmFkLTBhZTE2ZmQ4NWQzNyIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.jq1U3gdgfCJVcRE7D_VIPHtBQUtTMzPdKN5Z7G2YhKbEopXwHV0yumTzxkeuFcjuov0eTY3J2rfK_gQ5K1xvRwrqgwM8-LfStUD6Kmi2vkYLRFKzdyTasPgBmJUwa_-OulFsopSlBpasTFgBdVkSbDE_uAh9O6GjHTloZNMcfxfBUnjUva_hbS4tjmyL3_TrasUOzw8Tn0cSlek-SIXhmabonU6qeHkjaJ_UhLXG04IYh3l_XrwQmJ2y1MoACDjILH-hFtjZcAPSOlkc57iCfE188XIFBDyWMXhWvyxeb-SPybbxWVIDzAohiERRfsmwaAjg5cIIpegyQFIYp8rcWw"
+          Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImNZU2xFS3hlbzVSQWI2T0xQX1RScWt1U0ZXSDJ4RGdpbXMwd2FaZTJRY1UifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImI4ZmJkZDE3LTQ4NDgtNGYxNy1hYTkxLTQyZWM1ZDBlYjMxZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLWNsaWVudCJ9.Fue8lQyCxnWWvZc-dXsGPzQFZWzM8zBkaKmJdSjjNLpDEo_ej2vUA_yNsMXSNxufxKg9cII_oYUPGTRbc7VZjwjXwQ8mjU0LQJRTE251VY-vsA6eXJHDDervqtAZ2E2ZZ6G_uMFt5D9L_TYLjcjbO0dDWqmDHH8YyVlvTcihVu-NkOAPaS2euhYyNPsOXwlYHMNi3U4Ys6WDftdnsNb7x9jzWZ3eB-latVRKokcI8X_QsEprgDFxBkK3G9ai851gMMNfkuurXYagZpyurfb1USe-jHK63Xgtk4-qJF8dBLxBw_Jq1p1j0Ihukj-XeG5cyJLzVyFolZy2VEpK98wCYA"
           X-Custom-Source: project-star
-    #@overlay/match missing_ok=True
-    catalog:
-      locations:
-        - type: url
-          target: https://github.com/myminseok/tap-catalog/blob/main/blank/catalog-info.yaml
-        - type: url
-          target: https://github.com/myminseok/tap-catalog/blob/main/yelb/yelb-catalog/catalog-info.yaml
-        - type: url
-          target: https://github.com/myminseok/tanzu-java-web-app/blob/main/catalog-info.yaml
-        # - type: url
-        #   target: https://github.com/dbha/spring-sensors/blob/main/catalog-info.yaml
-        # - type: url
-        #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
+
+
 
     # github working
     # auth:
@@ -76,16 +67,23 @@ cnrs:
   #@overlay/match missing_ok=True
   default_tls_secret: tanzu-system-ingress/cnrs-default-tls
 
+
+## on, TAP 1.5 in single cluster, SourceScans for workload fails error occurs if it is installed on DEVELOPER-NAMESPACE
+## kubectl describe SourceScans tanzu-java-web-app -n demo-app => The scan job could not be created. admission webhook "validation.webhook.pipeline.tekton.dev" denied the request: validation failed: expected exactly one, got neither: 
+## namespace provisioner will deploy grype-scanner-DEVELOPER_NAMESPACE
+## Sample public source scan of a blob: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-samples-blob.html
 #@overlay/match missing_ok=True
 grype:
-  namespace: "DEVELOPER_NAMESPACE"
+  namespace: "tap-install"
   targetImagePullSecret: "registry-credentials"
 
+
+  
 #@overlay/match missing_ok=True
 api_auto_registration:
   tap_gui_url: https://tap-gui.TAP_DOMAIN
   cluster_name: full-cluster
-  ##  CA for tap-gui.tTAP_DOMAIN
+  ##  CA for tap-gui.TAP_DOMAIN
   ##  kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
   ##  CA for app workload domain
   ##  kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
@@ -126,6 +124,29 @@ api_auto_registration:
     h3BJCyYk/IIFmY0aEf9pcVQwJo2RYObUQziElByS75igz6YBQrX0HiiLz8bzfq9X
     VGR2RiY3r5gljy0dYMyInnrkiOjReQ/fBbyNIi07Q//LTErR
     -----END CERTIFICATE-----
+    
+#@overlay/match missing_ok=True
+api_portal:
+  apiPortalServer:
+    title: "API portal"
+    description: "Description"
+    # imagePullPolicy: IfNotPresent
+    # registryCredentialsSecret: api-portal-image-pull-secret
+    replicaCount: 1
+    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://myweb.lab.pksdemo.net:8080/openapi.json,http://myweb.lab.pksdemo.net:9090/v3/api-docs"
+    sourceUrlsCacheTtlSec: "10"
+    sourceUrlsTimeoutSec: "10"
+    requestMemory: "512Mi"
+    requestCpu: "100m"
+    limitMemory: "1024Mi"
+    limitCpu: "500m"
+    namespace: "api-portal"
+    trustInsecureSourceUrls: true
+    caCertData: ""
+
+  sso:
+    enabled: false
+    # secretName: sso-credentials
 
 #@overlay/match missing_ok=True
 package_overlays:
@@ -135,12 +156,10 @@ package_overlays:
   # ## for pvc support on knative.
   # - name: "knative-serving-overlay"
 
-## will be overlayed by common.sh>tap-values-custom-ca-overlay-template.yaml 
-## if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
+## secrets will be created by update-tap.sh via scanning-overlay/scanning-ca-overlay.sh if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
 # - name: "grype"
 #   secrets:
 #   - name: "scanning-ca-overlay"
-
 
 # - name: ootb-templates
 #   secrets:
@@ -163,3 +182,12 @@ accelerator:
 # ootb_templates:
 #   excluded_templates:
 #   - 'tekton-taskrun'
+
+#@overlay/match missing_ok=True
+#@overlay/replace
+excluded_packages:
+- policy.apps.tanzu.vmware.com # workaround for policy controller error
+- api-portal.tanzu.vmware.com
+- learningcenter.tanzu.vmware.com
+- workshops.learningcenter.tanzu.vmware.com
+- tap-telemetry.tanzu.vmware.com

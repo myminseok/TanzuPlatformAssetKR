@@ -4,8 +4,7 @@
 ---
 #@overlay/match missing_ok=True
 package_overlays:
-## will be overlayed by common.sh> tap-values-overlay-scanning-ca-overlay.yaml
-## if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
+## will be overlayed by scanning-overlay>tap-values-overlay-scanning-ca-overlay.yaml if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
 - name: "grype"
   secrets:
   - name: "scanning-ca-overlay"

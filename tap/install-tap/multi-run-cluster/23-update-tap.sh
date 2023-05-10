@@ -5,4 +5,4 @@ load_env_file $SCRIPTDIR/../tap-env
 
 PROFILE="run"
 
-$SCRIPTDIR/../common-scripts/update-tap.sh -p ${PROFILE} $@
+$SCRIPTDIR/../common-scripts/install-update-tap.sh --update -p ${PROFILE} $@

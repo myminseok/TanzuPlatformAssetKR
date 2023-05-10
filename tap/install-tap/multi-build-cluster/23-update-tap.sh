@@ -4,4 +4,4 @@ source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
 PROFILE="build"
-$SCRIPTDIR/../common-scripts/update-tap.sh -p ${PROFILE} $@
+$SCRIPTDIR/../common-scripts/install-update-tap.sh --update -p ${PROFILE} $@

@@ -5,4 +5,4 @@ load_env_file $SCRIPTDIR/../tap-env
 
 run_script "$SCRIPTDIR/../https-overlay/1-apply-cnrs-default-tls-run-cluster.sh"
 
-run_script "$SCRIPTDIR/../common-scripts/tap-gui-viewer-service-account-rbac.sh"
+run_script "$SCRIPTDIR/../tap-gui/tap-gui-viewer-service-account-rbac.sh"

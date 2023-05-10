@@ -47,5 +47,6 @@ else
   echo "  [OK] secret 'metadata-store-read-write-client' -n metadata-store found "
   echo "     kubectl get secrets metadata-store-read-write-client -n metadata-store "
 fi
+echo ""
+echo "metadata-store-read-write-client token: $AUTH_TOKEN" 
 echo "$AUTH_TOKEN" > /tmp/secret-metadata-store-read-write-client.txt
-cat /tmp/secret-metadata-store-read-write-client.txt

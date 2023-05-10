@@ -64,7 +64,7 @@ tap_gui:
       clusterLocatorMethods:
         - type: 'config'
           clusters:
-            ## result from /TanzuPlatformAssetKR/tap/install-tap/multi-build-cluster/22-tap-gui-viewer-service-account-rbac.sh
+            ## ## result from /TanzuPlatformAssetKR/tap/install-tap/tap-gui/tap-gui-viewer-service-account-rbac.sh
             ## For B64_ENCODED_CA, To install Tanzu Application Platform with Supply Chain Basic, you must retrieve your cluster’s base64 encoded ca certificate from $HOME/.kube/config. Retrieve the certificate-authority-data from the respective cluster section
             ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html#full-profile-3
             - url: https://192.168.80.22:6443

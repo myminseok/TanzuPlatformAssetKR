@@ -401,9 +401,9 @@ it will creates temp files to apply `build` cluster:
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
 - install-tap/multi-build-cluster/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
-- install-tap/common-scripts/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
+- install-tap/scanning-overlay/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
 - install-tap/metastore-access/3-apply-grype-metastore-cert-build-cluster.sh: apply metastore config
-- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
+- install-tap/tap-gui/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `BUILD` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
@@ -443,12 +443,12 @@ or you may specify other file:
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 
-### install tap `tbs full deps` dependencies (31-setup-repository-tbs-full-deps.sh)
+### install tap `tbs full deps` dependencies (30-setup-repository-tbs-full-deps.sh)
 
 switch context to `build` and install package.
 ```
-install-tap/31-setup-repository-tbs-full-deps.sh
-install-tap/32-install-tbs-full-deps.sh
+install-tap/30-setup-repository-tbs-full-deps.sh
+install-tap/31-install-tbs-full-deps.sh
 ```
 
 verify clusterbuilder status by running
@@ -490,7 +490,7 @@ install-tap/multi-{profile}-cluster/21-install-tap.sh
 run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
 it will run following scripts internally:
 - install-tap/https-overlay/1-apply-cnrs-default-tls-run-cluster.sh: create `cnrs-default-tls` in `tap-install` namespace
-- install-tap/common-scripts/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
+- install-tap/tap-gui/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `RUN` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
@@ -621,7 +621,8 @@ it will create
 
 and verify resources before deploying workload
 ```
-kubectl get clusterbuilder
+kubectl get clusterbuilder <= will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-setup-repository-tbs-full-deps.sh)
+kubectl get ScanTemplate -A <= will be created on developer-namespace by tap-namespace-provisioning controller.
 kubectl get ScanPolicy -A
 kubectl get Pipeline -A
 kubectl get secrets git-ssh -n $DEVELOPER_NAMESPACE
@@ -634,6 +635,9 @@ it will create files on /tmp folder
 - /tmp/${WORKLOAD_NAME}-delivery.yml
 
 ### Deploy workload on `RUN` cluster
+
+reference https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/multicluster-getting-started.html
+
 setup developer namespace by executing `install-tap/71-setup-developer-namespace-run-iterate-cluster.sh`
 
 apply the delivery copied from `BUILD` cluster by executing `sample-workload/multi-cluster-workload/3-apply-deliverable-to-run-cluster.sh`
@@ -652,6 +656,12 @@ and verify access
 
 ### Deploy workload on `ITERATE` cluster
 setup developer namespace by executing `install-tap/71-setup-developer-namespace-run-iterate-cluster.sh`
+
+
+### troubleshooting
+- tap/minseok-build-service => will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-setup-repository-tbs-full-deps.sh)
+- tap/minseok-supply-chain => will be created after the initial workload has been built successfully.
+
 
 
 

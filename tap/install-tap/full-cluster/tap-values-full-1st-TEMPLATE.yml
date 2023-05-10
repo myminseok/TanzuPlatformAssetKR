@@ -5,12 +5,13 @@ shared:
   ingress_domain: "TAP_DOMAIN"
   image_registry:
     project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
-    username: "IMGPKG_REGISTRY_USERNAME"
-    password: "IMGPKG_REGISTRY_PASSWORD"
+    secret:
+      name: "registry-credentials" ## will be created by "11-setup-repository-tap.sh"
+      namespace: "tap-install"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
 
-supply_chain: basic            # Can take testing, testing_scanning.
+supply_chain: basic       # Can take testing, testing_scanning.
 #supply_chain: testing          # Can take testing, testing_scanning.
 ## TODO 2nd tap update
 #supply_chain: testing_scanning # Can take testing, testing_scanning.
@@ -18,7 +19,10 @@ supply_chain: basic            # Can take testing, testing_scanning.
 ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
   registry:
     server: "BUILDSERVICE_REGISTRY_HOSTNAME" # Takes the value from shared section above by default, but can be overridden by setting a different value.
-    repository: "SUPPLYCHAIN_REPO" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+    ## Takes the value from shared section above by default, but can be overridden by setting a different value.
+    ## will be created after the initial workload has been built successfully.
+    repository: "SUPPLYCHAIN_REPO" 
+
   gitops:
     ssh_secret: "" # Takes "" as value by default; but can be overridden by setting a different value.
 
@@ -28,6 +32,7 @@ contour:
       type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
 
 buildservice:
+  ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-setup-repository-tbs-full-deps.sh 
   kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
   kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
   kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
@@ -42,11 +47,6 @@ tap_gui:
       custom_name: "Developer Portal"
     organization:
       name: "DevOps Team"
-    proxy:
-      /metadata-store:
-        target: https://metadata-store-app.metadata-store:8443/api/v1
-        changeOrigin: true
-        secure: false
     catalog:
       locations:
         - type: url
@@ -74,9 +74,10 @@ tap_gui:
 ## deployment.apps/scan-link-controller-manager > Could not find CA in Secret","err":"unable to set up connection to Supply Chain Security Tools - Store"
 ## kubectl rollout restart deployment.apps/scan-link-controller-manager -n scan-link-system
 scanning:
-  metadataStore:
-    url: "" # Configuration is moved, so set this string to empty.
-
+  # metadataStore:
+  #   url: "" # Configuration is moved, so set this string to empty. it works for full cluster, on tap 1.5
+  metadataStore: {} # Deactivate Supply Chain Security Tools - Store integration 
+  
 cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
@@ -85,34 +86,62 @@ metadata_store:
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-upgrading.html
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html#full-profile-3
   ns_for_export_app_cert: "*"
+<<<<<<< Updated upstream
   app_service_type: ClusterIP # Defaults to LoadBalancer. If shared.ingress_domain is set earlier, this must be set to ClusterIP.
+=======
+  app_service_type: ClusterIP # Defaults to LoadBalancer. If shared.ingress_domain is set earlier, this must be set to ClusterIP. it works for full cluster on tap 1.5
+  #app_service_type: LoadBalancer ## it works for full cluster on tap 1.5
+>>>>>>> Stashed changes
 
-api_portal:
-  apiPortalServer:
-    title: "API portal"
-    description: "Description"
-    # imagePullPolicy: IfNotPresent
-    # registryCredentialsSecret: api-portal-image-pull-secret
-    replicaCount: 1
-    sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://myweb.lab.pksdemo.net:8080/openapi.json,http://myweb.lab.pksdemo.net:9090/v3/api-docs"
-    sourceUrlsCacheTtlSec: "10"
-    sourceUrlsTimeoutSec: "10"
-    requestMemory: "512Mi"
-    requestCpu: "100m"
-    limitMemory: "1024Mi"
-    limitCpu: "500m"
-    namespace: "api-portal"
-    trustInsecureSourceUrls: true
-    caCertData: ""
+## api_portal will be comment out here due to following error and will be installed while updating tap
+## error while installation.
+## kapp: Error: Expected to find kind 'projectcontour.io/v1/HTTPProxy', but did not:
+##    - Kubernetes API server did not have matching apiVersion + kind
+##    - No matching CRD was found in given configuration
+# api_portal:
+#   apiPortalServer:
+#     title: "API portal"
+#     description: "Description"
+#     # imagePullPolicy: IfNotPresent
+#     # registryCredentialsSecret: api-portal-image-pull-secret
+#     replicaCount: 1
+#     sourceUrls: "https://petstore.swagger.io/v2/swagger.json,https://petstore3.swagger.io/api/v3/openapi.json,http://myweb.lab.pksdemo.net:8080/openapi.json,http://myweb.lab.pksdemo.net:9090/v3/api-docs"
+#     sourceUrlsCacheTtlSec: "10"
+#     sourceUrlsTimeoutSec: "10"
+#     requestMemory: "512Mi"
+#     requestCpu: "100m"
+#     limitMemory: "1024Mi"
+#     limitCpu: "500m"
+#     namespace: "api-portal"
+#     trustInsecureSourceUrls: true
+#     caCertData: ""
 
-  sso:
-    enabled: false
-    # secretName: sso-credentials
+#   sso:
+#     enabled: false
+#     # secretName: sso-credentials
 
-## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-app-live-view-install.html
+
+
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/app-live-view-install.html
 appliveview:
+  ingressEnabled: true
+
+## For a single-cluster environment, the Application Live View connector connects to the cluster-local Application Live View back end to register the applications
+appliveview_connector:
   backend:
     ingressEnabled: true
-
+    host: appliveview.TAP_DOMAIN
+    # sslDeactivated: true
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-customize-installation.html#con-label-selector
+# namespace_provisioner:
+#   controller: true
+#   namespace_selector:
+#     matchExpressions:
+#     - key: apps.tanzu.vmware.com/tap-ns
+#       operator: Exists
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
+- api-portal.tanzu.vmware.com
+- learningcenter.tanzu.vmware.com
+- workshops.learningcenter.tanzu.vmware.com
+- tap-telemetry.tanzu.vmware.com

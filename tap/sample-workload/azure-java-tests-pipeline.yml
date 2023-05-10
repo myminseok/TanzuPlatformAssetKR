@@ -1,0 +1,52 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  annotations:
+    kapp.k14s.io/identity: v1;min/tekton.dev/Pipeline/java-tests;tekton.dev/v1beta1
+    kapp.k14s.io/original: '{"apiVersion":"tekton.dev/v1beta1","kind":"Pipeline","metadata":{"labels":{"apps.tanzu.vmware.com/language":"java","apps.tanzu.vmware.com/pipeline":"test","kapp.k14s.io/app":"1677026528137020974","kapp.k14s.io/association":"v1.a98169282767bb2dd6e73eb8c6a08a1d"},"name":"java-tests","namespace":"min"},"spec":{"params":[{"name":"source-url"},{"name":"source-revision"}],"tasks":[{"name":"java-tests","params":[{"name":"source-url","value":"$(params.source-url)"},{"name":"source-revision","value":"$(params.source-revision)"}],"taskSpec":{"params":[{"name":"source-url"},{"name":"source-revision"}],"steps":[{"image":"taptest.azurecr.io/gradle:jdk11","name":"java-tests","script":"cd
+      `mktemp -d`\n\nwget -qO- $(params.source-url) | tar xvz\nchmod +x ./mvnw\n#
+      ./mvnw clean test -V --no-transfer-progress\necho \" gradle Test SKip OK!!\""}]}}]}}'
+    kapp.k14s.io/original-diff-md5: 3dd13a6f21f655c248523b28e0f171e0
+  creationTimestamp: "2023-02-22T01:12:12Z"
+  generation: 1
+  labels:
+    apps.tanzu.vmware.com/language: java
+    apps.tanzu.vmware.com/pipeline: test
+    kapp.k14s.io/app: "1677026528137020974"
+    kapp.k14s.io/association: v1.a98169282767bb2dd6e73eb8c6a08a1d
+  name: java-tests
+  namespace: min
+  resourceVersion: "55283"
+  uid: 97d8f618-4ae8-493c-bb8a-facf2a6a9df7
+spec:
+  params:
+  - name: source-url
+    type: string
+  - name: source-revision
+    type: string
+  tasks:
+  - name: java-tests
+    params:
+    - name: source-url
+      value: $(params.source-url)
+    - name: source-revision
+      value: $(params.source-revision)
+    taskSpec:
+      metadata: {}
+      params:
+      - name: source-url
+        type: string
+      - name: source-revision
+        type: string
+      spec: null
+      steps:
+      - image: taptest.azurecr.io/gradle:jdk11
+        name: java-tests
+        resources: {}
+        script: |-
+          cd `mktemp -d`
+
+          wget -qO- $(params.source-url) | tar xvz
+          chmod +x ./mvnw
+          # ./mvnw clean test -V --no-transfer-progress
+          echo " gradle Test SKip OK!!"

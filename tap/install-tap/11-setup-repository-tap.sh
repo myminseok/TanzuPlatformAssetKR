@@ -9,6 +9,10 @@ verify_tap_env_param "IMGPKG_REGISTRY_USERNAME", "$IMGPKG_REGISTRY_USERNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
 verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
 
+verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
+verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_USERNAME"
+verify_tap_env_param "BUILDSERVICE_REGISTRY_PASSWORD", "$BUILDSERVICE_REGISTRY_PASSWORD"
+
 print_current_k8s
 
 parse_args "$@"
@@ -22,7 +26,7 @@ set -e
 set -x
 
 if [ "$1" == "-d" ]; then
-  tanzu package repository delete  tanzu-tap-repository --namespace tap-install -y -f
+  tanzu package repository delete  tanzu-tap-repository --namespace tap-install -y 
   tanzu secret registry delete tap-registry -n tap-install -y 
 fi
 
@@ -40,4 +44,12 @@ tanzu package repository add tanzu-tap-repository \
 
 
 tanzu package repository get tanzu-tap-repository --namespace tap-install
+
+
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html
+set +e
+tanzu secret registry delete registry-credentials -n tap-install -y
+set -e
+tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace tap-install --export-to-all-namespaces --yes
+
 
