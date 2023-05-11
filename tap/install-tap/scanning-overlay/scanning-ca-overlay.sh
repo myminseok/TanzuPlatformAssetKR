@@ -44,4 +44,8 @@ kubectl get cm -n $DEVELOPER_NAMESPACE
 cp $SCRIPTDIR/scanning-ca-overlay.yml.template /tmp/scanning-ca-overlay.yml
 sed -i -r "s/CONFIG_MAP_NAME/${CONFIG_MAP_NAME}/g" /tmp/scanning-ca-overlay.yml
 sed -i -r "s/CONFIG_MAP_SUBPATH/${REGISTRY_CA_FILE}/g" /tmp/scanning-ca-overlay.yml
+set +e
+kubectl delete -f /tmp/scanning-ca-overlay.yml
+set -e
 kubectl apply -f /tmp/scanning-ca-overlay.yml
+

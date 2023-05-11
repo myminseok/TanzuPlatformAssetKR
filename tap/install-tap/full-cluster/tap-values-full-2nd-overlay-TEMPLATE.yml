@@ -68,15 +68,12 @@ cnrs:
   default_tls_secret: tanzu-system-ingress/cnrs-default-tls
 
 
-## on, TAP 1.5 in single cluster, SourceScans for workload fails error occurs if it is installed on DEVELOPER-NAMESPACE
-## kubectl describe SourceScans tanzu-java-web-app -n demo-app => The scan job could not be created. admission webhook "validation.webhook.pipeline.tekton.dev" denied the request: validation failed: expected exactly one, got neither: 
-## namespace provisioner will deploy grype-scanner-DEVELOPER_NAMESPACE
-## Sample public source scan of a blob: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-samples-blob.html
+## if grype is installed on DEVELOPER_NAMESPACE from tap-values.yml, then developer namespace provisioner doesn't do anything regarding grype installation for developer namespace.
+### commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
 #@overlay/match missing_ok=True
 grype:
-  namespace: "tap-install"
+  namespace: "DEVELOPER_NAMESPACE"
   targetImagePullSecret: "registry-credentials"
-
 
   
 #@overlay/match missing_ok=True
@@ -124,7 +121,7 @@ api_auto_registration:
     h3BJCyYk/IIFmY0aEf9pcVQwJo2RYObUQziElByS75igz6YBQrX0HiiLz8bzfq9X
     VGR2RiY3r5gljy0dYMyInnrkiOjReQ/fBbyNIi07Q//LTErR
     -----END CERTIFICATE-----
-    
+
 #@overlay/match missing_ok=True
 api_portal:
   apiPortalServer:
@@ -156,7 +153,8 @@ package_overlays:
   # ## for pvc support on knative.
   # - name: "knative-serving-overlay"
 
-## secrets will be created by update-tap.sh via scanning-overlay/scanning-ca-overlay.sh if there is BUILDSERVICE_REGISTRY_CA_CERTIFICATE ENV.
+### commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
+### kubectl describe SourceScans tanzu-java-web-app -n demo-app => The scan job could not be created. admission webhook "validation.webhook.pipeline.tekton.dev" denied the request: validation failed: expected exactly one, got neither: 
 # - name: "grype"
 #   secrets:
 #   - name: "scanning-ca-overlay"

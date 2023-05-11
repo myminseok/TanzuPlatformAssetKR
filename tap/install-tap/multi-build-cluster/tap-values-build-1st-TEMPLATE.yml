@@ -27,9 +27,13 @@ ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to oo
   gitops:
     ssh_secret: "" # Takes "" as value by default; but can be overridden by setting a different value.
 
+## package scanning.apps.tanzu.vmware.com 
+## deployment.apps/scan-link-controller-manager > Could not find CA in Secret","err":"unable to set up connection to Supply Chain Security Tools - Store"
+## kubectl rollout restart deployment.apps/scan-link-controller-manager -n scan-link-system
 scanning:
-  metadataStore:
-    url: "" # Configuration is moved, so set this string to empty.
+  # metadataStore:
+  #   url: "" # Configuration is moved, so set this string to empty. it works for full cluster, on tap 1.5
+  metadataStore: {} # Deactivate Supply Chain Security Tools - Store integration 
 
 contour:
   envoy:

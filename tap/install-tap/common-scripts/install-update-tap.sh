@@ -53,11 +53,12 @@ OVERLAYED_CA_SHARED_YML="/tmp/$(generate_new_filename $YML 'OVERLAYED_CA_SHARED'
 overlay_IMGPKG_REGISTRY_CA_CERTIFICATE $YML $OVERLAYED_CA_SHARED_YML
 YML=$OVERLAYED_CA_SHARED_YML
 
-if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
-  OVERLAYED_CA_BUILDSERVICE_YML="/tmp/$(generate_new_filename $YML 'OVERLAYED_CA_BUILDSERVICE')"
-  overlay_BUILDSERVICE_REGISTRY_CA_CERTIFICATE $YML $OVERLAYED_CA_BUILDSERVICE_YML
-  YML=$OVERLAYED_CA_BUILDSERVICE_YML
-fi
+### TODO: commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
+# if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
+#   OVERLAYED_CA_BUILDSERVICE_YML="/tmp/$(generate_new_filename $YML 'OVERLAYED_CA_BUILDSERVICE')"
+#   overlay_BUILDSERVICE_REGISTRY_CA_CERTIFICATE $YML $OVERLAYED_CA_BUILDSERVICE_YML
+#   YML=$OVERLAYED_CA_BUILDSERVICE_YML
+# fi
 
 FINAL_YML="/tmp/$(generate_new_filename $YML 'FINAL')"
 replace_key_if_template_yml $YML $FINAL_YML 
@@ -98,9 +99,10 @@ if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
 
-if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
- create_k8s_resources_BUILDSERVICE_REGISTRY_CA_CERTIFICATE
-fi
+### TODO: commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
+# if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
+#  create_k8s_resources_BUILDSERVICE_REGISTRY_CA_CERTIFICATE
+# fi
 
 if [ "$UPDATE" == "y" ]; then
   tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML 
