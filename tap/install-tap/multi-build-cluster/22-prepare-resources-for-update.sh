@@ -7,7 +7,7 @@ run_script "$SCRIPTDIR/grype-metastore.sh"
 ### TODO: on TAP 1.5, overlaying to scantemplate broke scan job validation webhook. 
 run_script "$SCRIPTDIR/../scanning-overlay/scanning-ca-overlay.sh"
 
-run_script "$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-cert-build-cluster.sh"
+run_script "$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-access-to-build-cluster.sh"
 
 run_script "$SCRIPTDIR/../tap-gui/tap-gui-viewer-service-account-rbac.sh"
 

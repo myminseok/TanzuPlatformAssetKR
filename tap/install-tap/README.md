@@ -205,7 +205,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ### check kapp-controller-config from mgmt-cluster
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
-### 11-setup-repository-tap.sh
+### 05-prepare-resources-for-tap.sh
 run the script and check status by running:
 ```
 tanzu package repository get tanzu-tap-repository --namespace tap-install
@@ -257,21 +257,21 @@ you may debug script internal steps  with `--debug` option. it is the same for a
 install-tap/multi-{profile}-cluster/21-install-tap.sh  --debug
 ```
 
-### prepare resources before updating TAP (22-prepare-resources.sh)
+### prepare resources before updating TAP (22-prepare-resources-for-update.sh)
 
 verify metastore access:
 - [tanzu insight plugin](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-cli-plugins-insight-cli-configuration.html) should be installed: 
 run install-tap/metastore-access/1-check-metastore-health-view-cluster-manually.sh
 
-run `install-tap/multi-{profile}-cluster/22-prepare-resources.sh`
+run `install-tap/multi-{profile}-cluster/22-prepare-resources-for-update.sh`
 
-install-tap/multi-{profile}-cluster/22-prepare-resources.sh will run following scripts internally:
+install-tap/multi-{profile}-cluster/22-prepare-resources-for-update.sh will run following scripts internally:
 - install-tap/https-overlay/1-apply-tap-gui-https-view-cluster.sh: will create `tap-gui-certificate` in  `tap-gui` namespace
 - install-tap/metastore-access/metadata-store-read-client-view-cluster.sh
 - install-tap/metastore-access/2-fetch-grype-metastore-cert-view-cluster.sh:  it will creates temp files to apply `build` cluster later on : /tmp/secret-metadata-store-read-write-client.txt, /tmp/store_ca.yaml
 
 
-then records any output with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
+then records any output with '[MANUAL]' keyword from the standard output of `22-prepare-resources-for-update.sh`
 ```
 ---------------------------------------------------------------------------------------
 [MANUAL]:  Manully update tap-values 'api_auto_registration.ca_cert_data' file on RUN/FULL cluster
@@ -283,7 +283,7 @@ kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca
 ```
 
 ### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
-update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
+update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources-for-update.sh`
 configure any changes from previous step
 ```
 $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
@@ -373,7 +373,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ### check kapp-controller-config from mgmt-cluster
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
-### 11-setup-repository-tap.sh
+### 05-prepare-resources-for-tap.sh
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
@@ -389,7 +389,7 @@ for installing cert-manager, ingress with minimum default configurations
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources before updating TAP (22-prepare-resources.sh)
+### prepare resources before updating TAP (22-prepare-resources-for-update.sh)
 
 if you missed to fetch metastore cert from `view` cluster
 - switch context to `view` cluster
@@ -398,11 +398,11 @@ it will creates temp files to apply `build` cluster:
 - /tmp/secret-metadata-store-read-write-client.txt
 - /tmp/store_ca.yaml
 
-run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
+run install-tap/multi-{profile}-cluster/22-prepare-resources-for-update.sh 
 it will run following scripts internally:
 - install-tap/multi-build-cluster/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
 - install-tap/scanning-overlay/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
-- install-tap/metastore-access/3-apply-grype-metastore-cert-build-cluster.sh: apply metastore config
+- install-tap/metastore-access/3-apply-grype-metastore-access-to-build-cluster.sh: apply metastore config
 - install-tap/tap-gui/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
 
 #### setup RBAC access to `BUILD` cluster from tap-gui on `VIEW` cluster
@@ -411,7 +411,7 @@ and and locate `VIEW` cluster and update the tap on `VIEW` cluster
 - install-tap/multi-view-cluster/23-update-tap.sh
 
 ### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
-update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
+update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources-for-update.sh`
 configure any changes from previous step
 ```
 $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
@@ -443,11 +443,11 @@ or you may specify other file:
 install-tap/multi-{profile}-cluster/23-update-tap.sh -f /path/to/my-values.yml
 ```
 
-### install tap `tbs full deps` dependencies (30-setup-repository-tbs-full-deps.sh)
+### install tap `tbs full deps` dependencies (30-prepare-resources-tbs-full-deps.sh)
 
 switch context to `build` and install package.
 ```
-install-tap/30-setup-repository-tbs-full-deps.sh
+install-tap/30-prepare-resources-tbs-full-deps.sh
 install-tap/31-install-tbs-full-deps.sh
 ```
 
@@ -469,7 +469,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ### check kapp-controller-config from mgmt-cluster
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
-### 11-setup-repository-tap.sh
+### 05-prepare-resources-for-tap.sh
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
@@ -485,9 +485,9 @@ for installing cert-manager, ingress with minimum default configurations
 install-tap/multi-{profile}-cluster/21-install-tap.sh
 ```
 
-### prepare resources before updating TAP (22-prepare-resources.sh)
+### prepare resources before updating TAP (22-prepare-resources-for-update.sh)
 
-run install-tap/multi-{profile}-cluster/22-prepare-resources.sh 
+run install-tap/multi-{profile}-cluster/22-prepare-resources-for-update.sh 
 it will run following scripts internally:
 - install-tap/https-overlay/1-apply-cnrs-default-tls-run-cluster.sh: create `cnrs-default-tls` in `tap-install` namespace
 - install-tap/tap-gui/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
@@ -498,7 +498,7 @@ and and locate `VIEW` cluster and update the tap on `VIEW` cluster
 - install-tap/multi-view-cluster/23-update-tap.sh
 
 ### edit tap-values-{profile}-2nd-overlay-TEMPLATE.yml
-update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources.sh`
+update any output from previous step especially with '[MANUAL]' keyword from the standard output of `22-prepare-resources-for-update.sh`
 configure any changes from previous step
 ```
 $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
@@ -559,13 +559,13 @@ kubectl delete cm config-network -n knative-serving
 
 ### check kapp-controller-config from mgmt-cluster
 
-### 11-setup-repository-tap.sh
+### 05-prepare-resources-for-tap.sh
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 
 ### install tap with profile (21-install-tap.sh)
 
-### prepare resources before updating TAP (22-prepare-resources.sh)
+### prepare resources before updating TAP (22-prepare-resources-for-update.sh)
 
 #### setup RBAC access to `ITERATE` cluster from tap-gui on `VIEW` cluster
 in the standard output, copy `CLUSTER_URL` and `CLUSTER_TOKEN` and edit install-tap/multi-view-cluster/tap-values-view-2nd-overlay-TEMPLATE.yml 
@@ -621,7 +621,7 @@ it will create
 
 and verify resources before deploying workload
 ```
-kubectl get clusterbuilder <= will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-setup-repository-tbs-full-deps.sh)
+kubectl get clusterbuilder <= will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh)
 kubectl get ScanTemplate -A <= will be created on developer-namespace by tap-namespace-provisioning controller.
 kubectl get ScanPolicy -A
 kubectl get Pipeline -A
@@ -659,7 +659,7 @@ setup developer namespace by executing `install-tap/71-setup-developer-namespace
 
 
 ### troubleshooting
-- tap/minseok-build-service => will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-setup-repository-tbs-full-deps.sh)
+- tap/minseok-build-service => will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh)
 - tap/minseok-supply-chain => will be created after the initial workload has been built successfully.
 
 

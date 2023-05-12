@@ -52,4 +52,3 @@ tanzu secret registry delete registry-credentials -n tap-install -y
 set -e
 tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace tap-install --export-to-all-namespaces --yes
 
-

@@ -6,8 +6,9 @@ shared:
   ingress_domain: "TAP_DOMAIN"
   image_registry:
     project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
-    username: "IMGPKG_REGISTRY_USERNAME"
-    password: "IMGPKG_REGISTRY_PASSWORD"
+    secret:
+      name: "registry-credentials" ## will be created by "05-prepare-resources-for-tap.sh"
+      namespace: "tap-install"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
 

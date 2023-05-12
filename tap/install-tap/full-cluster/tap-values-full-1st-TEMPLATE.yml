@@ -6,7 +6,7 @@ shared:
   image_registry:
     project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
     secret:
-      name: "registry-credentials" ## will be created by "11-setup-repository-tap.sh"
+      name: "registry-credentials" ## will be created by "05-prepare-resources-for-tap.sh"
       namespace: "tap-install"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
@@ -32,16 +32,19 @@ contour:
       type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
 
 buildservice:
-  ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-setup-repository-tbs-full-deps.sh 
+  ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 31-setup-repository-tbs-full-deps.sh 
   kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
-  kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
-  kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
+  kp_default_repository_secret: # Takes the value from the shared section by default, but can be overridden by setting a different value.
+    name: "kp-default-repo-secret"
+    namespace: "build-service"
   stack_configuration: jammy-only
   ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
   exclude_dependencies: true
 
 tap_gui:
   service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/tap-gui-plugins-scc-tap-gui.html
+  metadataStoreAutoconfiguration: true 
   app_config:
     customize:
       custom_name: "Developer Portal"
@@ -60,7 +63,7 @@ tap_gui:
         # - type: url
         #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
 
-    # github working
+    ## github integration
     # auth:
     #   environment: development
     #   providers:
@@ -86,12 +89,8 @@ metadata_store:
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-upgrading.html
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html#full-profile-3
   ns_for_export_app_cert: "*"
-<<<<<<< Updated upstream
-  app_service_type: ClusterIP # Defaults to LoadBalancer. If shared.ingress_domain is set earlier, this must be set to ClusterIP.
-=======
   app_service_type: ClusterIP # Defaults to LoadBalancer. If shared.ingress_domain is set earlier, this must be set to ClusterIP. it works for full cluster on tap 1.5
   #app_service_type: LoadBalancer ## it works for full cluster on tap 1.5
->>>>>>> Stashed changes
 
 ## api_portal will be comment out here due to following error and will be installed while updating tap
 ## error while installation.

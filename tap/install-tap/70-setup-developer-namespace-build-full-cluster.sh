@@ -4,8 +4,6 @@ source $SCRIPTDIR/common-scripts/common.sh
 load_env_file $SCRIPTDIR/tap-env
 
 
-
-
 verify_tap_env_param "DEVELOPER_NAMESPACE", "$DEVELOPER_NAMESPACE"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_HOSTNAME", "$BUILDSERVICE_REGISTRY_HOSTNAME"
 verify_tap_env_param "BUILDSERVICE_REGISTRY_USERNAME", "$BUILDSERVICE_REGISTRY_USERNAME"
@@ -47,8 +45,6 @@ fi
 
 
 
-set -x
-
 set +e
 tanzu secret registry delete registry-credentials -n $DEVELOPER_NAMESPACE -y
 set -e
@@ -62,6 +58,18 @@ set +e
 kubectl delete -f $TAP_ENV_DIR/git-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
 set -e
 kubectl apply -f $TAP_ENV_DIR/git-ssh-secret-basic.yml -n $DEVELOPER_NAMESPACE
+
+echo ""
+echo "---------------------------------------------------------------------------------------"
+echo "[Optional-Manual]: setup additional git secrets if required."
+echo "---------------------------------------------------------------------------------------"
+echo "  cp $SCRIPTDIR/setup-developer-namespace/git-ssh-secret-ssh.yml.template  $TAP_ENV_DIR/git-ssh-secret-ssh.yml "
+echo "  vi $TAP_ENV_DIR/git-ssh-secret-ssh.yml"
+echo "  kubectl apply -f $TAP_ENV_DIR/git-ssh-secret-ssh.yml -n $DEVELOPER_NAMESPACE"
+echo ""
+
+
+
 
 ## TODO: only for pvc testing...
 # kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
