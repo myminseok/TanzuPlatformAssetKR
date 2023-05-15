@@ -619,7 +619,7 @@ it will create
 - testing pipeline
 - gitops secret
 
-and verify resources before deploying workload
+and verify resources before deploying workload by running `install-tap/71-verify-developer-namespace-build-full-cluster.sh`
 ```
 kubectl get clusterbuilder <= will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh)
 kubectl get ScanTemplate -A <= will be created on developer-namespace by tap-namespace-provisioning controller.
@@ -638,7 +638,7 @@ it will create files on /tmp folder
 
 reference https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/multicluster-getting-started.html
 
-setup developer namespace by executing `install-tap/71-setup-developer-namespace-run-iterate-cluster.sh`
+setup developer namespace by executing `install-tap/73-setup-developer-namespace-run-iterate-cluster.sh`
 
 apply the delivery copied from `BUILD` cluster by executing `sample-workload/multi-cluster-workload/3-apply-deliverable-to-run-cluster.sh`
 it will does
@@ -655,7 +655,7 @@ and verify access
 - sample-workload/multi-cluster-workload/4-verify.sh
 
 ### Deploy workload on `ITERATE` cluster
-setup developer namespace by executing `install-tap/71-setup-developer-namespace-run-iterate-cluster.sh`
+setup developer namespace by executing `install-tap/73-setup-developer-namespace-run-iterate-cluster.sh`
 
 
 ### troubleshooting
