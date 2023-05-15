@@ -592,7 +592,7 @@ see the the same section(`verify update and fetch data(24-verify-resources.sh`) 
 `01-setup-tapconfig.sh` created following files to $TAP_ENV_DIR. edit following files
 - testing-pipeline.yml
 - scan-policy.yml
-- git-ssh-secret-basic.yml
+- gitops-ssh-secret-basic.yml
 
 edit `$TAP_ENV_DIR/testing-pipeline.yml`.  update image `gradle` location accessible from k8s cluster
 ```
@@ -611,7 +611,7 @@ spec:
 ```
 
 edit `$TAP_ENV_DIR/scan-policy.yml`
-edit `$TAP_ENV_DIR/git-ssh-secret-basic.yml`
+edit `$TAP_ENV_DIR/gitops-ssh-secret-basic.yml`
 
 setup developer namespace by executing `install-tap/70-setup-developer-namespace-build-full-cluster.sh`
 it will create 

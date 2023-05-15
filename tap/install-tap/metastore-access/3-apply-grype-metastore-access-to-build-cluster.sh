@@ -8,8 +8,8 @@ load_env_file $SCRIPTDIR/../tap-env
 
 function verify_file_exist {
   if [ ! -f "$1" ]; then
-    echo "[ERROR] $1 not found"
-    echo "  run 2-fetch-grype-metastore-access-from-view-cluster.sh first on VIEW cluster"
+    echo "[ERROR] Required file not found: $1"
+    echo "  => run 2-fetch-grype-metastore-access-from-view-cluster.sh first on VIEW cluster"
     echo ""
     exit 1
   fi

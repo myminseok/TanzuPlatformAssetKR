@@ -11,3 +11,7 @@ run_script "$SCRIPTDIR/../metastore-access/3-apply-grype-metastore-access-to-bui
 
 run_script "$SCRIPTDIR/../tap-gui/tap-gui-viewer-service-account-rbac.sh"
 
+
+## create overlay that used in tap-values.yml
+kubectl apply -f $SCRIPTDIR/../setup-developer-namespace/namespace-provisioner-overlay.yml -n tap-install
+

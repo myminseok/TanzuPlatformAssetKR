@@ -26,8 +26,10 @@ set -e
 set -x
 
 if [ "$1" == "-d" ]; then
+set +e
   tanzu package repository delete  tanzu-tap-repository --namespace tap-install -y 
   tanzu secret registry delete tap-registry -n tap-install -y 
+set -e
 fi
 
 tanzu secret registry add tap-registry \
@@ -37,6 +39,10 @@ tanzu secret registry add tap-registry \
     --namespace tap-install \
     --export-to-all-namespaces \
     --yes
+set +e
+ kubectl get secretexports -A | grep tap-registry
+set -e
+
 
 tanzu package repository add tanzu-tap-repository \
   --url ${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages:$TAP_VERSION \
@@ -52,3 +58,6 @@ tanzu secret registry delete registry-credentials -n tap-install -y
 set -e
 tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace tap-install --export-to-all-namespaces --yes
 
+set +e
+ kubectl get secretexports -A | grep registry-credentials
+set -e

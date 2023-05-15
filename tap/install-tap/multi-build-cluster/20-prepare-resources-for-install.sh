@@ -19,10 +19,12 @@ kubectl create ns tap-install
 set -e
 set -x
 
-if [ "$1" == "-d" ]; then
+# if [ "$1" == "-d" ]; then
+  set +e
   tanzu package repository delete  kp-default-repo-secret --namespace tap-install -y 
   tanzu secret registry delete kp-default-repo-secret -n tap-install -y 
-fi
+  set -e
+# fi
 
 tanzu secret registry add kp-default-repo-secret \
     --server   $BUILDSERVICE_REGISTRY_HOSTNAME \
@@ -32,4 +34,6 @@ tanzu secret registry add kp-default-repo-secret \
     --export-to-all-namespaces \
     --yes
 
-
+set +e
+ kubectl get secretexports -A | grep kp-default-repo-secret
+set -e

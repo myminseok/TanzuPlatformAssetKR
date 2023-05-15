@@ -1,8 +1,8 @@
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tbs-offline-install-deps.html
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPTDIR/common-scripts/common.sh
-load_env_file $SCRIPTDIR/tap-env
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $SCRIPTDIR/../common-scripts/common.sh
+load_env_file $SCRIPTDIR/../tap-env
 
 print_current_k8s
 

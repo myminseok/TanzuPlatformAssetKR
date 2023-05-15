@@ -337,6 +337,8 @@ function confirm_target_k8s {
     echo ""
 }
 
+
+
 function verify_tap_env_param {
   KEY=$1
   VALUE=$2
@@ -384,6 +386,11 @@ function overlay_IMGPKG_REGISTRY_CA_CERTIFICATE {
     cp $YML_1st $RESULT_YTT_YML
     return
   fi
+
+  echo "[YML] Saving IMGPKG_REGISTRY_CA_CERTIFICATE to $REGISTRY_CA_FILE_PATH"
+  echo "$IMGPKG_REGISTRY_CA_CERTIFICATE" | base64 -d > $REGISTRY_CA_FILE_PATH
+
+
   
   echo "[YML] Overlaying IMGPKG_REGISTRY_CA_CERTIFICATE from $TAP_ENV to  $RESULT_YTT_YML"
   YML_1st=$YML

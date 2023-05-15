@@ -15,5 +15,6 @@ data:
         namespaces:
         - name: demo-app
         # additional parameters about dev-ns1 added via label/annotations or GitOps
-        - name: my-space2
+        - name: my-space
         # additional parameters about dev-ns1 added via label/annotations or GitOps
+        - name: my-space4
