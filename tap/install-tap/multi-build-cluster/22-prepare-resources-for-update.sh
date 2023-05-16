@@ -2,7 +2,7 @@
 export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/prepare-resources.sh $@
 
-run_script "$SCRIPTDIR/grype-metastore.sh"
+run_script "$SCRIPTDIR/../metastore-secrets/grype-metastore.sh"
 
 ### TODO: on TAP 1.5, overlaying to scantemplate broke scan job validation webhook. 
 run_script "$SCRIPTDIR/../scanning-overlay/scanning-ca-overlay.sh"

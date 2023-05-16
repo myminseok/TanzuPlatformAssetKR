@@ -1,6 +1,9 @@
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPTDIR/sample-env
+source $SCRIPTDIR/../install-tap/common-scripts/common.sh
+load_env_file $SCRIPTDIR/tap-env
+DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
+
 
 ## this command doesn't have necessary params for register-api, so it will fail to register api to tap-gui.
 tanzu apps workload delete tanzu-java-web-app --yes -n ${DEVELOPER_NAMESPACE}

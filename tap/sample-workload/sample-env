@@ -1,6 +1,0 @@
-
-TAP_DOMAIN="tap.example.com"
-#DEVELOPER_NAMESPACE="demo-app"
-DEVELOPER_NAMESPACE="my-space2"
-WORKLOAD_NAME="tanzu-java-web-app"
-

@@ -1,0 +1,7 @@
+#@ load("@ytt:overlay", "overlay")
+#@overlay/match by=overlay.subset({"apiVersion": "secretgen.carvel.dev/v1alpha1", "kind": "SecretExport","metadata":{"namespace":"metadata-store-secrets"}}), expects="0+"
+---
+spec:
+  toNamespaces: 
+  #@overlay/append
+  - "DEVELOPER_NAMESPACE"

@@ -3,7 +3,8 @@ SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/../common-scripts/common.sh
 load_env_file $SCRIPTDIR/../tap-env
 
-echo "This script should run on BUILD cluster"
+DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
+echo "This script should run on BUILD cluster for namespace: $DEVELOPER_NAMESPACE"
 
 set +e
 kubectl create ns $DEVELOPER_NAMESPACE

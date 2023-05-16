@@ -205,7 +205,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ### check kapp-controller-config from mgmt-cluster
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
-### 05-prepare-resources-for-tap.sh
+### 10-prepare-resources-for-tap.sh
 run the script and check status by running:
 ```
 tanzu package repository get tanzu-tap-repository --namespace tap-install
@@ -373,7 +373,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ### check kapp-controller-config from mgmt-cluster
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
-### 05-prepare-resources-for-tap.sh
+### 10-prepare-resources-for-tap.sh
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
@@ -400,7 +400,7 @@ it will creates temp files to apply `build` cluster:
 
 run install-tap/multi-{profile}-cluster/22-prepare-resources-for-update.sh 
 it will run following scripts internally:
-- install-tap/multi-build-cluster/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
+- install-tap/metastore-secrets/grype-metastore.sh: SecretExport info for grype.metastore in tap-values.yml
 - install-tap/scanning-overlay/scanning-ca-overlay.sh: As a TAP operator, create CUSTOM CA configmap on DEVELOPER namespace. add additional config map as much as you need. 
 - install-tap/metastore-access/3-apply-grype-metastore-access-to-build-cluster.sh: apply metastore config
 - install-tap/tap-gui/tap-gui-viewer-service-account-rbac.sh: create service account to access `BUILD` cluster from Tap-gui on view cluster.
@@ -469,7 +469,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ### check kapp-controller-config from mgmt-cluster
 see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 
-### 05-prepare-resources-for-tap.sh
+### 10-prepare-resources-for-tap.sh
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
@@ -559,7 +559,7 @@ kubectl delete cm config-network -n knative-serving
 
 ### check kapp-controller-config from mgmt-cluster
 
-### 05-prepare-resources-for-tap.sh
+### 10-prepare-resources-for-tap.sh
 
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 

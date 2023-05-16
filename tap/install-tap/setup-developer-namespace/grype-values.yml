@@ -1,0 +1,10 @@
+namespace: "my-space5"
+targetImagePullSecret: "registry-credentials"
+metadataStore:
+  url: https://metadata-store.tap.lab.pcfdemo.net" ## point to lb on view-cluster in DNS.
+  caSecret:
+    name: "store-ca-cert" # The name of the secret containing the ca.crt
+    importFromNamespace: "metadata-store-secrets" # The namespace where Store is deployed (if single cluster) or where the connection secrets were created (if multi-cluster)
+  authSecret:
+    name: "store-auth-token" # The name of the secret containing the auth token to connect to Store
+    importFromNamespace: "metadata-store-secrets" # The namespace where the connection secrets were created (if multi-cluster)

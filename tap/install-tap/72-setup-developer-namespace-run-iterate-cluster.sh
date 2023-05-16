@@ -1,7 +1,8 @@
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPTDIR/common-scripts/common.sh
-load_env_file $SCRIPTDIR/tap-env
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export INSTALL_TAP_DIR=$SCRIPTDIR
+source $INSTALL_TAP_DIR/common-scripts/common.sh
+load_env_file $SCRIPTDIR/../tap-env
 
 DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
 
@@ -32,21 +33,28 @@ set +e
 kubectl create ns $DEVELOPER_NAMESPACE 
 set -e
 
-
+## for ALL profile
 set +e
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-customize-installation.html#con-label-selector
+## setup scan template to this namespace
 kubectl label namespace "$DEVELOPER_NAMESPACE" apps.tanzu.vmware.com/tap-ns=$DEVELOPER_NAMESPACE
 set -e
-
+## for ALL profile
 sh $SCRIPTDIR/setup-developer-namespace/gitops-ssh.sh $DEVELOPER_NAMESPACE
 
 
 
 
 
-# ## OPTIONAL
-# set +e
+# ## it will be set by namespace-provisioning
 # tanzu secret registry delete registry-credentials -n $DEVELOPER_NAMESPACE -y
 # set -e
 # tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace $DEVELOPER_NAMESPACE
 
+
+echo "================================="
+echo ""
+echo "wait for creating resources... for 5 second"
+sleep 5
+
+$SCRIPTDIR/73-verify-developer-namespace-run-iterate-cluster.sh $DEVELOPER_NAMESPACE

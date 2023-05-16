@@ -12,8 +12,8 @@ tap_gui:
   ## https-overlay/apply-tap-gui-https-view-cluster.sh
   #@overlay/match missing_ok=True
   tls:
-   namespace: tap-gui
-   secretName: tap-gui-cert
+    namespace: tap-gui
+    secretName: tap-gui-cert
   service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
   app_config:
     organization:
@@ -26,12 +26,14 @@ tap_gui:
         target: https://metadata-store-app.metadata-store:8443/api/v1
         changeOrigin: true
         secure: false
+        #@overlay/match missing_ok=True
         headers:
           ## IMPORTANT: Authorization is required even if full cluster.
           ## TOKEN: kubectl get secrets metadata-store-read-write-client -n metadata-store -o jsonpath="{.data.token}" | base64 -d
           ##  https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap/GUID-scst-store-create_service_account_access_token.html
           Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InYyUUVpaFA3alk0TDNBalZERkNCNlFTbHhsM1A3SHhxZmxnWVpkT1EweVUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQ5OTU0YjBhLThkYTktNGMzMS04NmVmLWM5OGYwZjk2YWNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCJ9.gti4z3bkMuDhqZ3Qp2TGHqyIyhVo8G72Ujg2rtN6VQ9js5gtIlW-HOsU5UN3Dzje9hMUDbW6I0v1cBxlELYGQ9Og276NZLulKOFOmD39L-AQQeI9HnolnSujEClnsG1jv8GxmJ-kvDs4L9EQaaXZJOqrY__AsXBIphoUC423CYyFAR58ZKA4qxqkVFeweubgtVe4EAkcOzMCE6CH-cI9FTLevgluHpwGQajB1lZCfvU-YL1Ob3KTuKa9EYtqIT50Bq8mL-W2EtLFfcRDssAGMQxUYZJMhWfDlTG92P1hVUVnowNZsGv7Sih52wn1eALQo-4gvfyxMDlGgIKH7l0IBw"
           X-Custom-Source: project-star
+
     #@overlay/match missing_ok=True
     catalog:
       locations:
@@ -142,3 +144,11 @@ accelerator:
     include: true
   sources:
     skip_tls_verify: true
+#@overlay/match missing_ok=True
+#@overlay/replace
+excluded_packages:
+- policy.apps.tanzu.vmware.com # workaround for policy controller error
+- api-portal.tanzu.vmware.com
+- learningcenter.tanzu.vmware.com
+- workshops.learningcenter.tanzu.vmware.com
+- tap-telemetry.tanzu.vmware.com

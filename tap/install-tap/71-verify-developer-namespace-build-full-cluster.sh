@@ -1,8 +1,8 @@
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPTDIR/common-scripts/common.sh
-load_env_file $SCRIPTDIR/tap-env
-
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export INSTALL_TAP_DIR=$SCRIPTDIR/
+source $INSTALL_TAP_DIR/common-scripts/common.sh
+load_env_file $SCRIPTDIR/../tap-env
 
 DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
 
@@ -64,9 +64,12 @@ kubectl get secrets gitops-basic -n $DEVELOPER_NAMESPACE
 kubectl get secrets gitops-ssh -n $DEVELOPER_NAMESPACE
 echo ""
 echo "================================="
-sh $SCRIPTDIR/test-grype/test-sourcescan.sh
+sh $INSTALL_TAP_DIR/test-grype/test-sourcescan.sh
 
 echo ""
 echo "================================="
 kubectl get sourcescan -A
 #kubectl describe sourcescan public-blob-source-example -n $DEVELOPER_NAMESPACE
+echo ""
+echo "================================="
+echo "SUCCESS namespace '$DEVELOPER_NAMESPACE' is ready "

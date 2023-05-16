@@ -1,7 +1,8 @@
 #!/bin/bash
-SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPTDIR/common-scripts/common.sh
-load_env_file $SCRIPTDIR/tap-env
+export SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export INSTALL_TAP_DIR=$SCRIPTDIR
+source $INSTALL_TAP_DIR/common-scripts/common.sh
+load_env_file $SCRIPTDIR/../tap-env
 
 DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
 
@@ -34,32 +35,45 @@ set +e
 kubectl create ns $DEVELOPER_NAMESPACE
 set -e
 
-
+## for ALL profile
 set +e
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/namespace-provisioner-customize-installation.html#con-label-selector
+## setup scan template to this namespace
 kubectl label namespace "$DEVELOPER_NAMESPACE" apps.tanzu.vmware.com/tap-ns=$DEVELOPER_NAMESPACE
 set -e
 
-sh $SCRIPTDIR/setup-developer-namespace/gitops-ssh.sh $DEVELOPER_NAMESPACE
+## for RUN/FULL profile
+## add namespace to metastore secrets.
+run_script "$INSTALL_TAP_DIR/metastore-secrets/grype-metastore-add-developer-namespace.sh" $DEVELOPER_NAMESPACE
 
+
+## for ALL profile
+sh $INSTALL_TAP_DIR/setup-developer-namespace/gitops-ssh.sh $DEVELOPER_NAMESPACE
+
+
+## for RUN/FULL profile
 kubectl apply -f "$TAP_ENV_DIR/scan-policy.yml" -n $DEVELOPER_NAMESPACE
 kubectl apply -f "$TAP_ENV_DIR/testing-pipeline.yml"  -n $DEVELOPER_NAMESPACE
 
-
+## for RUN/FULL profile
 ## OPTIONAL
 if [ ! -z "$BUILDSERVICE_REGISTRY_CA_CERTIFICATE" ]; then
   echo "creating scanning-ca-overlay. (BUILDSERVICE_REGISTRY_CA_CERTIFICATE env found from $TAP_ENV)"
-  run_script "$SCRIPTDIR/scanning-overlay/scanning-ca-overlay.sh" $DEVELOPER_NAMESPACE
+  run_script "$INSTALL_TAP_DIR/scanning-overlay/scanning-ca-overlay.sh" $DEVELOPER_NAMESPACE
 fi
 
 
-# ## OPTIONAL
-# set +e
+# ## it will be set by namespace-provisioning
 # tanzu secret registry delete registry-credentials -n $DEVELOPER_NAMESPACE -y
 # set -e
 # tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace $DEVELOPER_NAMESPACE
 
 
-
 ## TODO: only for pvc testing...
-# kubectl apply -f $SCRIPTDIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
+# kubectl apply -f $INSTALL_TAP_DIR/setup-developer-namespace/rbac-developer-namespace-podintent.yml -n $DEVELOPER_NAMESPACE
+echo "================================="
+echo ""
+echo "wait for creating resources... for 5 second"
+sleep 5
+
+$SCRIPTDIR/71-verify-developer-namespace-build-full-cluster.sh $DEVELOPER_NAMESPACE

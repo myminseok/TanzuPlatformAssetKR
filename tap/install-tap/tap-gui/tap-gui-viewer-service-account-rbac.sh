@@ -30,5 +30,6 @@ echo ""
 CURRENT_CONTEXT=$(kubectl config current-context)
 echo CONTEXT: $CURRENT_CONTEXT
 echo CLUSTER_URL: $CLUSTER_URL
+echo "CLUSTER_TOKEN will not be changed even if running this script multiple times"
 echo CLUSTER_TOKEN: $CLUSTER_TOKEN
 echo CLUSTER_CA_CERTIFICATES: $CLUSTER_CA_CERTIFICATES

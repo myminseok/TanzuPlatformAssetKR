@@ -5,7 +5,8 @@ metadata:
   name: store-ca-cert
   namespace: metadata-store-secrets
 spec:
-  toNamespace: "DEVELOPER_NAMESPACE"
+  toNamespaces:  ## make sure this key is 'plural'
+  - "DEVELOPER_NAMESPACE"
 ---
 apiVersion: secretgen.carvel.dev/v1alpha1
 kind: SecretExport
@@ -13,4 +14,5 @@ metadata:
   name: store-auth-token
   namespace: metadata-store-secrets
 spec:
-  toNamespace: "DEVELOPER_NAMESPACE"
+  toNamespaces:  ## make sure this key is 'plural'
+  - "DEVELOPER_NAMESPACE"

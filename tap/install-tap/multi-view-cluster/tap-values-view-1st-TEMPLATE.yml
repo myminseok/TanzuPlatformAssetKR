@@ -6,8 +6,9 @@ shared:
   ingress_domain: "TAP_DOMAIN"
   image_registry:
     project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
-    username: "IMGPKG_REGISTRY_USERNAME"
-    password: "IMGPKG_REGISTRY_PASSWORD"
+    secret:
+      name: "registry-credentials" ## will be created by "11-setup-repository-tap.sh"
+      namespace: "tap-install"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
 
@@ -48,3 +49,7 @@ appliveview_connector:
 
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
+- api-portal.tanzu.vmware.com
+- learningcenter.tanzu.vmware.com
+- workshops.learningcenter.tanzu.vmware.com
+- tap-telemetry.tanzu.vmware.com
