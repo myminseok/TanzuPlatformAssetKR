@@ -7,14 +7,15 @@ shared:
   image_registry:
     project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
     secret:
-      name: "registry-credentials" ## will be created by "11-setup-repository-tap.sh"
+      name: "registry-credentials" ## will be created by 10-prepare-resources-for-tap.sh
       namespace: "tap-install"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
 
 buildservice:
-  ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 31-setup-repository-tbs-full-deps.sh 
+  ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh, 31-install-tbs-full-deps.sh 
   kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
+  ## TODO apply kp-default-repo-secret
   kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
   kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
   # kp_default_repository_secret: # Takes the value from the shared section by default, but can be overridden by setting a different value.

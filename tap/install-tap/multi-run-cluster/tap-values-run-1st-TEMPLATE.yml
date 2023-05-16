@@ -6,8 +6,9 @@ shared:
   ingress_domain: "TAP_DOMAIN"
   image_registry:
     project_path: "IMGPKG_REGISTRY_HOSTNAME/IMGPKG_REPO"
-    username: "IMGPKG_REGISTRY_USERNAME"
-    password: "IMGPKG_REGISTRY_PASSWORD"
+    secret:
+      name: "registry-credentials" ## will be created by "10-prepare-resources-for-tap.sh"
+      namespace: "tap-install"
   kubernetes_distribution: "" # To be passed only for OpenShift. Defaults to "".
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
 
@@ -20,6 +21,12 @@ buildservice:
   exclude_dependencies: true
 
 supply_chain: basic            # Can take testing, testing_scanning.
+ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
+  registry:
+    server: "BUILDSERVICE_REGISTRY_HOSTNAME" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+    repository: "SUPPLYCHAIN_REPO" # Takes the value from shared section above by default, but can be overridden by setting a different value.
+  gitops:
+    ssh_secret: "" # Takes "" as value by default; but can be overridden by setting a different value.
 
 contour:
   envoy:

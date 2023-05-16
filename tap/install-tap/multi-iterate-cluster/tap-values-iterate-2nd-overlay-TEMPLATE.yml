@@ -63,8 +63,8 @@ namespace_provisioner:
 
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
-- api-portal.tanzu.vmware.com
-- learningcenter.tanzu.vmware.com
-- workshops.learningcenter.tanzu.vmware.com
-- tap-telemetry.tanzu.vmware.com
-- sso.apps.tanzu.vmware.com
+# - api-portal.tanzu.vmware.com
+# - learningcenter.tanzu.vmware.com
+# - workshops.learningcenter.tanzu.vmware.com
+# - tap-telemetry.tanzu.vmware.com
+# - sso.apps.tanzu.vmware.com

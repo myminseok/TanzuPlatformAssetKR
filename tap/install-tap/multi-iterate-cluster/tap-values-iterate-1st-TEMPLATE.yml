@@ -36,6 +36,7 @@ contour:
     service:
       type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
 
+
 appliveview_connector:
   backend:
     sslDisabled: true
@@ -44,3 +45,8 @@ appliveview_connector:
 
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
+# - api-portal.tanzu.vmware.com
+# - learningcenter.tanzu.vmware.com
+# - workshops.learningcenter.tanzu.vmware.com
+# - tap-telemetry.tanzu.vmware.com
+# - sso.apps.tanzu.vmware.com

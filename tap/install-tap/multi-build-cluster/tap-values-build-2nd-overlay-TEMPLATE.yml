@@ -5,6 +5,7 @@
 profile: build # Can take iterate, build, run, view.
 
 #@overlay/match missing_ok=True
+## 'testing_scanning' will trigger 'namespace-provisioner' to provision scantemplates
 supply_chain: testing_scanning # Can take testing, testing_scanning.
 
 #@overlay/match missing_ok=True

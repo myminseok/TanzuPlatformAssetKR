@@ -12,7 +12,7 @@
 This Scripts is not intended to 
 - provides Gitops model based TAP installation.
 
-Following scripts are compatible for TAP `1.3` and only tested on
+Following scripts are compatible for TAP `1.5` and only tested on
 - TKG on vSphere
 - Ubuntu
 - Mac OS
@@ -219,6 +219,9 @@ CONDITIONS:              - type: ReconcileSucceeded
   reason: ""
   message: ""
 ```
+
+don't run this script again after installing TAP. it will break config.
+
 ### (Optional) edit tap-values-{profile}-1st-TEMPLATE.yml
 ```
 vi $TAP_ENV_DIR/tap-values-{profile}-1st-TEMPLATE.yml
@@ -361,6 +364,7 @@ Error from server (NotFound): configmaps "config-network" not found
 
 ### verify tap-gui access.
 open https://tap-gui.TAP-DOMAIN (check TAP_ENV)
+
 
 =======================================================================================
 ## Install TAP on `BUILD` cluster
@@ -615,9 +619,12 @@ edit `$TAP_ENV_DIR/gitops-ssh-secret-basic.yml`
 
 setup developer namespace by executing `install-tap/70-setup-developer-namespace-build-full-cluster.sh`
 it will create 
+- ScanTemplate 
 - scan policy 
 - testing pipeline
 - gitops secret
+
+please note that only `testing_scanning` supply chain on tap-values.yml  will provision `scantemplates` resources on the namespace by 'namespace-provisioner'
 
 and verify resources before deploying workload by running `install-tap/71-verify-developer-namespace-build-full-cluster.sh`
 ```
@@ -633,6 +640,8 @@ check workload from tap-gui and fetch `deliverable`:
 - sample-workload/multi-cluster-workload/2-fetch-deliverable-from-build-cluster.sh
 it will create files on /tmp folder
 - /tmp/${WORKLOAD_NAME}-delivery.yml
+
+if you set gitops on supplychain in tap-values.yml, then it will create Pull Request on the target git.
 
 ### Deploy workload on `RUN` cluster
 
@@ -659,10 +668,9 @@ setup developer namespace by executing `install-tap/73-setup-developer-namespace
 
 
 ### troubleshooting
-- tap/minseok-build-service => will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh)
-- tap/minseok-supply-chain => will be created after the initial workload has been built successfully.
-
-
-
-
+- tap/*-build-service => will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh)
+- tap/*-supply-chain => will be created after the initial workload has been built successfully.
+- do not change yml file `*TEMPLATE*` such as `tap-values-{profile}-1st-TEMPLATE.yml`.
+- only `testing_scanning` supply chain on tap-values.yml  will provision `scanteplates` resources on the namespace by 'namespace-provisioner'
+- DNS for tap-gui.TAP_DOMAIN should point to envoy IP of `view`, `full` cluster. workload URL maps to envoy IP on `run` cluster.
 
