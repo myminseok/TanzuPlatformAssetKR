@@ -1,0 +1,17 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: django-app
+  description: Django Web App
+  tags:
+    - app-accelerator
+    - django
+    - python
+    - web
+    - tanzu
+  annotations:
+    'backstage.io/kubernetes-label-selector': 'app.kubernetes.io/part-of=django-app'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: default-team2

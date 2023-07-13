@@ -1,0 +1,19 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  labels:
+    app.kubernetes.io/part-of: django-app 
+    apps.tanzu.vmware.com/workload-type: web
+  name: django-app
+spec:
+  params:
+  - name: annotations
+    value:
+      autoscaling.knative.dev/minScale: "1"
+  - name: clusterBuilder
+    value: full
+  source:
+    git:
+      url: https://github.com/gordon-jin/django_accelerator
+      ref:
+        branch: main
