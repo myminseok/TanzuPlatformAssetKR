@@ -29,6 +29,7 @@ if [ "$1" == "-d" ]; then
 set +e
   tanzu package repository delete  tanzu-tap-repository --namespace tap-install -y 
   tanzu secret registry delete tap-registry -n tap-install -y 
+  tanzu secret registry delete registry-credentials -n tap-install -y
 set -e
 fi
 
@@ -44,20 +45,26 @@ set +e
 set -e
 
 
-tanzu package repository add tanzu-tap-repository \
-  --url ${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages:$TAP_VERSION \
-  --namespace tap-install
-
-
-tanzu package repository get tanzu-tap-repository --namespace tap-install
-
-
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html
-set +e
-tanzu secret registry delete registry-credentials -n tap-install -y
-set -e
-tanzu secret registry add registry-credentials --server $BUILDSERVICE_REGISTRY_HOSTNAME  --username $BUILDSERVICE_REGISTRY_USERNAME --password $BUILDSERVICE_REGISTRY_PASSWORD --namespace tap-install --export-to-all-namespaces --yes
+tanzu secret registry add registry-credentials \
+--server $BUILDSERVICE_REGISTRY_HOSTNAME  \
+--username $BUILDSERVICE_REGISTRY_USERNAME \
+--password $BUILDSERVICE_REGISTRY_PASSWORD \
+--namespace tap-install \
+--export-to-all-namespaces --yes
 
 set +e
  kubectl get secretexports -A | grep registry-credentials
 set -e
+
+
+url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tap-packages:$TAP_VERSION 
+if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
+  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages:$TAP_VERSION 
+fi
+tanzu package repository add tanzu-tap-repository \
+  --url $url \
+  --namespace tap-install
+
+
+tanzu package repository get tanzu-tap-repository --namespace tap-install

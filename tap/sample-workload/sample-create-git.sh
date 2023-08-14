@@ -13,6 +13,6 @@ tanzu apps workload create tanzu-java-web-app \
 --type web \
 --label app.kubernetes.io/part-of=tanzu-java-web-app \
 --label apps.tanzu.vmware.com/has-tests=true \
---label apis.apps.tanzu.vmware.com/register-api="true" \
 --yes -n ${DEVELOPER_NAMESPACE}
+#--label apis.apps.tanzu.vmware.com/register-api="true" \
 ##watch kubectl get workload,gitrepository,pipelinerun,images.kpack,podintent,app,services.serving -n ${DEVELOPER_NAMESPACE}

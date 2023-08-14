@@ -31,7 +31,7 @@ echo "[MANUAL] PREREQUSITE "
 echo "---------------------------------------------------------------"
 echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
 echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
-echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
+echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REGISTRY_USERNAME/$IMGPKG_REPO as PUBLIC"
 
 check_executable "imgpkg"
 
@@ -44,7 +44,12 @@ if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
 fi
 
 public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:${TAP_VERSION}"
-relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages"
+relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tap-packages"
+if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
+  relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages"
+fi
+
+
 
 get_value_from_args 'DOWNLOAD_TAR_PATH' '--download' $@
 if [ ! -z $DOWNLOAD_TAR_PATH ]; then

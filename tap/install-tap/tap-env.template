@@ -3,16 +3,28 @@
 ## for example, the script TanzuPlatformAssetKR/tap/install-tap/multi-build-cluster/21-install-tap.sh wil use the KEY in tap-env file 
 ## and generates tap-values.yml from the TanzuPlatformAssetKR/tap/install-tap/multi-build-cluster/tap-values-build-1st-TEMPLATE.yml by replacing the value.
 
-## takes long time: imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
-export TAP_VERSION=1.5.0
-## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
-TBS_FULL_DEPS_VERSION=1.10.8
 
+## takes long time: imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
+export TAP_VERSION=1.5.3
+## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
+TBS_FULL_DEPS_VERSION=1.10.10
+
+
+## only for 03-online-prepare-resources-for-tap.sh
+INSTALL_REGISTRY_HOSTNAME="registry.tanzu.vmware.com"
+INSTALL_REGISTRY_USERNAME="--"
+INSTALL_REGISTRY_PASSWORD='--' 
+INSTALL_REPO="tanzu-application-platform"
+
+## "ghcr.io", 
 IMGPKG_REGISTRY_HOSTNAME="my-image-registry.example.com"
+## optional.
+IMGPKG_REGISTRY_OWNER="ownername" 
 ## any path for operational preference. it should be PUBLIC.
 IMGPKG_REPO="tap"
-IMGPKG_REGISTRY_USERNAME="admin"
-IMGPKG_REGISTRY_PASSWORD=''
+IMGPKG_REGISTRY_USERNAME="ownername"
+## password or ghcr.io TOKEN
+IMGPKG_REGISTRY_PASSWORD='' 
 
 ## optional) custom CA. cat harbor.crt | base6d -w0
 IMGPKG_REGISTRY_CA_CERTIFICATE="LS0xxxx="

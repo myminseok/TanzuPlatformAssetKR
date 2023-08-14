@@ -28,20 +28,21 @@ verify_tap_env_param "IMGPKG_REGISTRY_USERNAME", "$IMGPKG_REGISTRY_USERNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
 verify_tap_env_param "IMGPKG_REPO", "$IMGPKG_REPO"
 verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
+verify_tap_env_param "TBS_FULL_DEPS_VERSION", "$TBS_FULL_DEPS_VERSION"
 
 echo "==============================================================="
 echo "[MANUAL] PREREQUSITE "
 echo "---------------------------------------------------------------"
 echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
 echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
-echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
+echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REGISTRY_USERNAME/$IMGPKG_REPO as PUBLIC"
 
 check_executable "imgpkg"
 
 ## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-VERSION=${TBS_FULL_DEPS_VERSION:-"1.7.2"}
+#VERSION=${TBS_FULL_DEPS_VERSION:-"1.7.2"}
 
-echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$VERSION"
+echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TBS_FULL_DEPS_VERSION"
 
 REGISTRY_CA_PATH_ARG=""
 if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
@@ -51,8 +52,11 @@ if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
   REGISTRY_CA_PATH_ARG="--registry-ca-cert-path $REGISTRY_CA_PATH"
 fi
 
-public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-tbs-deps-package-repo:${VERSION}"
-relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps"
+public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-tbs-deps-package-repo:${TBS_FULL_DEPS_VERSION}"
+relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tbs-full-deps"
+if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
+  relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps"
+fi
 
 get_value_from_args 'DOWNLOAD_TAR_PATH' '--download' $@
 if [ ! -z $DOWNLOAD_TAR_PATH ]; then
