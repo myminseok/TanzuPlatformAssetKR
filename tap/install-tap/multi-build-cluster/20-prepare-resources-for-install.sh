@@ -34,6 +34,6 @@ tanzu secret registry add kp-default-repo-secret \
     --export-to-all-namespaces \
     --yes
 
-set +e
- kubectl get secretexports -A | grep kp-default-repo-secret
-set -e
+# set +e
+#  kubectl get secretexports -A | grep kp-default-repo-secret
+# set -e
