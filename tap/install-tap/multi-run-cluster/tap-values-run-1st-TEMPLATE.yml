@@ -33,5 +33,22 @@ contour:
     service:
       type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
 
+# https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/app-live-view-troubleshooting.html#no-live-info
+# connector should be able to connect to the workload url from run cluster.
+# connector should be able to connect to appliveview.TAP_DOMAIN
+# on view cluster:  k get secret -n app-live-view appliveview-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d
+# kubectl -n app-live-view-connector delete pods -l=name=application-live-view-connector
+appliveview_connector:
+  backend:
+    sslDisabled: false
+    sslDeactivated: false
+    ingressEnabled: true
+    host: appliveview.TAP_DOMAIN
+    #host: appliveview.tap.lab.pcfdemo.net
+    caCertData: |-
+      -----BEGIN CERTIFICATE-----
+      -----END CERTIFICATE-----
+  activateSensitiveOperations: true
+  
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
