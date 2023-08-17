@@ -33,7 +33,7 @@ contour:
 
 buildservice:
   ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 31-setup-repository-tbs-full-deps.sh 
-  kp_default_repository: "BUILDSERVICE_REGISTRY_REPOSITORY"
+  kp_default_repository: "BUILDSERVICE_OWNER_REPOSITORY/BUILDSERVICE_REPO"
   ## TODO apply kp-default-repo-secret
   kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
   kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
