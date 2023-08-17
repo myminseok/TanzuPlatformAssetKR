@@ -13,7 +13,7 @@ shared:
   #ca_cert_data: | # it will be injected by scripts if IMGPKG_REGISTRY_CA_CERTIFICATE is defined as ENV
 
 buildservice:
-  kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
+  kp_default_repository: "BUILDSERVICE_REGISTRY_REPOSITORY"
   kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
   kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
   stack_configuration: jammy-only
