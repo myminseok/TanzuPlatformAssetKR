@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tanzu-java-web-app-ingress
+  annotations:
+    ako.vmware.com/enable-tls: "true"
+#  labels:
+#    loadbalancer: run-1-glsb-dev
+spec:
+#  ingressClassName: avi-lb
+  rules:
+    - host: new-tanzu-java-web-app.my-space.tap-choice-sculpin.tapsandbox.com
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: tanzu-java-web-app-00003-private
+              port:
+                number: 80

@@ -1,0 +1,97 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  annotations:
+    projectcontour.io/ingress.class: contour
+  creationTimestamp: "2023-08-16T04:05:52Z"
+  generation: 5
+  labels:
+    contour.networking.knative.dev/domainHash: a58d3b96c00f19f3ed2e402fd7c7481e1bc6be51
+    contour.networking.knative.dev/generation: "5"
+    contour.networking.knative.dev/parent: tanzu-java-web-app
+    projectcontour.io/ingress.class: contour
+  name: tanzu-java-web-app-contour-6254425696947954ed4bf0882f76a391tanz
+  namespace: my-space
+  ownerReferences:
+  - apiVersion: networking.internal.knative.dev/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Ingress
+    name: tanzu-java-web-app
+    uid: f5696ac4-05f8-4a64-a27f-edc4740157dd
+  resourceVersion: "316865"
+  uid: 47638f53-94e1-4992-8478-e3e3eb65467c
+spec:
+  routes:
+  - conditions:
+    - header:
+        exact: override
+        name: K-Network-Hash
+    enableWebsockets: true
+    requestHeadersPolicy:
+      set:
+      - name: K-Network-Hash
+        value: 0a4fe68026503286cff4acb1a8edfd1ef0de769c207a066009b56c60d089e8a5
+    retryPolicy:
+      count: 2
+      retryOn:
+      - cancelled
+      - connect-failure
+      - refused-stream
+      - resource-exhausted
+      - retriable-status-codes
+      - reset
+    services:
+    - name: tanzu-java-web-app-00003
+      port: 80
+      requestHeadersPolicy:
+        set:
+        - name: Knative-Serving-Namespace
+          value: my-space
+        - name: Knative-Serving-Revision
+          value: tanzu-java-web-app-00003
+      weight: 100
+    timeoutPolicy:
+      idle: infinity
+      response: infinity
+  - enableWebsockets: true
+    requestHeadersPolicy: {}
+    retryPolicy:
+      count: 2
+      retryOn:
+      - cancelled
+      - connect-failure
+      - refused-stream
+      - resource-exhausted
+      - retriable-status-codes
+      - reset
+    services:
+    - name: tanzu-java-web-app-00003
+      port: 80
+      requestHeadersPolicy:
+        set:
+        - name: Knative-Serving-Namespace
+          value: my-space
+        - name: Knative-Serving-Revision
+          value: tanzu-java-web-app-00003
+      weight: 100
+    timeoutPolicy:
+      idle: infinity
+      response: infinity
+  virtualhost:
+    fqdn: tanzu-java-web-app.my-space.tap-choice-sculpin.tapsandbox.com
+    tls:
+      secretName: my-space/route-e68e20dd-5c20-4c5f-9ec6-2e27394be4c6
+status:
+  conditions:
+  - lastTransitionTime: "2023-08-16T04:15:03Z"
+    message: Valid HTTPProxy
+    observedGeneration: 5
+    reason: Valid
+    status: "True"
+    type: Valid
+  currentStatus: valid
+  description: Valid HTTPProxy
+  loadBalancer:
+    ingress:
+    - ip: 192.158.30.192
