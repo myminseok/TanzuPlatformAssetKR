@@ -23,6 +23,7 @@ echo $VERSION
 
 # tanzu package available get -n tap-install full-tbs-deps.tanzu.vmware.com
 
+tanzu package installed delete full-tbs-deps  -n tap-install -y
+
 tanzu package install full-tbs-deps -p full-tbs-deps.tanzu.vmware.com -v $VERSION -n tap-install
 
-# tanzu package installed delete full-tbs-deps  -n tap-install -y

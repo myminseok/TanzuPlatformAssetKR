@@ -39,10 +39,15 @@ echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REGISTRY_USERN
 
 check_executable "imgpkg"
 
-## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-#VERSION=${TBS_FULL_DEPS_VERSION:-"1.7.2"}
-
+if [ -z $TBS_FULL_DEPS_VERSION ]; then
+  TBS_FULL_DEPS_VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
+  if [ "x$TBS_FULL_DEPS_VERSION" == "x" ]; then
+    echo "ERROR no buildservice.tanzu.vmware.com found"
+    exit 1
+  fi
+fi
 echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TBS_FULL_DEPS_VERSION"
+
 
 REGISTRY_CA_PATH_ARG=""
 if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
@@ -87,4 +92,5 @@ fi
 echo "Downloading and Uploading to $IMGPKG_REGISTRY_HOSTNAME directly."
 set -x
 imgpkg copy -b $public_repo_url --to-repo $relocated_repo_url $REGISTRY_CA_PATH_ARG
+
 
