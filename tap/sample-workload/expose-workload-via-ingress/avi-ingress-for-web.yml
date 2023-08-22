@@ -9,7 +9,7 @@ metadata:
 spec:
 #  ingressClassName: avi-lb
   rules:
-    - host: new-tanzu-java-web-app.my-space.tap-choice-sculpin.tapsandbox.com
+    - host: new-tanzu-java-web-app.my-space.tap-comic-woodcock.tapsandbox.com
       http:
         paths:
         - path: /

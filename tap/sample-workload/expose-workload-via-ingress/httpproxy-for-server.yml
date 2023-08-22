@@ -1,0 +1,57 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: tanzu-java-web-app
+  namespace: my-space
+spec:
+  virtualhost:
+    fqdn: myapp.apps.tap.lab.pcfdemo.net
+    tls:
+      secretName: app-tls-secret
+  routes:
+  - enableWebsockets: true
+    retryPolicy:
+      count: 2
+      retryOn:
+      - cancelled
+      - connect-failure
+      - refused-stream
+      - resource-exhausted
+      - retriable-status-codes
+      - reset
+    services:
+    - name: tanzu-java-web-app  # add label apps.tanzu.vmware.com/workload-type: server in workload.yml
+      port: 8080
+      requestHeadersPolicy:
+        set:
+        - name: Knative-Serving-Namespace
+          value: my-space
+        - name: Knative-Serving-Revision
+          value: tanzu-java-web-app 
+      weight: 100
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+   name: selfsigned-issuer
+   namespace: my-space
+spec:
+   selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+   name: app-domain-selfsigned-certificate
+   namespace: my-space
+spec:
+   commonName: "*.apps.tap.lab.pcfdemo.net"
+   dnsNames:
+     - "*.apps.tap.lab.pcfdemo.net"
+   issuerRef:
+     name: selfsigned-issuer
+   privateKey:
+     algorithm: RSA
+   secretName: app-tls-secret
+   usages:
+   - server auth
+   - client auth
