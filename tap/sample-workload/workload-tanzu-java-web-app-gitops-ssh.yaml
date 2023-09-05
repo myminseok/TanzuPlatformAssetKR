@@ -17,6 +17,7 @@ spec:
       url: ssh://git@github.com/myminseok/tanzu-java-web-app.git
       ref:
         branch: main
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scc-gitops-vs-regops.html#gitops-workload-parameters-5
   params:
     - name: gitops_server_address
       #value: https://github.com ## "https://" prefix" is required for basic auth.
@@ -28,6 +29,8 @@ spec:
     - name: gitops_ssh_secret
       #value: gitops-basic
       value: gitops-ssh
+    - name: gitops_branch
+      value: my-gitops-branch
     - name: api_descriptor
       value:
         type: openapi
