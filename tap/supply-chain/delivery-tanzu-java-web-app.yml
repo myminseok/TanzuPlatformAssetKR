@@ -1,0 +1,19 @@
+kind: Service
+metadata:
+  name: tanzu-java-web-app-grypesourcescan
+  annotations:
+    ootb.apps.tanzu.vmware.com/servicebinding-workload: "true"
+    ootb.apps.tanzu.vmware.com/apidescriptor-ref: "true"
+    kapp.k14s.io/change-rule: upsert after upserting servicebinding.io/ServiceBindings
+  labels:
+    app.kubernetes.io/part-of: tanzu-java-web-app-grypesourcescan
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/component: run
+    carto.run/workload-name: tanzu-java-web-app-grypesourcescan
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: "100"
+        autoscaling.knative.dev/metric: rps
+        autoscaling.knative.dev/minScale: "2"
