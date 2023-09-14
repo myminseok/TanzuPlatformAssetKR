@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/has-tests: true
     apis.apps.tanzu.vmware.com/register-api: "true"
-    apps.tanzu.vmware.com/pipeline: test
   annotations:
     autoscaling.knative.dev/minScale: "1"
 spec:
@@ -17,6 +16,15 @@ spec:
       ref:
         branch: main
   params:
+    - name: "volumes"
+      value: 
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: tanzu-java-web-app-pvc
+    - name: volumeMounts
+      value: 
+      - name: data-volume
+        mountPath: /home/cnb/data
     - name: api_descriptor
       value:
         type: openapi
