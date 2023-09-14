@@ -18,17 +18,19 @@ INSTALL_REPO="tanzu-application-platform"
 
 ## "ghcr.io", 
 IMGPKG_REGISTRY_HOSTNAME="my-image-registry.example.com"
-## optional.
+## optional. put empty for harbor
 IMGPKG_REGISTRY_OWNER="ownername" 
-## any path for operational preference. it should be PUBLIC.
+## any path for operational preference. it should be create as PUBLIC manually
 IMGPKG_REPO="tap"
+## for authentication.
 IMGPKG_REGISTRY_USERNAME="ownername"
-## password or ghcr.io TOKEN
+## password for authentication.  or ghcr.io TOKEN
 IMGPKG_REGISTRY_PASSWORD='' 
 
 ## optional) custom CA. cat harbor.crt | base6d -w0
 IMGPKG_REGISTRY_CA_CERTIFICATE="LS0xxxx="
 
+BUILDSERVICE_REGISTRY_REPOSITORY="my-image-registry.example.com"
 BUILDSERVICE_REGISTRY_HOSTNAME="my-image-registry.example.com"
 BUILDSERVICE_REGISTRY_USERNAME="admin"
 BUILDSERVICE_REGISTRY_PASSWORD=''
