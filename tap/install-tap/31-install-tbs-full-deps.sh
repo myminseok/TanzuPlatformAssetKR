@@ -11,19 +11,10 @@ if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
 
+# tanzu package installed delete full-deps  -n tap-install -y
 
-#VERSION=1.7.2
+# tanzu package available get  full-deps.buildservice.tanzu.vmware.com -n tap-install
 
-VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-if [ "$VERSION" == "" ]; then
-  echo "ERROR no buildservice.tanzu.vmware.com found"
-  exit 1
-fi
-echo $VERSION
-
-# tanzu package available get -n tap-install full-tbs-deps.tanzu.vmware.com
-
-tanzu package installed delete full-tbs-deps  -n tap-install -y
-
-tanzu package install full-tbs-deps -p full-tbs-deps.tanzu.vmware.com -v $VERSION -n tap-install
-
+echo "kp_default_repository: $BUILDSERVICE_REGISTRY_HOSTNAME/$BUILDSERVICE_REPO" > /tmp/full-tbs-deps-values.yml
+cat /tmp/full-tbs-deps-values.yml
+tanzu package install full-tbs-deps -p full-deps.buildservice.tanzu.vmware.com -v "> 0.0.0" -n tap-install --values-file /tmp/full-tbs-deps-values.yml

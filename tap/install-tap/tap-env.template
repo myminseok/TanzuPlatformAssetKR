@@ -5,9 +5,11 @@
 
 
 ## takes long time: imgpkg tag list -i registry.tanzu.vmware.com/tanzu-application-platform/tap-packages | grep -v sha | sort -V
-export TAP_VERSION=1.5.3
+export TAP_VERSION=1.6.3
+
 ## tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
-TBS_FULL_DEPS_VERSION=1.10.10
+## don't need for 1.6.x+
+##TBS_FULL_DEPS_VERSION=1.10.10
 
 
 ## only for 03-online-prepare-resources-for-tap.sh

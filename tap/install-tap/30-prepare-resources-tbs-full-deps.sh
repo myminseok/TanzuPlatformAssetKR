@@ -17,19 +17,19 @@ set +e
 tanzu package repository delete tbs-full-deps-repository -n tap-install -y
 set -e
 
-if [ -z $TBS_FULL_DEPS_VERSION ]; then
-  TBS_FULL_DEPS_VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-  if [ "x$TBS_FULL_DEPS_VERSION" == "x" ]; then
+if [ -z $TAP_VERSION ]; then
+  TAP_VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
+  if [ "x$TAP_VERSION" == "x" ]; then
     echo "ERROR no buildservice.tanzu.vmware.com found"
     exit 1
   fi
 fi
-echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TBS_FULL_DEPS_VERSION"
+echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 
 
-url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tbs-full-deps:$TBS_FULL_DEPS_VERSION
+url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tbs-full-deps:$TAP_VERSION
 if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
-  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps:$TBS_FULL_DEPS_VERSION
+  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps:$TAP_VERSION
 fi
 
 tanzu package repository add tbs-full-deps-repository \
