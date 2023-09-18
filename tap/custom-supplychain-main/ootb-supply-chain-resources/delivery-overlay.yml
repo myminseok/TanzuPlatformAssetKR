@@ -1,0 +1,11 @@
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind": "Service"}), expects="1+"
+---
+spec:
+  template:
+    metadata:
+      #@overlay/match missing_ok=True
+      annotations:
+        #@overlay/replace
+        autoscaling.knative.dev/minScale: "4"

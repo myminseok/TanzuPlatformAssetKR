@@ -1,0 +1,27 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterRunTemplate
+metadata:
+  name: tekton-sonarqube-taskrun
+  namespace: my-space
+  labels:
+    apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
+spec:
+  outputs:
+    revision: spec.params[?(@.name=="source-revision")].value
+    url:      spec.params[?(@.name=="source-url")].value
+
+  template:
+    apiVersion: tekton.dev/v1beta1
+    kind: TaskRun
+    metadata:
+      generateName: $(runnable.metadata.name)$-
+      labels: $(runnable.metadata.labels)$
+    spec:
+      serviceAccountName: $(runnable.spec.inputs.serviceAccountName)$
+      params: $(runnable.spec.inputs.tekton-params)$
+
+      taskRef:
+        name: $(selected.metadata.name)$
+      workspaces:
+        - name: tmp-workspace
+          emptyDir: {}

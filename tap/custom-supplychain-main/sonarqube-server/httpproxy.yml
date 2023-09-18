@@ -1,0 +1,15 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: sonarqube-httpproxy
+  namespace: sonarqube
+spec:
+  virtualhost:
+    fqdn: sonar-server.lab.pcfdemo.net
+    tls:
+      secretName: sonar-default-tls
+  routes:
+    - services:
+        - name: sonarqube-sonarqube
+          port: 9000
+

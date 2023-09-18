@@ -1,0 +1,225 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterTemplate
+metadata:
+  annotations:
+    kapp.k14s.io/identity: v1;/carto.run/ClusterTemplate/config-writer-template;carto.run/v1alpha1
+    kapp.k14s.io/original: '{"apiVersion":"carto.run/v1alpha1","kind":"ClusterTemplate","metadata":{"labels":{"kapp.k14s.io/app":"1694555316234948570","kapp.k14s.io/association":"v1.03a82cf1322797de0619e77144b895b2"},"name":"config-writer-template"},"spec":{"healthRule":{"singleConditionType":"Ready"},"params":[{"default":"default","name":"serviceAccount"},{"default":{},"name":"registry"}],"ytt":"#@
+      load(\"@ytt:data\", \"data\")\n#@ load(\"@ytt:json\", \"json\")\n#@ load(\"@ytt:base64\",
+      \"base64\")\n#@ load(\"@ytt:assert\", \"assert\")\n\n#@ def merge_labels(fixed_values):\n#@   labels
+      = {}\n#@   if hasattr(data.values.workload.metadata, \"labels\"):\n#@     labels.update(data.values.workload.metadata.labels)\n#@   end\n#@   labels.update(fixed_values)\n#@   return
+      labels\n#@ end\n\n#@ def is_monorepo_approach():\n#@   if ''gitops_server_address''
+      in data.values.params and ''gitops_repository_owner'' in data.values.params
+      and ''gitops_repository_name'' in data.values.params:\n#@     return True\n#@   end\n#@   if
+      ''gitops_server_address'' in data.values.params or ''gitops_repository_owner''
+      in data.values.params or ''gitops_repository_name'' in data.values.params:\n#@     ''gitops_server_address''
+      in data.values.params or assert.fail(\"missing param: gitops_server_address\")\n#@     ''gitops_repository_owner''
+      in data.values.params or assert.fail(\"missing param: gitops_repository_owner\")\n#@     ''gitops_repository_name''
+      in data.values.params or assert.fail(\"missing param: gitops_repository_name\")\n#@   end\n#@   return
+      False\n#@ end\n\n#@ def has_git_params():\n#@   if ''gitops_repository_prefix''
+      in data.values.params:\n#@     return True\n#@   end\n#@\n#@   if ''gitops_repository''
+      in data.values.params:\n#@     return True\n#@   end\n#@\n#@   return False\n#@
+      end\n\n#@ def is_gitops():\n#@   return is_monorepo_approach() or has_git_params()\n#@
+      end\n\n#@ def param(key):\n#@   if not key in data.values.params:\n#@     return
+      None\n#@   end\n#@   return data.values.params[key]\n#@ end\n\n#@ def strip_trailing_slash(some_string):\n#@   if
+      some_string[-1] == \"/\":\n#@     return some_string[:-1]\n#@   end\n#@   return
+      some_string\n#@ end\n\n#@ def mono_repository():\n#@   strip_trailing_slash(data.values.params.gitops_server_address)\n#@   if
+      param(\"gitops_server_kind\") == \"azure\":\n#@     return \"/\".join([\n#@       strip_trailing_slash(data.values.params.gitops_server_address),\n#@       strip_trailing_slash(data.values.params.gitops_repository_owner),\n#@       \"_git\",\n#@       data.values.params.gitops_repository_name,\n#@     ])\n#@   end\n#@\n#@   return
+      \"/\".join([\n#@     strip_trailing_slash(data.values.params.gitops_server_address),\n#@     strip_trailing_slash(data.values.params.gitops_repository_owner),\n#@     data.values.params.gitops_repository_name,\n#@   ])
+      + \".git\"\n#@ end\n\n#@ def git_repository():\n#@   if is_monorepo_approach():\n#@     return
+      mono_repository()\n#@   end\n#@\n#@   if ''gitops_repository'' in data.values.params:\n#@     return
+      param(\"gitops_repository\")\n#@   end\n#@\n#@   prefix = param(\"gitops_repository_prefix\")\n#@   if
+      param(\"gitops_server_kind\") == \"azure\":\n#@     return prefix + data.values.workload.metadata.name\n#@   end\n#@   return
+      prefix + data.values.workload.metadata.name + \".git\"\n#@ end\n\n#@ def image():\n#@   return
+      \"/\".join([\n#@    data.values.params.registry.server,\n#@    data.values.params.registry.repository,\n#@    \"-\".join([\n#@      data.values.workload.metadata.name,\n#@      data.values.workload.metadata.namespace,\n#@      \"bundle\",\n#@    ])\n#@   ])
+      + \":\" + data.values.workload.metadata.uid\n#@ end\n\n#@ def ca_cert_data():\n#@   if
+      \"ca_cert_data\" not in param(\"registry\"):\n#@     return \"\"\n#@   end\n#@\n#@   return
+      param(\"registry\")[\"ca_cert_data\"]\n#@ end\n\n---\napiVersion: carto.run/v1alpha1\nkind:
+      Runnable\nmetadata:\n  name: #@ data.values.workload.metadata.name + \"-config-writer\"\n  labels:
+      #@ merge_labels({ \"app.kubernetes.io/component\": \"config-writer\" })\nspec:\n  #@
+      if/end hasattr(data.values.workload.spec, \"serviceAccountName\"):\n  serviceAccountName:
+      #@ data.values.workload.spec.serviceAccountName\n\n  runTemplateRef:\n    name:
+      tekton-taskrun\n\n  inputs:\n    serviceAccount: #@ data.values.params.serviceAccount\n    taskRef:\n      kind:
+      ClusterTask\n      name: #@ \"git-writer\" if is_gitops() else \"image-writer\"\n    params:\n      #@
+      if is_gitops():\n      - name: git_repository\n        value: #@ git_repository()\n      -
+      name: git_branch\n        value: #@ param(\"gitops_branch\")\n      - name:
+      git_user_name\n        value: #@ param(\"gitops_user_name\")\n      - name:
+      git_user_email\n        value: #@ param(\"gitops_user_email\")\n      - name:
+      git_commit_message\n        value: #@ param(\"gitops_commit_message\")\n      -
+      name: git_files\n        value: #@ base64.encode(json.encode(data.values.config))\n      #@
+      if/end is_monorepo_approach():\n      - name: sub_path\n        value: #@ \"config/\"
+      + data.values.workload.metadata.namespace + \"/\" + data.values.workload.metadata.name\n      #@
+      else:\n      - name: files\n        value: #@ base64.encode(json.encode(data.values.config))\n      -
+      name: bundle\n        value: #@ image()\n      - name: ca_cert_data\n        value:
+      #@ ca_cert_data()\n      #@ end\n"}}'
+    kapp.k14s.io/original-diff-md5: 8e1ca9893e5a176f4f857f553ca2442f
+  creationTimestamp: "2023-09-12T21:48:37Z"
+  generation: 1
+  labels:
+    kapp.k14s.io/app: "1694555316234948570"
+    kapp.k14s.io/association: v1.03a82cf1322797de0619e77144b895b2
+  name: config-writer-template
+  resourceVersion: "13406"
+  uid: 1f4cb97f-207e-485a-a0ab-539339df143a
+spec:
+  healthRule:
+    singleConditionType: Ready
+  lifecycle: mutable
+  params:
+  - default: default
+    name: serviceAccount
+  - default: {}
+    name: registry
+  ytt: |
+    #@ load("@ytt:data", "data")
+    #@ load("@ytt:json", "json")
+    #@ load("@ytt:base64", "base64")
+    #@ load("@ytt:assert", "assert")
+
+    #@ def merge_labels(fixed_values):
+    #@   labels = {}
+    #@   if hasattr(data.values.workload.metadata, "labels"):
+    #@     labels.update(data.values.workload.metadata.labels)
+    #@   end
+    #@   labels.update(fixed_values)
+    #@   return labels
+    #@ end
+
+    #@ def is_monorepo_approach():
+    #@   if 'gitops_server_address' in data.values.params and 'gitops_repository_owner' in data.values.params and 'gitops_repository_name' in data.values.params:
+    #@     return True
+    #@   end
+    #@   if 'gitops_server_address' in data.values.params or 'gitops_repository_owner' in data.values.params or 'gitops_repository_name' in data.values.params:
+    #@     'gitops_server_address' in data.values.params or assert.fail("missing param: gitops_server_address")
+    #@     'gitops_repository_owner' in data.values.params or assert.fail("missing param: gitops_repository_owner")
+    #@     'gitops_repository_name' in data.values.params or assert.fail("missing param: gitops_repository_name")
+    #@   end
+    #@   return False
+    #@ end
+
+    #@ def has_git_params():
+    #@   if 'gitops_repository_prefix' in data.values.params:
+    #@     return True
+    #@   end
+    #@
+    #@   if 'gitops_repository' in data.values.params:
+    #@     return True
+    #@   end
+    #@
+    #@   return False
+    #@ end
+
+    #@ def is_gitops():
+    #@   return is_monorepo_approach() or has_git_params()
+    #@ end
+
+    #@ def param(key):
+    #@   if not key in data.values.params:
+    #@     return None
+    #@   end
+    #@   return data.values.params[key]
+    #@ end
+
+    #@ def strip_trailing_slash(some_string):
+    #@   if some_string[-1] == "/":
+    #@     return some_string[:-1]
+    #@   end
+    #@   return some_string
+    #@ end
+
+    #@ def mono_repository():
+    #@   strip_trailing_slash(data.values.params.gitops_server_address)
+    #@   if param("gitops_server_kind") == "azure":
+    #@     return "/".join([
+    #@       strip_trailing_slash(data.values.params.gitops_server_address),
+    #@       strip_trailing_slash(data.values.params.gitops_repository_owner),
+    #@       "_git",
+    #@       data.values.params.gitops_repository_name,
+    #@     ])
+    #@   end
+    #@
+    #@   return "/".join([
+    #@     strip_trailing_slash(data.values.params.gitops_server_address),
+    #@     strip_trailing_slash(data.values.params.gitops_repository_owner),
+    #@     data.values.params.gitops_repository_name,
+    #@   ]) + ".git"
+    #@ end
+
+    #@ def git_repository():
+    #@   if is_monorepo_approach():
+    #@     return mono_repository()
+    #@   end
+    #@
+    #@   if 'gitops_repository' in data.values.params:
+    #@     return param("gitops_repository")
+    #@   end
+    #@
+    #@   prefix = param("gitops_repository_prefix")
+    #@   if param("gitops_server_kind") == "azure":
+    #@     return prefix + data.values.workload.metadata.name
+    #@   end
+    #@   return prefix + data.values.workload.metadata.name + ".git"
+    #@ end
+
+    #@ def image():
+    #@   return "/".join([
+    #@    data.values.params.registry.server,
+    #@    data.values.params.registry.repository,
+    #@    "-".join([
+    #@      data.values.workload.metadata.name,
+    #@      data.values.workload.metadata.namespace,
+    #@      "bundle",
+    #@    ])
+    #@   ]) + ":" + data.values.workload.metadata.uid
+    #@ end
+
+    #@ def ca_cert_data():
+    #@   if "ca_cert_data" not in param("registry"):
+    #@     return ""
+    #@   end
+    #@
+    #@   return param("registry")["ca_cert_data"]
+    #@ end
+
+    ---
+    apiVersion: carto.run/v1alpha1
+    kind: Runnable
+    metadata:
+      name: #@ data.values.workload.metadata.name + "-config-writer"
+      labels: #@ merge_labels({ "app.kubernetes.io/component": "config-writer" })
+    spec:
+      #@ if/end hasattr(data.values.workload.spec, "serviceAccountName"):
+      serviceAccountName: #@ data.values.workload.spec.serviceAccountName
+
+      runTemplateRef:
+        name: tekton-taskrun
+
+      inputs:
+        serviceAccount: #@ data.values.params.serviceAccount
+        taskRef:
+          kind: ClusterTask
+          name: #@ "git-writer" if is_gitops() else "image-writer"
+        params:
+          #@ if is_gitops():
+          - name: git_repository
+            value: #@ git_repository()
+          - name: git_branch
+            value: #@ param("gitops_branch")
+          - name: git_user_name
+            value: #@ param("gitops_user_name")
+          - name: git_user_email
+            value: #@ param("gitops_user_email")
+          - name: git_commit_message
+            value: #@ param("gitops_commit_message")
+          - name: git_files
+            value: #@ base64.encode(json.encode(data.values.config))
+          #@ if/end is_monorepo_approach():
+          - name: sub_path
+            value: #@ "config/" + data.values.workload.metadata.namespace + "/" + data.values.workload.metadata.name
+          #@ else:
+          - name: files
+            value: #@ base64.encode(json.encode(data.values.config))
+          - name: bundle
+            value: #@ image()
+          - name: ca_cert_data
+            value: #@ ca_cert_data()
+          #@ end

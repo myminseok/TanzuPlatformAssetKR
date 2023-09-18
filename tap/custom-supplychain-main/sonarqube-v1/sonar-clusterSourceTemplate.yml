@@ -1,0 +1,38 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  annotations:
+  name: sonarqube-template
+spec:
+  # We have to use `ytt` instead of `template` so we can fetch variables from Cartographer.
+  ytt: |
+    #@ load("@ytt:data", "data")
+    apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: sonarqube-pipeline-run-
+    spec:
+      pipelineRef:
+        name: sonarqube-pipeline
+      params:
+        - name: source-url
+          value: #@ data.values.source.url
+        - name: source-revision
+          value: #@ data.values.source.revision
+      workspaces:
+        - name: tmp-workspace
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 256Mi
+
+  # We're not changing anything (only scanning), so the output is the same as the input.
+  # NOTE: this will be found in the TaskRun that is automatically created. To observe,
+  # look in your cluster for a TaskRun while the SupplyChain is running.
+  urlPath: .status.pipelineSpec.tasks[0].params[0].value
+  revisionPath: .status.pipelineSpec.tasks[0].params[1].value
+  lifecycle: tekton
+

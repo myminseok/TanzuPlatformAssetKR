@@ -1,0 +1,31 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  labels:
+    apps.tanzu.vmware.com/pipeline: test     # (!) required
+  name: sonarqube-pipeline
+  namespace: my-space
+spec:
+  params:
+    - name: source-url                       # (!) required
+    - name: source-revision                 # (!) required
+  workspaces:
+    - name: tmp-workspace
+  tasks:
+    - name: sonarqube-scan
+      taskRef:
+        name: sonarqube-scanner
+      workspaces:
+        - name: tmp-workspace
+          workspace: tmp-workspace
+      params:
+
+        # We have to pass both the url and the rev because Cartographer
+        # expects those from any ClusterSourceTemplate. The TaskRun that
+        # gets automatically created will have those parameters ONLY IF
+        # we list them here.
+        - name: source-url
+          value: $(params.source-url)   # this comes from the 'params' in the spec above ^
+        - name: source-revision
+          value: $(params.source-revision)     # This one, too
