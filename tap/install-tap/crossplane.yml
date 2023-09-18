@@ -1,0 +1,118 @@
+# adopt_resources: false
+# affinity: '{}'
+# args: []
+# billing:
+#   awsMarketplace:
+#     enabled: false
+#     iamRoleARN: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
+# bootstrapper:
+#   config:
+#     args: []
+#     debugMode: false
+#     envVars: '{}'
+#   image:
+#     pullPolicy: IfNotPresent
+#     repository: xpkg.upbound.io/upbound/uxp-bootstrapper
+#     tag: ""
+#   resources: '{}'
+# ca_cert_data: ""
+# configuration:
+#   packages: []
+# customAnnotations: '{}'
+# customLabels: '{}'
+# deploymentStrategy: RollingUpdate
+# extraEnvVarsCrossplane: '{}'
+# extraEnvVarsRBACManager: '{}'
+# extraVolumeMountsCrossplane: '{}'
+# extraVolumesCrossplane: '{}'
+# hostNetwork: false
+# image:
+#   pullPolicy: IfNotPresent
+#   repository: upbound/crossplane
+#   tag: v1.12.1-up.2
+# imagePullSecrets: '{}'
+# kubernetes_distribution: ""
+# kubernetes_version: ""
+# leaderElection: true
+# metrics:
+#   enabled: false
+# nameOverride: crossplane
+# nodeSelector: '{}'
+# orphan_resources: true
+# packageCache:
+#   configMap: ""
+#   medium: ""
+#   pvc: ""
+#   sizeLimit: 20Mi
+# podSecurityContextCrossplane: '{}'
+# podSecurityContextRBACManager: '{}'
+# priorityClassName: ""
+# provider:
+#   packages: []
+# rbacManager:
+#   affinity: '{}'
+#   args: []
+#   deploy: true
+#   leaderElection: true
+#   managementPolicy: All
+#   nodeSelector: '{}'
+#   replicas: 1
+#   skipAggregatedClusterRoles: false
+#   tolerations: []
+# replicas: 1
+# resourcesCrossplane:
+#   limits:
+#     cpu: 100m
+#     memory: 512Mi
+#   requests:
+#     cpu: 100m
+#     memory: 256Mi
+# resourcesRBACManager:
+#   limits:
+#     cpu: 100m
+#     memory: 512Mi
+#   requests:
+#     cpu: 100m
+#     memory: 256Mi
+# securityContextCrossplane:
+#   allowPrivilegeEscalation: false
+#   readOnlyRootFilesystem: true
+#   runAsGroup: 65532
+#   runAsUser: 65532
+# securityContextRBACManager:
+#   allowPrivilegeEscalation: false
+#   readOnlyRootFilesystem: true
+#   runAsGroup: 65532
+#   runAsUser: 65532
+# tolerations: []
+# webhooks:
+#   enabled: true
+# xfn:
+#   args: []
+#   cache:
+#     configMap: ""
+#     medium: ""
+#     pvc: ""
+#     sizeLimit: 1Gi
+#   enabled: false
+#   extraEnvVars: '{}'
+#   image:
+#     pullPolicy: IfNotPresent
+#     repository: upbound/xfn
+#     tag: v1.12.1-up.2
+#   resources:
+#     limits:
+#       cpu: 2000m
+#       memory: 2Gi
+#     requests:
+#       cpu: 1000m
+#       memory: 1Gi
+#   securityContext:
+#     allowPrivilegeEscalation: false
+#     capabilities:
+#       add: []
+#     readOnlyRootFilesystem: true
+#     runAsGroup: 65532
+#     runAsUser: 65532
+#     seccompProfile:
+#       type: Unconfined

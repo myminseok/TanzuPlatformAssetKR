@@ -25,6 +25,9 @@ buildservice:
   ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
   exclude_dependencies: true
 
+local_source_proxy:
+  repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO/lsp"
+
 supply_chain: basic            # Can take testing, testing_scanning.
 ootb_supply_chain_basic: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
   registry:

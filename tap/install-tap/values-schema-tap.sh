@@ -1,4 +1,6 @@
 #!/bin/bash
 
 #tanzu package available list -A
-tanzu package available get tap.tanzu.vmware.com/1.5.0 --values-schema --namespace tap-install
+tanzu package available get tap.tanzu.vmware.com/1.6.3 --values-schema --namespace tap-install
+
+tanzu package available get tap.tanzu.vmware.com/1.6.3 --values-schema --namespace tap-install

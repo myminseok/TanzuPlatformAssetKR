@@ -43,6 +43,8 @@ buildservice:
   stack_configuration: jammy-only
   ## for airgapped env, it requires to exclude dependencies from buildservice at first, to install tbs-full-deps later.
   exclude_dependencies: true
+local_source_proxy:
+  repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO/lsp"
 
 tap_gui:
   service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP
@@ -66,8 +68,9 @@ tap_gui:
         # - type: url
         #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
 
+    auth:
+      allowGuestAccess: true
     ## github integration
-    # auth:
     #   environment: development
     #   providers:
     #     github:

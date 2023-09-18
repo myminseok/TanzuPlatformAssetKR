@@ -144,6 +144,21 @@ accelerator:
     include: true
   sources:
     skip_tls_verify: true
+
+#@overlay/match missing_ok=True
+namespace_provisioner:
+  controller: true
+  default_parameters:
+    supply_chain_service_account:
+      secrets:
+      - gitops-basic
+      - gitops-ssh
+  # overlay_secrets:
+  # - name: namespace-provisioner-overlay-add-secrets-to-sa
+  #   namespace: tap-install
+  #   create_export: true
+
+  
 #@overlay/match missing_ok=True
 #@overlay/replace
 excluded_packages:
