@@ -6,8 +6,7 @@ DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
 
 
 tanzu apps workload delete tanzu-java-web-app --yes -n ${DEVELOPER_NAMESPACE}
-tanzu apps workload apply --file ./tanzu-java-web-app/config/workload.yaml \
+tanzu apps workload apply --file $SCRIPTDIR/workload-tanzu-java-web-app.yaml \
 	-n ${DEVELOPER_NAMESPACE} \
-	--source-image harbor.h2o-2-2257.h2o.vmware.com/tap/tanzu-java-web-app-source-image \
 	--debug --yes --local-path ./tanzu-java-web-app
 
