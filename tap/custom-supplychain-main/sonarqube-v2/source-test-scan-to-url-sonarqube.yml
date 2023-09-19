@@ -43,6 +43,7 @@ spec:
     templateRef:
       kind: ClusterSourceTemplate
       name: source-template
+
   - name: source-tester
     sources:
     - name: source
@@ -51,56 +52,39 @@ spec:
       kind: ClusterSourceTemplate
       name: testing-pipeline
 
-  - name: sonarqube-scan
+  - name: sonarqube-sourcescanner
     sources:
     - name: source
       resource: source-tester
     templateRef:
       kind: ClusterSourceTemplate
       name: sonarqube-template
-      
-  # - name: source-scanner
-  #   params:
-  #   - default: scan-policy
-  #     name: scanning_source_policy
-  #   - default: blob-source-scan-template
-  #     name: scanning_source_template
-  #   sources:
-  #   - name: source
-  #     resource: source-tester
-  #   templateRef:
-  #     kind: ClusterSourceTemplate
-  #     name: source-scanner-template
+
+  - name: grype-sourcescanner
+    sources:
+    - name: source
+      resource: source-tester
+    params:
+    - default: scan-policy
+      name: scanning_source_policy
+    - default: blob-source-scan-template
+      name: scanning_source_template
+
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: source-scanner-template
+
   - name: image-provider
+    sources:
+    - name: source
+      resource: sonarqube-sourcescanner
+    - name: source
+      resource: grype-sourcescanner
     params:
     - default: default
       name: serviceAccount
-    - name: registry
+    - name: registry ## mandatory.
       value:
-        ca_cert_data: |
-          -----BEGIN CERTIFICATE-----
-          MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
-          BQAwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNVBAMME3Jvb3Qg
-          U2VsZiBTaWduZWQgQ0EwHhcNMjIxMjAyMDMzMDU5WhcNMzIxMTI5MDMzMDU5WjA6
-          MQswCQYDVQQGEwJLUjENMAsGA1UECgwETXlDQTEcMBoGA1UEAwwTcm9vdCBTZWxm
-          IFNpZ25lZCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPHhqddI
-          Dn193GcUybpXpmJqHEDnh7fI0KONrh1Cp1k4vAv1O7P8BwVZf6WW6r52GN4J4bo5
-          UOi1XN4dYTRAFzoMAfJAnxJvTqrhEILL1N7vclzVCVS2mdtcddiC2TfMsTqp2K3J
-          Vv/UgxTpIqMBOlDUu7fhh6cd4iS8XA32btQXZHARuz6eVZziUyLHxwUkL3ZZrhLF
-          GKs7YZftfAkISwCF4frWYQYZf32dJGqRaXW4j8O/UwYDp2DKMCa4cdxOJT4MyJ/N
-          b4iRCTRAWs+EnLZQc8Rh6JtelW+QFKAh6BWXihU6rlxL/HNudTX1B+DDrXKCyZl9
-          YYOuuv7MLWk/YW0CAwEAAaOByjCBxzAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
-          BBRl540rI3YLXOumjA1nrsTXgcVctTB1BgNVHSMEbjBsgBRl540rI3YLXOumjA1n
-          rsTXgcVctaE+pDwwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNV
-          BAMME3Jvb3QgU2VsZiBTaWduZWQgQ0GCFDXIej+X67LQJ/9/rMsB/MBmiKN9MAsG
-          A1UdDwQEAwIBBjARBglghkgBhvhCAQEEBAMCAAcwDQYJKoZIhvcNAQELBQADggEB
-          ACgvk4FXepiiVBo7Dif5dD8FZ4B26jYBjhZcVAp1uMW38nFmHIpWWzIJy1pDo2rJ
-          oByk67EoL9h0YYOMZMEE9anLtesEs0wlqPke4/eWvVysJWEYeTDGqzcJgIP8HHHd
-          ASKJnZW+hk2Obzj3/CGw6TW9Y7TIJKN0W6GivMyEslCykL4PXlHuFWiG38Z3grHy
-          Wet+XL6SGmmcRSee8ZVhLc17jUYWTwpBOXYXsq+UFwyDWe/zmv6xE3SjeSgCRiX7
-          q22++tb6Rk9sFCrnGsqfwm/gs0LKlf3JIbjte6g8r10YlDaskQsfWkClpTugAEhQ
-          Zv0+hwgpeQUFe2ZsoKGcpfI=
-          -----END CERTIFICATE-----
         repository: tap/my-supply-chain
         server: infra-harbor.lab.pcfdemo.net
     - default: default
@@ -111,9 +95,7 @@ spec:
       name: docker_build_context
     - default: []
       name: docker_build_extra_args
-    sources:
-    - name: source
-      resource: source-tester
+
     templateRef:
       kind: ClusterImageTemplate
       options:
@@ -127,51 +109,28 @@ spec:
           matchFields:
           - key: spec.params[?(@.name=="dockerfile")]
             operator: Exists
-            
-  - images:
+
+  - name: grype-imagescanner
+    images:
     - name: image
       resource: image-provider
-    name: image-scanner
     params:
     - default: scan-policy
       name: scanning_image_policy
     - default: private-image-scan-template
       name: scanning_image_template
-    - name: registry
-      value:
-        ca_cert_data: |
-          -----BEGIN CERTIFICATE-----
-          MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
-          BQAwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNVBAMME3Jvb3Qg
-          U2VsZiBTaWduZWQgQ0EwHhcNMjIxMjAyMDMzMDU5WhcNMzIxMTI5MDMzMDU5WjA6
-          MQswCQYDVQQGEwJLUjENMAsGA1UECgwETXlDQTEcMBoGA1UEAwwTcm9vdCBTZWxm
-          IFNpZ25lZCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPHhqddI
-          Dn193GcUybpXpmJqHEDnh7fI0KONrh1Cp1k4vAv1O7P8BwVZf6WW6r52GN4J4bo5
-          UOi1XN4dYTRAFzoMAfJAnxJvTqrhEILL1N7vclzVCVS2mdtcddiC2TfMsTqp2K3J
-          Vv/UgxTpIqMBOlDUu7fhh6cd4iS8XA32btQXZHARuz6eVZziUyLHxwUkL3ZZrhLF
-          GKs7YZftfAkISwCF4frWYQYZf32dJGqRaXW4j8O/UwYDp2DKMCa4cdxOJT4MyJ/N
-          b4iRCTRAWs+EnLZQc8Rh6JtelW+QFKAh6BWXihU6rlxL/HNudTX1B+DDrXKCyZl9
-          YYOuuv7MLWk/YW0CAwEAAaOByjCBxzAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
-          BBRl540rI3YLXOumjA1nrsTXgcVctTB1BgNVHSMEbjBsgBRl540rI3YLXOumjA1n
-          rsTXgcVctaE+pDwwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNV
-          BAMME3Jvb3QgU2VsZiBTaWduZWQgQ0GCFDXIej+X67LQJ/9/rMsB/MBmiKN9MAsG
-          A1UdDwQEAwIBBjARBglghkgBhvhCAQEEBAMCAAcwDQYJKoZIhvcNAQELBQADggEB
-          ACgvk4FXepiiVBo7Dif5dD8FZ4B26jYBjhZcVAp1uMW38nFmHIpWWzIJy1pDo2rJ
-          oByk67EoL9h0YYOMZMEE9anLtesEs0wlqPke4/eWvVysJWEYeTDGqzcJgIP8HHHd
-          ASKJnZW+hk2Obzj3/CGw6TW9Y7TIJKN0W6GivMyEslCykL4PXlHuFWiG38Z3grHy
-          Wet+XL6SGmmcRSee8ZVhLc17jUYWTwpBOXYXsq+UFwyDWe/zmv6xE3SjeSgCRiX7
-          q22++tb6Rk9sFCrnGsqfwm/gs0LKlf3JIbjte6g8r10YlDaskQsfWkClpTugAEhQ
-          Zv0+hwgpeQUFe2ZsoKGcpfI=
-          -----END CERTIFICATE-----
-        repository: tap/my-supply-chain
-        server: infra-harbor.lab.pcfdemo.net
+    # - name: registry
+    #   value:
+    #     repository: tap/my-supply-chain
+    #     server: infra-harbor.lab.pcfdemo.net
     templateRef:
       kind: ClusterImageTemplate
       name: image-scanner-template
-  - images:
+
+  - name: config-provider
+    images:
     - name: image
-      resource: image-scanner
-    name: config-provider
+      resource: grype-imagescanner
     params:
     - default: default
       name: serviceAccount
@@ -218,9 +177,9 @@ spec:
     params:
     - default: default
       name: serviceAccount
-    - name: registry
+    - name: registry ## mandatory
       value:
-        ca_cert_data: |
+        ca_cert_data: |  ## mandatory
           -----BEGIN CERTIFICATE-----
           MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
           BQAwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNVBAMME3Jvb3Qg
@@ -251,32 +210,8 @@ spec:
       name: config-writer-template
   - name: deliverable
     params:
-    - name: registry
+    - name: registry ## mandatory
       value:
-        ca_cert_data: |
-          -----BEGIN CERTIFICATE-----
-          MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
-          BQAwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNVBAMME3Jvb3Qg
-          U2VsZiBTaWduZWQgQ0EwHhcNMjIxMjAyMDMzMDU5WhcNMzIxMTI5MDMzMDU5WjA6
-          MQswCQYDVQQGEwJLUjENMAsGA1UECgwETXlDQTEcMBoGA1UEAwwTcm9vdCBTZWxm
-          IFNpZ25lZCBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAPHhqddI
-          Dn193GcUybpXpmJqHEDnh7fI0KONrh1Cp1k4vAv1O7P8BwVZf6WW6r52GN4J4bo5
-          UOi1XN4dYTRAFzoMAfJAnxJvTqrhEILL1N7vclzVCVS2mdtcddiC2TfMsTqp2K3J
-          Vv/UgxTpIqMBOlDUu7fhh6cd4iS8XA32btQXZHARuz6eVZziUyLHxwUkL3ZZrhLF
-          GKs7YZftfAkISwCF4frWYQYZf32dJGqRaXW4j8O/UwYDp2DKMCa4cdxOJT4MyJ/N
-          b4iRCTRAWs+EnLZQc8Rh6JtelW+QFKAh6BWXihU6rlxL/HNudTX1B+DDrXKCyZl9
-          YYOuuv7MLWk/YW0CAwEAAaOByjCBxzAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQW
-          BBRl540rI3YLXOumjA1nrsTXgcVctTB1BgNVHSMEbjBsgBRl540rI3YLXOumjA1n
-          rsTXgcVctaE+pDwwOjELMAkGA1UEBhMCS1IxDTALBgNVBAoMBE15Q0ExHDAaBgNV
-          BAMME3Jvb3QgU2VsZiBTaWduZWQgQ0GCFDXIej+X67LQJ/9/rMsB/MBmiKN9MAsG
-          A1UdDwQEAwIBBjARBglghkgBhvhCAQEEBAMCAAcwDQYJKoZIhvcNAQELBQADggEB
-          ACgvk4FXepiiVBo7Dif5dD8FZ4B26jYBjhZcVAp1uMW38nFmHIpWWzIJy1pDo2rJ
-          oByk67EoL9h0YYOMZMEE9anLtesEs0wlqPke4/eWvVysJWEYeTDGqzcJgIP8HHHd
-          ASKJnZW+hk2Obzj3/CGw6TW9Y7TIJKN0W6GivMyEslCykL4PXlHuFWiG38Z3grHy
-          Wet+XL6SGmmcRSee8ZVhLc17jUYWTwpBOXYXsq+UFwyDWe/zmv6xE3SjeSgCRiX7
-          q22++tb6Rk9sFCrnGsqfwm/gs0LKlf3JIbjte6g8r10YlDaskQsfWkClpTugAEhQ
-          Zv0+hwgpeQUFe2ZsoKGcpfI=
-          -----END CERTIFICATE-----
         repository: tap/my-supply-chain
         server: infra-harbor.lab.pcfdemo.net
     - default: go-git

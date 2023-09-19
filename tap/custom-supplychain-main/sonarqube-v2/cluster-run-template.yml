@@ -2,7 +2,7 @@ apiVersion: carto.run/v1alpha1
 kind: ClusterRunTemplate
 metadata:
   name: tekton-sonarqube-taskrun
-  namespace: my-space
+  #namespace: my-space
   labels:
     apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
 spec:

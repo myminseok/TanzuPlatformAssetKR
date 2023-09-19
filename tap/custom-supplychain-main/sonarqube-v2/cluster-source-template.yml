@@ -3,7 +3,7 @@ kind: ClusterSourceTemplate
 metadata:
   annotations:
   name: sonarqube-template
-  namespace: my-space
+  #namespace: my-space
 spec:
   revisionPath: .status.outputs.revision
   urlPath: .status.outputs.url
