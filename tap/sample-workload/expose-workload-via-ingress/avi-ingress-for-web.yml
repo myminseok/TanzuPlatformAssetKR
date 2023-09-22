@@ -4,10 +4,10 @@ metadata:
   name: tanzu-java-web-app-ingress
   annotations:
     ako.vmware.com/enable-tls: "true"
-#  labels:
-#    loadbalancer: run-1-glsb-dev
+  labels:
+    loadbalancer: run-1-glsb-dev
 spec:
-#  ingressClassName: avi-lb
+  ingressClassName: avi-lb
   rules:
     - host: new-tanzu-java-web-app.my-space.tap-comic-woodcock.tapsandbox.com
       http:
