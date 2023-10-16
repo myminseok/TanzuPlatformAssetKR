@@ -61,9 +61,9 @@ fi
 #public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-tbs-deps-package-repo:${TBS_FULL_DEPS_VERSION}"
 ## for 1.6.x
 public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-deps-package-repo:${TAP_VERSION}"
-relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tbs-full-deps"
+relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/full-deps-package-repo"
 if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
-  relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps"
+  relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo"
 fi
 
 get_value_from_args 'DOWNLOAD_TAR_PATH' '--download' $@

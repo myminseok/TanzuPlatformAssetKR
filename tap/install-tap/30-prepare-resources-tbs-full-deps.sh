@@ -24,12 +24,11 @@ if [ -z $TAP_VERSION ]; then
     exit 1
   fi
 fi
-echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
+echo "Creating package repository add tbs-full-deps-repository for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 
-
-url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tbs-full-deps:$TAP_VERSION
+url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSION
 if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
-  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tbs-full-deps:$TAP_VERSION
+  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSION
 fi
 
 tanzu package repository add tbs-full-deps-repository \
