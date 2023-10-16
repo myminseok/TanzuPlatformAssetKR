@@ -1,0 +1,50 @@
+## WARNING: there might be access limit to docker hub. you would be better use gradle image from private repo.
+### you have reached your pull rate limit. You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limi
+
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: developer-defined-tekton-pipeline
+  labels:
+    apps.tanzu.vmware.com/pipeline: test     # (!) required
+    apps.tanzu.vmware.com/language: java
+spec:
+  params:
+    - name: source-url                       # (!) required
+    - name: source-revision                  # (!) required
+  tasks:
+    - name: test
+      params:
+        - name: source-url
+          value: $(params.source-url)
+        - name: source-revision
+          value: $(params.source-revision)
+      taskSpec:
+        volumes:                             # <=== set secrets or configmap here.
+        - name: settings-xml
+          secret:
+            secretName: maven-settings
+        - name: my-ca-certs
+          secret:
+            secretName: my-ca-certs
+        params:
+          - name: source-url
+          - name: source-revision
+        steps:
+          - name: test
+            image: gradle:latest
+            volumeMounts:                   # <=== mount volumes here.
+            - mountPath: /opt/maven
+              name: settings-xml
+              readOnly: true
+            - mountPath: /certs
+              name: my-ca-certs
+            script: |-
+              echo "hello, testing pipeline"
+              cd `mktemp -d`
+              wget -qO- $(params.source-url) | tar xvz -m
+              cat /certs/customca.crt
+              keytool -importcert -file /certs/customca.crt -keystore cacerts -alias customca -storepass 123456789 -noprompt
+              ./mvnw test -settings /opt/maven/settings.xml
+
+              

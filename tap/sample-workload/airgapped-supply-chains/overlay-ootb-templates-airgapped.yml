@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: overlay-ootb-templates-airgapped
+  namespace: tap-install
+type: Opaque
+stringData:
+  overlay-supplychain-source-ignore.yml: |
+    #@ load("@ytt:overlay", "overlay")
+    #@ load("@ytt:yaml", "yaml")
+
+    #@ def ignoreFiles():
+    ignore: |
+      gradle
+      gradlew
+      gradlew.bat
+    #@ end
+
+    #@overlay/match by=overlay.subset({"kind":"ClusterSourceTemplate", "metadata": {"name": "source-template"}})
+    ---
+    spec:
+        #@overlay/replace via=lambda left, right: left.replace("ignore: |", yaml.encode(ignoreFiles()).replace("  ", "    "))
+        ytt:
+  overlay-kpack-bindings-overlay.yml: |
+    #@ load("@ytt:overlay", "overlay")
+    #@ load("@ytt:yaml", "yaml")
+
+    #@ def serviceBindings():
+    services:
+    - name: maven-settings
+      kind: Secret
+      apiVersion: v1
+    #@ end
+
+    #@overlay/match by=overlay.subset({"kind":"ClusterImageTemplate", "metadata": {"name": "kpack-template"}})
+    ---
+    spec:
+        #@overlay/replace via=lambda left, right: left.replace("services: #@ data.values.params.buildServiceBindings", yaml.encode(serviceBindings()).replace("  ", "      ").replace("- ", "    - "))
+        ytt:
