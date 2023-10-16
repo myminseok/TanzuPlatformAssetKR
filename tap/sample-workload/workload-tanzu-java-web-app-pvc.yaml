@@ -16,21 +16,21 @@ spec:
       ref:
         branch: main
   params:
-    - name: "volumes"
-      value: 
-      - name: data-volume
-        persistentVolumeClaim:
-          claimName: tanzu-java-web-app-pvc
-    - name: volumeMounts
-      value: 
-      - name: data-volume
-        mountPath: /home/cnb/data
-    - name: api_descriptor
-      value:
-        type: openapi
-        location:
-          #baseURL: http://petclinic-hard-coded.my-apps.tapdemo.vmware.com/
-          path: "/v3/api-docs"
-        owner: team-petclinic
-        system: pet-clinics
-        description: "A set of API endpoints to manage the resources within the petclinic app.(running on TAP, main)"
+  - name: "volumes"
+    value: 
+    - name: data-volume
+      persistentVolumeClaim:
+        claimName: tanzu-java-web-app-pvc
+  - name: volumeMounts
+    value: 
+    - name: data-volume
+      mountPath: /home/cnb/data
+  - name: api_descriptor
+    value:
+      type: openapi
+      location:
+        #baseURL: http://petclinic-hard-coded.my-apps.tapdemo.vmware.com/
+        path: "/v3/api-docs"
+      owner: team-petclinic
+      system: pet-clinics
+      description: "A set of API endpoints to manage the resources within the petclinic app.(running on TAP, main)"

@@ -1,10 +1,10 @@
 apiVersion: carto.run/v1alpha1
 kind: Workload
 metadata:
-  name: python-web-app
+  name: node-express
   labels:
     apps.tanzu.vmware.com/workload-type: web
-    app.kubernetes.io/part-of: python-web-app
+    app.kubernetes.io/part-of: node-express
     apps.tanzu.vmware.com/has-tests: true
   annotations:
     autoscaling.knative.dev/minScale: "1"
@@ -12,9 +12,9 @@ spec:
   params:
     - name: testing_pipeline_matching_labels
       value:
-        apps.tanzu.vmware.com/language: python
+        apps.tanzu.vmware.com/language: nodejs
   source:
-    subPath: python-web-app
+    subPath: node-express
     git:
       url: https://github.com/vmware-tanzu/application-accelerator-samples
       ref:

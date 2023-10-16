@@ -22,12 +22,15 @@ spec:
       ref:
         branch: main
   params:
-    - name: api_descriptor
-      value:
-        type: openapi
-        location:
-          #baseURL: http://petclinic-hard-coded.my-apps.tapdemo.vmware.com/
-          path: "/v3/api-docs"
-        owner: team-petclinic
-        system: pet-clinics
-        description: "A set of API endpoints to manage the resources within the petclinic app.(running on TAP, main)"
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/language: java
+  - name: api_descriptor
+    value:
+      type: openapi
+      location:
+        #baseURL: http://petclinic-hard-coded.my-apps.tapdemo.vmware.com/
+        path: "/v3/api-docs"
+      owner: team-petclinic
+      system: pet-clinics
+      description: "A set of API endpoints to manage the resources within the petclinic app.(running on TAP, main)"

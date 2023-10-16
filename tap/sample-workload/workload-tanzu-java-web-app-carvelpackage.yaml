@@ -7,6 +7,7 @@ metadata:
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/has-tests: true
     apis.apps.tanzu.vmware.com/register-api: "true"
+    apps.tanzu.vmware.com/carvel-package-workflow: true  # for source-to-url-package, no doublequote ""
   annotations:
     autoscaling.knative.dev/minScale: "1"
 spec:
@@ -19,6 +20,7 @@ spec:
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scc-gitops-vs-regops.html#gitops-workload-parameters-5
   params:
   - name: gitops_server_address
+    #value: https://github.com ## "https://" prefix" is required for basic auth.
     value: ssh://git@github.com ## "https://" prefix" is required for basic auth.
   - name: gitops_repository_owner
     value: myminseok
