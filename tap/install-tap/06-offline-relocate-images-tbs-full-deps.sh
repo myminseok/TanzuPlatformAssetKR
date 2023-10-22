@@ -28,7 +28,6 @@ verify_tap_env_param "IMGPKG_REGISTRY_USERNAME", "$IMGPKG_REGISTRY_USERNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
 verify_tap_env_param "IMGPKG_REPO", "$IMGPKG_REPO"
 verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
-verify_tap_env_param "TBS_FULL_DEPS_VERSION", "$TBS_FULL_DEPS_VERSION"
 
 echo "==============================================================="
 echo "[MANUAL] PREREQUSITE "
@@ -39,14 +38,7 @@ echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REGISTRY_USERN
 
 check_executable "imgpkg"
 
-if [ -z $TBS_FULL_DEPS_VERSION ]; then
-  TBS_FULL_DEPS_VERSION=$(tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install -o json | jq -r '.[] | select(.name=="buildservice.tanzu.vmware.com") | .version')
-  if [ "x$TBS_FULL_DEPS_VERSION" == "x" ]; then
-    echo "ERROR no buildservice.tanzu.vmware.com found"
-    exit 1
-  fi
-fi
-echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TBS_FULL_DEPS_VERSION"
+echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 
 
 REGISTRY_CA_PATH_ARG=""
