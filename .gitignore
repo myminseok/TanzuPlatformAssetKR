@@ -1,2 +1,4 @@
 **/tap-env
 **/gitops-ssh*.yml
+**/*.crt
+**/tap/install-tap/tap-package-values/output
