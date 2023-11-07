@@ -15,3 +15,8 @@ set -e
 tanzu package installed delete tap -n tap-install $@
 tanzu package installed delete full-tbs-deps -n tap-install -y
 
+
+set +e
+kubectl delete clusterrole/tap-install-cluster-admin-role
+kubectl delete clusterrolebinding/tap-install-cluster-admin-role-binding
+set -e

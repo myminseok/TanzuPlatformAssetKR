@@ -1,5 +1,6 @@
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tbs-offline-install-deps.html
-## 9.6GB
+## 
+
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
@@ -38,8 +39,9 @@ echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REGISTRY_USERN
 
 check_executable "imgpkg"
 
-echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
+echo "INFO) For TAp 1.6, repo size is 11.24 GiB"
 
+echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 
 REGISTRY_CA_PATH_ARG=""
 if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
@@ -52,6 +54,7 @@ fi
 ## for 1.5.x
 #public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-tbs-deps-package-repo:${TBS_FULL_DEPS_VERSION}"
 ## for 1.6.x
+
 public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-deps-package-repo:${TAP_VERSION}"
 relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/full-deps-package-repo"
 if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then

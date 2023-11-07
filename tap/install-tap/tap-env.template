@@ -22,7 +22,7 @@ INSTALL_REPO="tanzu-application-platform"
 IMGPKG_REGISTRY_HOSTNAME="my-image-registry.example.com"
 ## optional. put empty for harbor
 IMGPKG_REGISTRY_OWNER="ownername" 
-## any path for operational preference. it should be create as PUBLIC manually
+## !!!!! any path for operational preference. it should be create as PUBLIC manually
 IMGPKG_REPO="tap"
 ## for authentication.
 IMGPKG_REGISTRY_USERNAME="ownername"
