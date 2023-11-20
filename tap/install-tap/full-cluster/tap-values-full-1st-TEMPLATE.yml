@@ -87,9 +87,6 @@ scanning:
   #   url: "" # Configuration is moved, so set this string to empty. it works for full cluster, on tap 1.5
   metadataStore: {} # Deactivate Supply Chain Security Tools - Store integration 
   
-cnrs:
-  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-
 metadata_store:
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-scst-scan-upgrading.html
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/scst-scan-upgrading.html

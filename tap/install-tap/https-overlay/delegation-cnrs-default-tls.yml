@@ -2,7 +2,7 @@ apiVersion: projectcontour.io/v1
 kind: TLSCertificateDelegation
 metadata:
   name: contour-delegation
-  namespace: tanzu-system-ingress
+  namespace: tap-install
 spec:
   delegations:
   - secretName: cnrs-default-tls

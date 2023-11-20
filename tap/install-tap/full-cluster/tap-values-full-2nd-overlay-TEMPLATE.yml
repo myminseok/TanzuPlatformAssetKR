@@ -88,8 +88,10 @@ tap_gui:
 #@overlay/match missing_ok=True
 cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-  #@overlay/match missing_ok=True
   default_tls_secret: tanzu-system-ingress/cnrs-default-tls
+  ingress:
+    external:
+      namespace: tanzu-system-ingress
 
 
 ## if grype is installed on DEVELOPER_NAMESPACE from tap-values.yml, 
@@ -177,14 +179,6 @@ api_portal:
     enabled: false
     # secretName: sso-credentials
 
-#@overlay/match missing_ok=True
-package_overlays:
-- name: cnrs
-  secrets:
-  - name: cnrs-default-tls
-  # ## for pvc support on knative.
-  # - name: "knative-serving-overlay"
-
 ### TODO: commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
 ### kubectl describe SourceScans tanzu-java-web-app -n demo-app => The scan job could not be created. admission webhook "validation.webhook.pipeline.tekton.dev" denied the request: validation failed: expected exactly one, got neither: 
 # - name: "grype"
@@ -214,6 +208,15 @@ accelerator:
 #   excluded_templates:
 #   - 'tekton-taskrun'
 
+#@overlay/match missing_ok=True
+package_overlays:
+- name: cnrs
+  secrets:
+  - name: cnrs-default-tls-overlay
+  # ## for pvc support on knative.
+  # - name: "knative-serving-overlay"
+
+  
 #@overlay/match missing_ok=True
 #@overlay/replace
 excluded_packages:

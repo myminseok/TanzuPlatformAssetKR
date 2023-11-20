@@ -1,0 +1,1 @@
+https://gitlab.eng.vmware.com/tanzu/constellation/-/blob/main/artifacts/packages/tap-gui.tanzu.vmware.com/1.7.8/package.yml

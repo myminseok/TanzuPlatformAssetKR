@@ -9,15 +9,22 @@ profile: run # Can take iterate, build, run, view.
 #@overlay/match missing_ok=True
 cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-  #@overlay/match missing_ok=True
   default_tls_secret: tanzu-system-ingress/cnrs-default-tls
-
+  ingress:
+    external:
+      namespace: tanzu-system-ingress
 
 #@overlay/match missing_ok=True
-package_overlays:
-- name: cnrs
-  secrets:
-  - name: cnrs-default-tls
+api_auto_registration:
+  tap_gui_url: https://tap-gui.TAP_DOMAIN
+  cluster_name: run-cluster
+  ##  - CA for app workload domain from RUN cluster"
+  ##    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
+  ## - CA for TAP GUI domain from VIEW cluster"
+  ##    kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
+  #ca_cert_data: |
+  ##  -----BEGIN CERTIFICATE-----
+    
 
 #@overlay/match missing_ok=True
 namespace_provisioner:
@@ -31,15 +38,11 @@ namespace_provisioner:
   # - name: namespace-provisioner-overlay-add-secrets-to-sa
   #   namespace: tap-install
   #   create_export: true
-  
+
 #@overlay/match missing_ok=True
-api_auto_registration:
-  tap_gui_url: https://tap-gui.TAP_DOMAIN
-  cluster_name: run-cluster
-  ##  - CA for app workload domain from RUN cluster"
-  ##    kubectl get secret -n tanzu-system-ingress cnrs-ca -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
-  ## - CA for TAP GUI domain from VIEW cluster"
-  ##    kubectl get secret -n tap-gui tap-gui-cert -o yaml -ojsonpath='{.data.ca\.crt}' | base64 -d"
-  #ca_cert_data: |
-  ##  -----BEGIN CERTIFICATE-----
-    
+package_overlays:
+- name: cnrs
+  secrets:
+  - name: cnrs-default-tls-overlay
+  # ## for pvc support on knative.
+  # - name: "knative-serving-overlay"

@@ -49,8 +49,10 @@ ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys 
 #@overlay/match missing_ok=True
 cnrs:
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-  #@overlay/match missing_ok=True
   default_tls_secret: tanzu-system-ingress/cnrs-default-tls
+  ingress:
+    external:
+      namespace: tanzu-system-ingress
 
 #@overlay/match missing_ok=True
 namespace_provisioner:
@@ -64,6 +66,15 @@ namespace_provisioner:
   # - name: namespace-provisioner-overlay-add-secrets-to-sa
   #   namespace: tap-install
   #   create_export: true
+
+#@overlay/match missing_ok=True
+package_overlays:
+- name: cnrs
+  secrets:
+  - name: cnrs-default-tls-overlay
+  # ## for pvc support on knative.
+  # - name: "knative-serving-overlay"
+
   
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
@@ -72,3 +83,4 @@ excluded_packages:
 # - workshops.learningcenter.tanzu.vmware.com
 # - tap-telemetry.tanzu.vmware.com
 # - sso.apps.tanzu.vmware.com
+

@@ -77,9 +77,6 @@ grype:
   #   MIIDzTCCArWgAwIBAgIUNch6P5frstAn/3+sywH8wGaIo30wDQYJKoZIhvcNAQEL
   #   -----END CERTIFICATE-----
 
-# #@overlay/match missing_ok=True
-# package_overlays:
-
 ### commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
 ### kubectl describe SourceScans tanzu-java-web-app -n demo-app => The scan job could not be created. admission webhook "validation.webhook.pipeline.tekton.dev" denied the request: validation failed: expected exactly one, got neither: 
 # - name: "grype"
