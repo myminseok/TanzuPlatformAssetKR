@@ -25,6 +25,8 @@ kubectl create ns tap-install
 set -e
 set -x
 
+docker login $IMGPKG_REGISTRY_HOSTNAME -u $IMGPKG_REGISTRY_USERNAME -p $IMGPKG_REGISTRY_PASSWORD
+
 if [ "$1" == "-d" ]; then
 set +e
   tanzu package repository delete  tanzu-tap-repository --namespace tap-install -y 

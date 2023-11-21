@@ -30,7 +30,7 @@ contour:
   envoy:
     service:
       type: LoadBalancer # This is set by default, but can be overridden by setting a different value.
-
+      #loadBalancerIP: 192.168.0.27
 buildservice:
   ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 31-setup-repository-tbs-full-deps.sh 
   kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
