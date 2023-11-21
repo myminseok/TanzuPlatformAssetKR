@@ -20,5 +20,5 @@ set -e
 kubectl apply -f /tmp/grype-metadatastore.yml
 echo ""
 ## verify
-kubectl get secretexports -A
+kubectl get secretexports.secretgen.carvel.dev -A
 #kubectl get secretexports -n metadata-store-secrets store-auth-token -o yaml

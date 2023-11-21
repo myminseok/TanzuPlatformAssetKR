@@ -103,7 +103,8 @@ cnrs:
 #@overlay/match missing_ok=True
 grype:
   namespace: "DEVELOPER_NAMESPACE"
-  targetImagePullSecret: "registry-credentials"
+  #targetImagePullSecret: "registry-credentials"
+  targetImagePullSecret: "registries-credentials"
   ## additional custom CAs. inherits from shared.ca_cert_data by default.
   # ca_cert_data: |
   #   -----BEGIN CERTIFICATE-----
