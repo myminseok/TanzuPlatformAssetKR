@@ -11,7 +11,7 @@ if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
 
-# tanzu package installed delete full-deps  -n tap-install -y
+# tanzu package installed delete full-tbs-deps   -n tap-install -y
 
 # tanzu package available get  full-deps.buildservice.tanzu.vmware.com -n tap-install
 
