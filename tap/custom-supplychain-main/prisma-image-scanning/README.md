@@ -5,7 +5,7 @@ This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
 #### install AMR
-for full profile cluster, tap-values.yml should be:
+for `full` profile cluster, tap-values.yml should be:
 ```
 metadata_store:
   ns_for_export_app_cert: "*"
@@ -74,3 +74,6 @@ Supply Chain
 ```
 
 
+### TODO
+- multi cluster testing
+- image build guide
