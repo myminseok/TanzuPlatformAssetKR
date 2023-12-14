@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prisma-auth
+  namespace: DEV_NAMESPACE
+stringData:
+  username: USERNAME
+  password: PASSWORD
+  address: https://us-west1.cloud.twistlock.com/ACCOUNT_HERE

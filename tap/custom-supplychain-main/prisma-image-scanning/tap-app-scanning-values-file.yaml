@@ -1,0 +1,3 @@
+scans:
+  workspace:
+    storageSize: 200Mi
