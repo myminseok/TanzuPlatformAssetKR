@@ -1,0 +1,9 @@
+eventhandler:
+  endpoint: https://amr-persister.tap.lab.pcfdemo.net
+## kubectl get secrets amr-persister-ingress-cert -n metadata-store -o yaml
+## run on linux. not mac
+## openssl s_client -connect amr-persister.tap.lab.pcfdemo.net:443
+ca_cert_data: |
+  -----BEGIN CERTIFICATE-----
+  ...
+  -----END CERTIFICATE-----
