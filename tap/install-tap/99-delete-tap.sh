@@ -12,8 +12,8 @@ set -e
 
 #kubectl edit PackageInstall cnrs -n tap-install
 #kapp delete --app tap-ctrl -n tap-install
-tanzu package installed delete tap -n tap-install $@
 tanzu package installed delete full-tbs-deps -n tap-install -y
+tanzu package installed delete tap -n tap-install $@
 
 
 set +e
