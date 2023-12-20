@@ -4,12 +4,12 @@ This sample is for TAP 1.6.3 only. and follows [scanning v2 guide](https://docs.
 
 ## Setup ISV
 
-#### Prerequisites
+### Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
 
-#### Install AMR for `full` profile cluster
+### Install AMR for `FULL` profile cluster
 see [AMR documentation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-install-amr-observer.html)<br>
 for `full` profile cluster, tap-values.yml should be:
 ```
@@ -76,7 +76,7 @@ kubectl rollout restart -n amr-observer-system deployment.apps/amr-observer-cont
 go to `install SCST - scan 2.0` section.
 
 
-####  Install AMR on `view` profile cluster
+###  Install AMR on `VIEW` profile cluster
 tap-values.yml
 ```
 metadata_store:
@@ -97,7 +97,7 @@ kubectl rollout restart -n metadata-store deployment.apps/amr-persister
 ```
 
 
-####  Install AMR on `build` profile cluster
+###  Install AMR on `BUILD` profile cluster
 
 fetch amr info from `view` cluster
 ```
@@ -154,7 +154,7 @@ tanzu package installed delete amr-observer -n tap-install  -y
 go to `install SCST - scan 2.0` section.
 
 
-####  Install SCST - scan 2.0 ( `full`, `build` profile cluster)
+##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
 see [SCST - scan 2.0](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html#install-2)<br>
 
 it is required for CRD of scanning v2. donot install to `view` profile cluster.
@@ -178,7 +178,7 @@ tanzu package installed delete app-scanning-beta  -n tap-install  -y
 
 ## Testing ISV
 
-#### test `clusterimagetemplate` ISV on  ( `full`, `build` profile cluster)
+### test `clusterimagetemplate` ISV on  ( `full`, `build` profile cluster)
 
 it is good idea to test if ISV scaning is working. you can use `image-vulnerability-scan-grype` clusterimagetemplate.
 ```
