@@ -73,7 +73,7 @@ kubectl rollout restart -n amr-observer-system deployment.apps/amr-observer-cont
 ```
 
 
-go to `install SCST - scan 2.0` section.
+go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build-profile-cluster-only)
 
 
 ###  Install AMR on `VIEW` profile cluster
@@ -151,7 +151,7 @@ to uninstall,
 tanzu package installed delete amr-observer -n tap-install  -y
 ```
 
-go to `install SCST - scan 2.0` section.
+go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build-profile-cluster-only)
 
 
 ##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
