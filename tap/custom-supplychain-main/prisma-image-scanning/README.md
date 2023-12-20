@@ -1,5 +1,5 @@
 
-This sample is for TAP 1.6.3 only. and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
+### NOTE: This sample is only for TAP 1.6.3 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
 
 ## Setup ISV
@@ -155,7 +155,7 @@ go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build
 
 
 ##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
-see [SCST - scan 2.0](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html#install-2)<br>
+this follows [SCST - scan 2.0 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html#install-2)<br>
 
 it is required for CRD of scanning v2. donot install to `view` profile cluster.
 ```
