@@ -190,11 +190,8 @@ image-vulnerability-scan-grype    5h35m
 kaniko-template                   5h35m
 kpack-template                    5h35m
 ```
-
-and apply it to supply-chain.
-https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-integrate-app-scanning.html
-
-tap-values.yml
+change the new scanner to supply-chain by following [guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-integrate-app-scanning.html).
+please note that to clean up the previous scan result for the workload, you need to delete workload and redeploy for the new scanner.
 ```
 ootb_supply_chain_testing_scanning:
   image_scanner_template_name: image-vulnerability-scan-grype
@@ -243,16 +240,15 @@ kubectl apply -f image-vulnerability-scan-prisma-tap1.6.yaml
 
 ```
 #### Add App Scanning to default Test and Scan supply chains
-https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-integrate-app-scanning.html
-
-tap-values.yml
+change the new scanner to supply-chain by following [guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-integrate-app-scanning.html).
+please note that to clean up the previous scan result for the workload, you need to delete workload and redeploy for the new scanner.
 ```
 ootb_supply_chain_testing_scanning:
   image_scanner_template_name: image-vulnerability-scan-prisma
   registry:
   ...
 ```
-and update tap.
+
 
 
 ## Troubleshooting
