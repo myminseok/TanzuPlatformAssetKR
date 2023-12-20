@@ -1,3 +1,4 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/tap-gui-cluster-view-setup.html
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/tap-gui-cluster-view-setup.html
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )

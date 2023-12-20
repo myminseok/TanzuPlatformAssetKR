@@ -328,7 +328,7 @@ function confirm_target_k8s {
     CONTEXT=$(kubectl config current-context)
 
     echo ""
-    read -p "Are you sure the target cluster '$CONTEXT'? (Y/y) " -n 1 -r
+    read -p "$1 '$CONTEXT'? (Y/y) " -n 1 -r
     if [[ ! $REPLY =~ ^[Yy]$ ]]
     then
       echo "Quitting"

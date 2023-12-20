@@ -96,7 +96,8 @@ echo "================================"
 
 
 if [ "$YES" != "y" ]; then
- confirm_target_k8s
+ confirm_target_k8s "Are you sure the TARGET CLUSTER: "
+ confirm_target_k8s "TARGET CLUSTER is "
 fi
 
 ### TODO: commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
