@@ -55,9 +55,14 @@ kubectl rollout restart -n metadata-store deployment.apps/amr-persister
 ```
 
 
-install amr-observer without any values file (no need on single cluster)
+install amr-observer without any values file 
+- no need on single cluster
+- no need to install on TAP installation with [gitops sops)(https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/install-gitops-sops.html)`amr-observer` is installed automatically with `build` profile. tested on TAP 1.6.3 with gitops Reference Implementation for TAP 1.7.
+
 ```
 tanzu package available list amr-observer.apps.tanzu.vmware.com -n tap-install
+
+tanzu package installed delete amr-observer -n tap-install  -y
 
 tanzu package install amr-observer --package amr-observer.apps.tanzu.vmware.com \
     --version 0.1.1-alpha.2 \
