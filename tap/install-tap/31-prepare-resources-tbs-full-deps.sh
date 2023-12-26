@@ -13,6 +13,20 @@ fi
 
 set -x
 
+## make sure tap-registry is in place. otherwise tanzu package repository add tbs-full-deps-repository will be failed.
+tanzu secret registry add tap-registry \
+    --server   $INSTALL_REGISTRY_HOSTNAME \
+    --username $INSTALL_REGISTRY_USERNAME \
+    --password $INSTALL_REGISTRY_PASSWORD \
+    --namespace tap-install \
+    --export-to-all-namespaces \
+    --yes
+set +e
+ kubectl get secretexports -A | grep tap-registry
+set -e
+
+
+
 set +e
 tanzu package repository delete tbs-full-deps-repository -n tap-install -y
 set -e

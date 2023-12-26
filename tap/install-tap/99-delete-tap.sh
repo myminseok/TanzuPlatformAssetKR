@@ -5,18 +5,11 @@ load_env_file $SCRIPTDIR/tap-env
 
 print_current_k8s
 
-set +e
-kubectl delete secret/scanning-ca-overlay -n tap-install
-kubectl delete configmap/scanning-harbor-ca-overlay-cm -n tap-install
-set -e
+$SCRIPTDIR/99-delete-tbs-full-deps.sh
 
-#kubectl edit PackageInstall cnrs -n tap-install
-#kapp delete --app tap-ctrl -n tap-install
-tanzu package installed delete full-tbs-deps -n tap-install -y
 tanzu package installed delete tap -n tap-install $@
-
-
 set +e
 kubectl delete clusterrole/tap-install-cluster-admin-role
 kubectl delete clusterrolebinding/tap-install-cluster-admin-role-binding
 set -e
+
