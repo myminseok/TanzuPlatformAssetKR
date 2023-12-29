@@ -1,6 +1,8 @@
 
 
 # Prometheus and grafana for TAP.
+Sample implementation for TAP key metrics. this is inspired by following references. tested on TAP 1.6.3.
+
 References:
 - https://apps-cloudmgmt.techzone.vmware.com/resource/how-configure-and-monitor-vmware-tanzu-application-platform-prometheus-loki-and-grafana#prerequisites
 - https://vrabbi.cloud/post/monitoring-tap-with-prometheus-and-grafana/
@@ -29,13 +31,15 @@ monitoring   tap-monitoring-kube-promet-prometheus   <none>   prometheus.lab.pcf
 
 ### Troubleshooting  
 #### `tap-monitoring-kube-state-metrics` error 
+sample implentation [`values-example.yaml`](https://github.com/vrabbi-tap/tap-kube-state-metrics/blob/main/values-example.yaml) is not compatible for TAP. and needs to be patched. you can see errors as following:
 ```
 kubectl logs -n monitoring deployment.apps/tap-monitoring-kube-state-metrics -f 
 
 [status,conditions]: [1]: [status]: strconv.ParseFloat: parsing \"Unknown\": invalid syntax
 ```
-solution is to patch `helm-values-modified.yaml` by referencing `Gauge` metric with `Info`.  refer to https://github.com/kubernetes/kube-state-metrics/blob/main/docs/customresourcestate-metrics.md
-
+refer to the [related issue ticket](https://github.com/kubernetes/kube-state-metrics/issues/2070).
+and solution is to patch . and replacing `Gauge` metric with `Info` in `values-example.yaml`. 
+see `helm-values-modified.yaml`
 ```
  - name: workload_status
                 help: Workload status from conditions
@@ -62,12 +66,10 @@ solution is to patch `helm-values-modified.yaml` by referencing `Gauge` metric w
                       last_transition_Time: ["lastTransitionTime"]
                     valueFrom: ["status"]
 ```
-refer to https://github.com/kubernetes/kube-state-metrics/issues/2070
-
+see the detailed metric spec of [kube-state-metrics](https://github.com/kubernetes/kube-state-metrics/blob/main/docs/customresourcestate-metrics.md)
 
 ### add additional metrics and RBAC config
-
-add metric to kube-prometheus-stack by patching `helm-values-modified.yaml`
+you can add additional metric to `kube-state-metrics` by patching `helm-values-modified.yaml` as following.
 ```
 kube-state-metrics:
   rbac:
@@ -109,9 +111,8 @@ kube-state-metrics:
                       ref: [ status ]
 ```
 
-
-# Useful metrics 
-- https://vrabbi.cloud/post/monitoring-tap-with-prometheus-and-grafana/
+# Useful metrics and Implementation.
+all metrics are inspired from https://vrabbi.cloud/post/monitoring-tap-with-prometheus-and-grafana/
 
 ### Workloads
 - workload without a matching supply chain
