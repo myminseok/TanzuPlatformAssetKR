@@ -4,26 +4,26 @@ prometheus:
     annotations:
       cert-manager.io/cluster-issuer: tap-ingress-selfsigned
     hosts:
-    - "prometheus.lab.pcfdemo.net"
+    - "prometheus.lab.pcfdemo.net"                         ## TODO update this
     tls:
     - secretName: grafana-cert
       hosts:
-      - "prometheus.lab.pcfdemo.net"
+      - "prometheus.lab.pcfdemo.net"                       ## TODO update this
   prometheusSpec:
-    scrapeInterval: 5s
+    scrapeInterval: 5s                                     ## TODO update this
 
 grafana:
-  adminPassword: "changeme"
+  adminPassword: "changeme"                                ## TODO update this
   ingress:
     enabled: true
     annotations:
       cert-manager.io/cluster-issuer: tap-ingress-selfsigned
     hosts:
-    - "grafana.lab.pcfdemo.net"
+    - "grafana.lab.pcfdemo.net"                            ## TODO update this
     tls:
     - secretName: grafana-cert
       hosts:
-      - "grafana.lab.pcfdemo.net"
+      - "grafana.lab.pcfdemo.net"                          ## TODO update this
 kube-state-metrics:
   rbac:
     extraRules:
