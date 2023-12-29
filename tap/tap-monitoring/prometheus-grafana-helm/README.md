@@ -10,7 +10,9 @@ References:
 - https://github.com/kubernetes/kube-state-metrics
 
 
-there is a [sample grafana dashboard here](tap/tap-monitoring/prometheus-grafana-helm/grafana-dashboard-example-tap-workload.json)
+there is a sample grafana dashboard [`grafana-dashboard-example-tap-workload.json`](https://github.com/myminseok/TanzuPlatformAssetKR/blob/main/tap/tap-monitoring/prometheus-grafana-helm/grafana-dashboard-example-tap-workload.json)
+and [`helm-values-modified.yaml` for kube-state-metrics](https://github.com/myminseok/TanzuPlatformAssetKR/blob/main/tap/tap-monitoring/prometheus-grafana-helm/helm-values-modified.yaml) in this repo.
+
 ### Setup
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
