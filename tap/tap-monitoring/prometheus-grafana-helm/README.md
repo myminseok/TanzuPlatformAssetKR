@@ -9,6 +9,8 @@ References:
 - https://github.com/x95castle1/tap-grafana-dashboard-with-ksm
 - https://github.com/kubernetes/kube-state-metrics
 
+
+there is a [sample grafana dashboard here](tap/tap-monitoring/prometheus-grafana-helm/grafana-dashboard-example-tap-workload.json)
 ### Setup
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
