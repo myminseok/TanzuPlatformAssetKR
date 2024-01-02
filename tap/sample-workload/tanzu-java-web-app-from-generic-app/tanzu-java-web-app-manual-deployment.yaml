@@ -1,0 +1,264 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    conventions.carto.run/applied-conventions: |-
+      appliveview-sample/app-live-view-appflavour-check
+      spring-boot-convention/auto-configure-actuators-check
+      spring-boot-convention/spring-boot
+      spring-boot-convention/spring-boot-graceful-shutdown
+      spring-boot-convention/spring-boot-web
+      spring-boot-convention/spring-boot-actuator
+      spring-boot-convention/app-live-view-appflavour-check
+      spring-boot-convention/app-live-view-connector-boot
+      spring-boot-convention/app-live-view-appflavours-boot
+    deployment.kubernetes.io/revision: "1"
+    developer.conventions/target-containers: workload
+    serving.knative.dev/creator: system:serviceaccount:my-space:default
+  labels:
+    app: tanzu-java-web-app ## <======
+    app.kubernetes.io/component: run
+    app.kubernetes.io/part-of: tanzu-java-web-app
+    apps.tanzu.vmware.com/auto-configure-actuators: "false"
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/use-sonarqube: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    carto.run/workload-name: tanzu-java-web-app
+    conventions.carto.run/framework: spring-boot
+    # serving.knative.dev/configuration: tanzu-java-web-app
+    # serving.knative.dev/configurationGeneration: "2"
+    # serving.knative.dev/configurationUID: 2c5a0682-423a-47ae-84f0-040573daa7ce
+    # serving.knative.dev/revision: tanzu-java-web-app-00002
+    # serving.knative.dev/revisionUID: d46c6627-4251-4c55-a5fc-7f9021aa8cf3
+    # serving.knative.dev/service: tanzu-java-web-app
+    # serving.knative.dev/serviceUID: 0d913a15-f326-49c2-a949-fc09ba9f68fd
+    tanzu.app.live.view: "true"
+    tanzu.app.live.view.application.actuator.path: actuator
+    tanzu.app.live.view.application.actuator.port: "8080"
+    tanzu.app.live.view.application.flavours: spring-boot
+    tanzu.app.live.view.application.name: tanzu-java-web-app
+  name: tanzu-java-web-app-manual-deployment
+  namespace: my-space
+  # ownerReferences:
+  # - apiVersion: serving.knative.dev/v1
+  #   blockOwnerDeletion: true
+  #   controller: true
+  #   kind: Revision
+  #   name: tanzu-java-web-app-00002
+  #   uid: d46c6627-4251-4c55-a5fc-7f9021aa8cf3
+  # resourceVersion: "2564777"
+  # uid: aac89809-cd18-4d1b-b025-68566faa9185
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: tanzu-java-web-app ## <======
+      # serving.knative.dev/revisionUID: d46c6627-4251-4c55-a5fc-7f9021aa8cf3
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+        boot.spring.io/version: 2.5.8
+        conventions.carto.run/applied-conventions: |-
+          appliveview-sample/app-live-view-appflavour-check
+          spring-boot-convention/auto-configure-actuators-check
+          spring-boot-convention/spring-boot
+          spring-boot-convention/spring-boot-graceful-shutdown
+          spring-boot-convention/spring-boot-web
+          spring-boot-convention/spring-boot-actuator
+          spring-boot-convention/app-live-view-appflavour-check
+          spring-boot-convention/app-live-view-connector-boot
+          spring-boot-convention/app-live-view-appflavours-boot
+        developer.conventions/target-containers: workload
+        serving.knative.dev/creator: system:serviceaccount:my-space:default
+      creationTimestamp: null
+      labels:
+        app: tanzu-java-web-app ## <======
+        app.kubernetes.io/component: run
+        app.kubernetes.io/part-of: tanzu-java-web-app
+        apps.tanzu.vmware.com/auto-configure-actuators: "false"
+        apps.tanzu.vmware.com/has-tests: "true"
+        apps.tanzu.vmware.com/use-sonarqube: "true"
+        apps.tanzu.vmware.com/workload-type: web
+        carto.run/workload-name: tanzu-java-web-app
+        conventions.carto.run/framework: spring-boot
+        # serving.knative.dev/configuration: tanzu-java-web-app
+        # serving.knative.dev/configurationGeneration: "2"
+        # serving.knative.dev/configurationUID: 2c5a0682-423a-47ae-84f0-040573daa7ce
+        # serving.knative.dev/revision: tanzu-java-web-app-00002
+        # serving.knative.dev/revisionUID: d46c6627-4251-4c55-a5fc-7f9021aa8cf3
+        # serving.knative.dev/service: tanzu-java-web-app
+        # serving.knative.dev/serviceUID: 0d913a15-f326-49c2-a949-fc09ba9f68fd
+        tanzu.app.live.view: "true"
+        tanzu.app.live.view.application.actuator.path: actuator
+        tanzu.app.live.view.application.actuator.port: "8080"
+        tanzu.app.live.view.application.flavours: spring-boot
+        tanzu.app.live.view.application.name: tanzu-java-web-app
+    spec:
+      containers:
+      - env:
+        - name: BP_LOG_LEVEL
+          value: DEBUG
+        - name: JAVA_TOOL_OPTIONS
+          value: -Dserver.port="8080" -Dserver.shutdown.grace-period="24s"
+        - name: PORT
+          value: "8080"
+        - name: K_REVISION
+          value: tanzu-java-web-app-00002
+        - name: K_CONFIGURATION
+          value: tanzu-java-web-app
+        - name: K_SERVICE
+          value: tanzu-java-web-app
+        image: ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space@sha256:04820d5551ad62a08bab13a0c416592e575918845cbaa6fb9ffa25014f126061
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          preStop:
+            httpGet:
+              path: /wait-for-drain
+              port: 8022
+              scheme: HTTP
+        name: workload
+        ports:
+        - containerPort: 8080
+          name: user-port
+          protocol: TCP
+        resources: {}
+        securityContext:
+          runAsUser: 1000
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: FallbackToLogsOnError
+      - env:
+        - name: SERVING_NAMESPACE
+          value: my-space
+        - name: SERVING_SERVICE
+          value: tanzu-java-web-app
+        - name: SERVING_CONFIGURATION
+          value: tanzu-java-web-app
+        - name: SERVING_REVISION
+          value: tanzu-java-web-app-00002
+        - name: QUEUE_SERVING_PORT
+          value: "8012"
+        - name: QUEUE_SERVING_TLS_PORT
+          value: "8112"
+        - name: CONTAINER_CONCURRENCY
+          value: "0"
+        - name: REVISION_TIMEOUT_SECONDS
+          value: "300"
+        - name: REVISION_RESPONSE_START_TIMEOUT_SECONDS
+          value: "0"
+        - name: REVISION_IDLE_TIMEOUT_SECONDS
+          value: "0"
+        - name: SERVING_POD
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: SERVING_POD_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.podIP
+        - name: SERVING_LOGGING_CONFIG
+        - name: SERVING_LOGGING_LEVEL
+        - name: SERVING_REQUEST_LOG_TEMPLATE
+          value: '{"httpRequest": {"requestMethod": "{{.Request.Method}}", "requestUrl":
+            "{{js .Request.RequestURI}}", "requestSize": "{{.Request.ContentLength}}",
+            "status": {{.Response.Code}}, "responseSize": "{{.Response.Size}}", "userAgent":
+            "{{js .Request.UserAgent}}", "remoteIp": "{{js .Request.RemoteAddr}}",
+            "serverIp": "{{.Revision.PodIP}}", "referer": "{{js .Request.Referer}}",
+            "latency": "{{.Response.Latency}}s", "protocol": "{{.Request.Proto}}"},
+            "traceId": "{{index .Request.Header "X-B3-Traceid"}}"}'
+        - name: SERVING_ENABLE_REQUEST_LOG
+          value: "false"
+        - name: SERVING_REQUEST_METRICS_BACKEND
+          value: prometheus
+        - name: TRACING_CONFIG_BACKEND
+          value: none
+        - name: TRACING_CONFIG_ZIPKIN_ENDPOINT
+        - name: TRACING_CONFIG_DEBUG
+          value: "false"
+        - name: TRACING_CONFIG_SAMPLE_RATE
+          value: "0.1"
+        - name: USER_PORT
+          value: "8080"
+        - name: SYSTEM_NAMESPACE
+          value: knative-serving
+        - name: METRICS_DOMAIN
+          value: knative.dev/internal/serving
+        - name: SERVING_READINESS_PROBE
+          value: '{"tcpSocket":{"port":8080,"host":"127.0.0.1"},"successThreshold":1}'
+        - name: ENABLE_PROFILING
+          value: "false"
+        - name: SERVING_ENABLE_PROBE_REQUEST_LOG
+          value: "false"
+        - name: METRICS_COLLECTOR_ADDRESS
+        - name: HOST_IP
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: status.hostIP
+        - name: ENABLE_HTTP2_AUTO_DETECTION
+          value: "false"
+        - name: ROOT_CA
+        image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:dc9e15ed033a3d6eb9d966397a535032e7c98f8c0a6b14b96c96a2cb9e58aaa8
+        imagePullPolicy: IfNotPresent
+        name: queue-proxy
+        ports:
+        - containerPort: 8022
+          name: http-queueadm
+          protocol: TCP
+        - containerPort: 9090
+          name: http-autometric
+          protocol: TCP
+        - containerPort: 9091
+          name: http-usermetric
+          protocol: TCP
+        - containerPort: 8012
+          name: queue-port
+          protocol: TCP
+        - containerPort: 8112
+          name: https-port
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: K-Network-Probe
+              value: queue
+            path: /
+            port: 8012
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "1"
+            memory: 200Mi
+          requests:
+            cpu: 25m
+            memory: 50Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      enableServiceLinks: false
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 300

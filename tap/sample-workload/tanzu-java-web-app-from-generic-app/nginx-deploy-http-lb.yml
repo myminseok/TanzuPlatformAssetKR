@@ -1,0 +1,73 @@
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: nginx-app
+  annotations:
+    autoscaling.knative.dev/minScale: "1"
+    boot.spring.io/version: 2.5.8
+    conventions.carto.run/applied-conventions: |-
+      appliveview-sample/app-live-view-appflavour-check
+      spring-boot-convention/auto-configure-actuators-check
+      spring-boot-convention/spring-boot
+      spring-boot-convention/spring-boot-graceful-shutdown
+      spring-boot-convention/spring-boot-web
+      spring-boot-convention/spring-boot-actuator
+      spring-boot-convention/app-live-view-appflavour-check
+      spring-boot-convention/app-live-view-connector-boot
+      spring-boot-convention/app-live-view-appflavours-boot
+    deployment.kubernetes.io/revision: "1"
+    developer.conventions/target-containers: workload
+    serving.knative.dev/creator: system:serviceaccount:my-space:default
+  labels:
+    app: nginx
+    app.kubernetes.io/component: run
+    app.kubernetes.io/part-of: tanzu-java-web-app
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate: 
+      maxUnavailable: 1
+
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+      annotations:
+        fluentbit.io/parser: nginx
+    spec:
+      imagePullSecrets:
+       - name: harbor-registry-secret
+      containers:
+      - image: nginx
+        name: nginx-app
+        imagePullPolicy: Always
+        securityContext:
+          allowPrivilegeEscalation: false
+          runAsUser: 0
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app-service
+spec:
+  type: LoadBalancer
+  #type: ClusterIP
+  externalTrafficPolicy: Local
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
