@@ -20,12 +20,12 @@ prometheus-community    https://prometheus-community.github.io/helm-charts
 ```
 
 ```
-helm upgrade --install tap-monitoring prometheus-community/kube-state-metrics -n monitoring --create-namespace -f helm-values.yaml
+helm upgrade --install tap-monitoring prometheus-community/kube-state-metrics -n kube-state-metrics-helm --create-namespace -f helm-values.yaml
 ```
 
 verify
 ```
-kubectl get all -n kube-state-metrics
+kubectl get all -n kube-state-metrics-helm
 
 ```
 
