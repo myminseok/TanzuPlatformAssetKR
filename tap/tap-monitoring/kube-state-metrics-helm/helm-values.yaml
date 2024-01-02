@@ -1,0 +1,1322 @@
+# Default values for kube-state-metrics.
+prometheusScrape: true
+image:
+  registry: registry.k8s.io
+  repository: kube-state-metrics/kube-state-metrics
+  # If unset use v + .Charts.appVersion
+  tag: ""
+  sha: ""
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+# - name: "image-pull-secret"
+
+global:
+  # To help compatibility with other charts which use global.imagePullSecrets.
+  # Allow either an array of {name: pullSecret} maps (k8s-style), or an array of strings (more common helm-style).
+  # global:
+  #   imagePullSecrets:
+  #   - name: pullSecret1
+  #   - name: pullSecret2
+  # or
+  # global:
+  #   imagePullSecrets:
+  #   - pullSecret1
+  #   - pullSecret2
+  imagePullSecrets: []
+  #
+  # Allow parent charts to override registry hostname
+  imageRegistry: ""
+
+# If set to true, this will deploy kube-state-metrics as a StatefulSet and the data
+# will be automatically sharded across <.Values.replicas> pods using the built-in
+# autodiscovery feature: https://github.com/kubernetes/kube-state-metrics#automated-sharding
+# This is an experimental feature and there are no stability guarantees.
+autosharding:
+  enabled: false
+
+replicas: 1
+
+# Change the deployment strategy when autosharding is disabled
+# updateStrategy: Recreate
+
+# Number of old history to retain to allow rollback
+# Default Kubernetes value is set to 10
+revisionHistoryLimit: 10
+
+# List of additional cli arguments to configure kube-state-metrics
+# for example: --enable-gzip-encoding, --log-file, etc.
+# all the possible args can be found here: https://github.com/kubernetes/kube-state-metrics/blob/master/docs/cli-arguments.md
+extraArgs: []
+
+service:
+  port: 8080
+  # Default to clusterIP for backward compatibility
+  type: ClusterIP
+  nodePort: 0
+  loadBalancerIP: ""
+  # Only allow access to the loadBalancerIP from these IPs
+  loadBalancerSourceRanges: []
+  clusterIP: ""
+  annotations: {}
+
+## Additional labels to add to all resources
+customLabels: {}
+  # app: kube-state-metrics
+
+## Override selector labels
+selectorOverride: {}
+
+## set to true to add the release label so scraping of the servicemonitor with kube-prometheus-stack works out of the box
+releaseLabel: false
+
+hostNetwork: false
+
+rbac:
+  # If true, create & use RBAC resources
+  create: true
+
+  # Set to a rolename to use existing role - skipping role creating - but still doing serviceaccount and rolebinding to it, rolename set here.
+  # useExistingRole: your-existing-role
+
+  # If set to false - Run without Cluteradmin privs needed - ONLY works if namespace is also set (if useExistingRole is set this name is used as ClusterRole or Role to bind to)
+  useClusterRole: true
+
+  # Add permissions for CustomResources' apiGroups in Role/ClusterRole. Should be used in conjunction with Custom Resource State Metrics configuration
+  # Example:
+  # - apiGroups: ["monitoring.coreos.com"]
+  #   resources: ["prometheuses"]
+  #   verbs: ["list", "watch"]
+  ## TODO 
+  extraRules:
+  - apiGroups: ["carto.run"]
+    resources: ["deliverables","workloads"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["source.toolkit.fluxcd.io"]
+    resources: ["gitrepositories"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["tekton.dev"]
+    resources: ["taskruns","pipelineruns"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["app-scanning.apps.tanzu.vmware.com"]
+    resources: ["imagevulnerabilityscans"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["scanning.apps.tanzu.vmware.com"]
+    resources: ["imagescans","sourcescans"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["kpack.io"]
+    resources: ["images","builds"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["packaging.carvel.dev"]
+    resources: ["packagerepositories","packageinstalls"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["kappctrl.k14s.io"]
+    resources: ["apps"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["serving.knative.dev"]
+    resources: ["services","revisions"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["servicebinding.io"]
+    resources: ["servicebindings"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["services.apps.tanzu.vmware.com"]
+    resources: ["clusterinstanceclasses","classclaims","resourceclaims"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["apis.apps.tanzu.vmware.com"]
+    resources: ["apidescriptors"]
+    verbs: ["list", "watch"]
+  - apiGroups: ["accelerator.apps.tanzu.vmware.com"]
+    resources: ["accelerators","fragments"]
+    verbs: ["list", "watch"]
+
+
+# Configure kube-rbac-proxy. When enabled, creates one kube-rbac-proxy container per exposed HTTP endpoint (metrics and telemetry if enabled).
+# The requests are served through the same service but requests are then HTTPS.
+kubeRBACProxy:
+  enabled: false
+  image:
+    registry: quay.io
+    repository: brancz/kube-rbac-proxy
+    tag: v0.14.0
+    sha: ""
+    pullPolicy: IfNotPresent
+
+  # List of additional cli arguments to configure kube-rbac-prxy
+  # for example: --tls-cipher-suites, --log-file, etc.
+  # all the possible args can be found here: https://github.com/brancz/kube-rbac-proxy#usage
+  extraArgs: []
+
+  ## Specify security settings for a Container
+  ## Allows overrides and additional options compared to (Pod) securityContext
+  ## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+  containerSecurityContext: {}
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 64Mi
+    # requests:
+    #  cpu: 10m
+    #  memory: 32Mi
+
+  ## volumeMounts enables mounting custom volumes in rbac-proxy containers
+  ## Useful for TLS certificates and keys
+  volumeMounts: []
+    # - mountPath: /etc/tls
+    #   name: kube-rbac-proxy-tls
+    #   readOnly: true
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created, require rbac true
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+  # Reference to one or more secrets to be used when pulling images
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  imagePullSecrets: []
+  # ServiceAccount annotations.
+  # Use case: AWS EKS IAM roles for service accounts
+  # ref: https://docs.aws.amazon.com/eks/latest/userguide/specify-service-account-role.html
+  annotations: {}
+
+prometheus:
+  monitor:
+    enabled: false
+    annotations: {}
+    additionalLabels: {}
+    namespace: ""
+    namespaceSelector: []
+    jobLabel: ""
+    targetLabels: []
+    podTargetLabels: []
+    interval: ""
+    ## SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
+    ##
+    sampleLimit: 0
+
+    ## TargetLimit defines a limit on the number of scraped targets that will be accepted.
+    ##
+    targetLimit: 0
+
+    ## Per-scrape limit on number of labels that will be accepted for a sample. Only valid in Prometheus versions 2.27.0 and newer.
+    ##
+    labelLimit: 0
+
+    ## Per-scrape limit on length of labels name that will be accepted for a sample. Only valid in Prometheus versions 2.27.0 and newer.
+    ##
+    labelNameLengthLimit: 0
+
+    ## Per-scrape limit on length of labels value that will be accepted for a sample. Only valid in Prometheus versions 2.27.0 and newer.
+    ##
+    labelValueLengthLimit: 0
+    scrapeTimeout: ""
+    proxyUrl: ""
+    ## Whether to enable HTTP2 for servicemonitor
+    # enableHttp2: false
+    selectorOverride: {}
+    honorLabels: false
+    metricRelabelings: []
+    relabelings: []
+    scheme: ""
+    ## File to read bearer token for scraping targets
+    bearerTokenFile: ""
+    ## Secret to mount to read bearer token for scraping targets. The secret needs
+    ## to be in the same namespace as the service monitor and accessible by the
+    ## Prometheus Operator
+    bearerTokenSecret: {}
+      # name: secret-name
+      # key:  key-name
+    tlsConfig: {}
+
+## Specify if a Pod Security Policy for kube-state-metrics must be created
+## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
+##
+podSecurityPolicy:
+  enabled: false
+  annotations: {}
+    ## Specify pod annotations
+    ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#apparmor
+    ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp
+    ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#sysctl
+    ##
+    # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+    # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
+    # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
+
+  additionalVolumes: []
+
+## Configure network policy for kube-state-metrics
+networkPolicy:
+  enabled: false
+  # networkPolicy.flavor -- Flavor of the network policy to use.
+  # Can be:
+  # * kubernetes for networking.k8s.io/v1/NetworkPolicy
+  # * cilium     for cilium.io/v2/CiliumNetworkPolicy
+  flavor: kubernetes
+
+  ## Configure the cilium network policy kube-apiserver selector
+  # cilium:
+    # kubeApiServerSelector:
+      # - toEntities:
+      #   - kube-apiserver
+
+  # egress:
+  # - {}
+  # ingress:
+  # - {}
+  # podSelector:
+  #   matchLabels:
+  #     app.kubernetes.io/name: kube-state-metrics
+
+securityContext:
+  enabled: true
+  runAsGroup: 65534
+  runAsUser: 65534
+  fsGroup: 65534
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+## Specify security settings for a Container
+## Allows overrides and additional options compared to (Pod) securityContext
+## Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+
+## Node labels for pod assignment
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+nodeSelector: {}
+
+## Affinity settings for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+affinity: {}
+
+## Tolerations for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+
+## Topology spread constraints for pod assignment
+## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+topologySpreadConstraints: []
+
+# Annotations to be added to the deployment/statefulset
+annotations: {}
+
+# Annotations to be added to the pod
+podAnnotations: {}
+
+## Assign a PriorityClassName to pods if set
+# priorityClassName: ""
+
+# Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+podDisruptionBudget: {}
+
+# Comma-separated list of metrics to be exposed.
+# This list comprises of exact metric names and/or regex patterns.
+# The allowlist and denylist are mutually exclusive.
+metricAllowlist: []
+
+# Comma-separated list of metrics not to be enabled.
+# This list comprises of exact metric names and/or regex patterns.
+# The allowlist and denylist are mutually exclusive.
+metricDenylist: []
+
+# Comma-separated list of additional Kubernetes label keys that will be used in the resource's
+# labels metric. By default the metric contains only name and namespace labels.
+# To include additional labels, provide a list of resource names in their plural form and Kubernetes
+# label keys you would like to allow for them (Example: '=namespaces=[k8s-label-1,k8s-label-n,...],pods=[app],...)'.
+# A single '*' can be provided per resource instead to allow any labels, but that has
+# severe performance implications (Example: '=pods=[*]').
+metricLabelsAllowlist: []
+  # - namespaces=[k8s-label-1,k8s-label-n]
+
+# Comma-separated list of Kubernetes annotations keys that will be used in the resource'
+# labels metric. By default the metric contains only name and namespace labels.
+# To include additional annotations provide a list of resource names in their plural form and Kubernetes
+# annotation keys you would like to allow for them (Example: '=namespaces=[kubernetes.io/team,...],pods=[kubernetes.io/team],...)'.
+# A single '*' can be provided per resource instead to allow any annotations, but that has
+# severe performance implications (Example: '=pods=[*]').
+metricAnnotationsAllowList: []
+  # - pods=[k8s-annotation-1,k8s-annotation-n]
+
+# Available collectors for kube-state-metrics.
+# By default, all available resources are enabled, comment out to disable.
+collectors:
+  - certificatesigningrequests
+  - configmaps
+  - cronjobs
+  - daemonsets
+  - deployments
+  - endpoints
+  - horizontalpodautoscalers
+  - ingresses
+  - jobs
+  - leases
+  - limitranges
+  - mutatingwebhookconfigurations
+  - namespaces
+  - networkpolicies
+  - nodes
+  - persistentvolumeclaims
+  - persistentvolumes
+  - poddisruptionbudgets
+  - pods
+  - replicasets
+  - replicationcontrollers
+  - resourcequotas
+  - secrets
+  - services
+  - statefulsets
+  - storageclasses
+  - validatingwebhookconfigurations
+  - volumeattachments
+
+# Enabling kubeconfig will pass the --kubeconfig argument to the container
+kubeconfig:
+  enabled: false
+  # base64 encoded kube-config file
+  secret:
+
+# Enabling support for customResourceState, will create a configMap including your config that will be read from kube-state-metrics
+## TODO 
+customResourceState:
+  enabled: true
+  # Add (Cluster)Role permissions to list/watch the customResources defined in the config to rbac.extraRules
+  config: 
+    spec:
+      resources:
+        - groupVersionKind:
+            group: accelerator.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: Fragment
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: ""
+          metrics:
+            - name: accelerator_fragment_info
+              help: App Accelerators Fragment info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    source_bundle: [spec, source, image]
+                    source_bundle_secret: [spec, source, imagePullSecrets, "0", name]
+                    source_git_url: [spec, git, url]
+                    source_git_branch: [spec, git, ref, branch]
+                    source_git_tag: [spec, git, ref, tag]
+                    source_git_commit: [spec, git, ref, commit]
+                    source_git_secret: [spec, git, secretRef, name]
+                    source_git_sub_path: [spec, git, subPath]
+                    source_git_semver: [spec, git, ref, semver]
+                    ready: [status, artifact, ready]
+                    status_message: [status, artifact, message]
+            - name: accelerator_fragment_status
+              help: App Accelerator Fragment status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: accelerator.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: Accelerator
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: ""
+          metrics:
+            - name: accelerator_info
+              help: App Accelerators info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    source_bundle: [spec, source, image]
+                    source_bundle_secret: [spec, source, imagePullSecrets, "0", name]
+                    displayName: [status, displayName]
+                    source_git_url: [spec, git, url]
+                    source_git_branch: [spec, git, ref, branch]
+                    source_git_tag: [spec, git, ref, tag]
+                    source_git_commit: [spec, git, ref, commit]
+                    source_git_secret: [spec, git, secretRef, name]
+                    source_git_sub_path: [spec, git, subPath]
+                    source_git_semver: [spec, git, ref, semver]
+                    ready: [status, artifact, ready]
+                    status_message: [status, artifact, message]
+            - name: accelerator_imports_info
+              help: App Accelerators info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:  
+                    "*": [status, artifact, imports]
+            - name: accelerator_status
+              help: App Accelerator status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: apis.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: APIDescriptor
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: ""
+          metrics:
+            - name: api_descriptor_info
+              help: API Descriptor info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    type: [spec, type]
+                    system: [spec, system]
+                    owner: [spec, owner]
+                    base_url_ref_kind: [spec, location, baseURL, ref, kind]
+                    base_url_ref_name: [spec, location, baseURL, ref, name]
+                    base_url_ref_namespace: [spec, location, baseURL, ref, namespace]
+                    base_url_ref_api_version: [spec, location, baseURL, ref, apiVersion]
+                    base_url_ref_jsonPath: [spec, location, baseURL, ref, jsonPath]
+                    path: [spec, location, path]
+                    resolved_api_url: [status, resolvedAPISpecURL]
+                    base_url: [spec, location, baseURL, url]
+                    tap_gui_entity_url: [status, registeredEntityURL]
+                    tap_gui_entity_id: [status, registeredTapUID]
+            - name: api_descriptor_status
+              help: API Descriptor status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: serving.knative.dev
+            version: "v1"
+            kind: Revision
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            workload: [metadata, labels, carto.run/workload-name]
+            knative_service: [metadata, labels, serving.knative.dev/service]
+          metricNamePrefix: knative
+          metrics:
+            - name: revision_info
+              help: Knative Revision info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    workload_image: [spec, containers, "0", image]
+                    service_account: [spec, serviceAccountName]
+                    timeout_seconds: [spec, timeoutSeconds]
+                    container_port: [spec, containers, "0", ports, "0", containerPort]
+                    run_as_user: [spec, containers, "0", securityContext, runAsUser]
+                    actual_replicas: [status, actualReplicas]
+                    desired_replicas: [status, desiredReplicas]
+                    routing_state: [metadata, labels, serving.knative.dev/routingState]
+                    knative_configuration: [metadata, labels, serving.knative.dev/configuration]
+            - name: revision_status
+              help: Knative Revision status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] #Unknown
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: serving.knative.dev
+            version: "v1"
+            kind: Service
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: knative
+          metrics:
+            - name: service_info
+              help: Knative Service info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    workload_image: [spec, template, spec, containers, "0", image]
+                    service_account: [spec, template, spec, serviceAccountName]
+                    timeout_seconds: [spec, template, spec, timeoutSeconds]
+                    container_port: [spec, template, spec, containers, "0", ports, "0", containerPort]
+                    run_as_user: [spec, template, spec, containers, "0", securityContext, runAsUser]
+                    internal_url: [status, address, url]
+                    latest_ready_revision: [status, latestReadyRevisionName]
+                    latest_created_revision: [status, latestCreatedRevisionName]
+                    external_url: [status, url]
+            - name: service_status
+              help: Knative Service status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] #Unknown
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_Time: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: servicebinding.io
+            version: "v1beta1"
+            kind: ServiceBinding
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: ""
+          metrics:
+            - name: service_binding_info
+              help: Service Binding info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    binding_name: [spec, name]
+                    service_kind: [spec, service, kind]
+                    service_api_version: [spec, service, apiVersion]
+                    service_name: [spec, service, name]
+                    workload_name: [spec, workload, name]
+                    workload_kind: [spec, workload, kind]
+                    workload_api_version: [spec, workload, apiVersion]
+                    binding_secret: [status, binding, name]
+            - name: service_binding_status
+              help: Service Binding status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: services.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: ClusterInstanceClass
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            xrd: [spec, provisioner, crossplane, compositeResourceDefinition]
+            instance_type_kind: [status, instanceType, kind]
+            instance_type_api_group: [status, instanceType, group]
+            instance_type_api_version: [status, instanceType, version]
+          metricNamePrefix: stk
+          metrics:
+            - name: cluster_instance_class_composition_selector
+              help: Cluster Instance Class composition label selectors
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    "*": [spec, provisioner, crossplane, compositionSelector, matchLabels] 
+            - name: cluster_instance_class_status
+              help: Cluster Instance Class status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: services.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: ResourceClaim
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: stk
+          metrics:
+            - name: resource_claim_info
+              help: Resource Claim info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    class_claim: [metadata, ownerReferences, "0", name]
+                    binding_secret: [status, binding, name]
+                    claimed_resource_name: [status, claimedResourceRef, name]
+                    claimed_resource_kind: [status, claimedResourceRef, kind]
+            - name: resource_claim_status
+              help: Resource Claim status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: services.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: ClassClaim
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: stk
+          metrics:
+            - name: class_claim_info
+              help: Class Claim info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    xrd: [metadata, annotations, classclaims.services.apps.tanzu.vmware.com/xrd-name]
+                    class: [spec, classRef, name]
+                    binding_secret: [status, binding, name]
+                    provisioned_resource_name: [status,provisionedResourceRef, name]
+                    provisioned_resource_kind: [status,provisionedResourceRef, kind]
+            - name: class_claim_status
+              help: Class Claim status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: carto.run
+            version: "v1alpha1"
+            kind: Deliverable
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            type: [metadata, labels, apps.tanzu.vmware.com/workload-type]
+            has_tests: [metadata, labels, apps.tanzu.vmware.com/has-tests]
+          metricNamePrefix: cartographer
+          metrics:
+            - name: deliverable_info
+              help: Deliverable info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    auto_configure_actuators: [metadata, labels, apps.tanzu.vmware.com/auto-configure-actuators]
+                    source_image: [spec, source, image]
+                    source_git_url: [spec, source, git, url]
+                    source_git_branch: [spec, source, git, ref, branch]
+                    source_git_commit: [spec, source, git, ref, commit]
+                    source_git_tag: [spec, source, git, ref, tag]
+                    source_sub_path: [spec, source, subPath]
+                    delivery: [status, deliveryRef, name]
+            - name: deliverable_status
+              help: Deliverable status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] #Unknown
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: carto.run
+            version: "v1alpha1"
+            kind: Workload
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            type: [metadata, labels, apps.tanzu.vmware.com/workload-type]
+            has_tests: [metadata, labels, apps.tanzu.vmware.com/has-tests]
+          metricNamePrefix: cartographer
+          metrics:
+            - name: workload_info
+              help: Workload info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    created_at: [metadata, creationTimestamp]
+                    auto_configure_actuators: [metadata, labels, apps.tanzu.vmware.com/auto-configure-actuators]
+                    source_image: [spec, source, image]
+                    source_git_url: [spec, source, git, url]
+                    source_git_branch: [spec, source, git, ref, branch]
+                    source_git_commit: [spec, source, git, ref, commit]
+                    source_git_tag: [spec, source, git, ref, tag]
+                    source_sub_path: [spec, source, subPath]
+                    supply_chain: [status, supplyChainRef, name]
+                    debug_enabled: [spec, params, "[name=debug]", value]
+                    live_update_enabled: [spec, params, "[name=live-update]", value]
+            - name: workload_status
+              help: Workload status from conditions
+              each:
+                # type: Gauge
+                # gauge:
+                #   path: [status, conditions]
+                #   labelsFromPath:
+                #     type: ["type"] 
+                #     status: ["status"] # Unknown 
+                #     reason: ["reason"]
+                #     message: ["message"]
+                #     last_transition_ime: ["lastTransitionTime"]
+                #   valueFrom: ["status"]
+
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: [ status ]                      
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_Time: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: source.toolkit.fluxcd.io
+            version: "v1beta2"
+            kind: GitRepository
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: flux
+          metrics:
+            - name: git_repository_info
+              help: Flux Git Repository info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    sync_interval: [spec, interval]
+                    branch: [spec, ref, branch]
+                    git_secret: [spec, secretRef, name]
+                    git_url: [spec, url]
+                    internal_url: [status, artifact, url]
+                    last_updated: [status, artifact, lastUpdateTime]
+                    revision: [status, artifact, revision]
+                    status: [status, conditions, "[type=Succeeded]", reason]
+            - name: git_repository_status
+              help: Git Repository status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: tekton.dev
+            version: "v1beta1"
+            kind: TaskRun
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+            task: [spec, taskRef, name]
+          metricNamePrefix: tekton
+          metrics:
+            - name: task_run_info
+              help: Tekton Task Run info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    task_type: [spec, taskRef, kind]
+                    completion_time: [status, completionTime]
+                    start_time: [status, startTime]
+                    carto_resource: [metadata, labels, carto.run/resource-name]
+                    supply_chain: [metadata, labels, carto.run/supply-chain-name]
+                    pod_name: [status, podName]
+            - name: task_run_status
+              help: Task Run status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] #Unknown
+                    reason: ["reason"]
+                    message: ["message"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: scanning.apps.tanzu.vmware.com
+            version: "v1beta1"
+            kind: SourceScan
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            scan_template: [spec, scanTemplate]
+            scan_policy: [spec, scanPolicy]
+            source_url: [spec, blob, url]
+            source_revision: [spec, blob, revision]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+            carto_resource: [metadata, labels, carto.run/resource-name]
+            supply_chain: [metadata, labels, carto.run/supply-chain-name]
+            scanner_name: [status, scannedBy, scanner, name]
+            scanner_version: [status, scannedBy, scanner, version]
+          metricNamePrefix: scst
+          metrics:
+            - name: source_scan_info
+              help: Source scan information
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    store_url: [status, metadataUrl]
+                    phase: [status, phase]
+                    critical_cve_count: [status, cveCount, critical]
+                    high_cve_count: [status, cveCount, high]
+                    low_cve_count: [status, cveCount, low]
+                    medium_cve_count: [status, cveCount, medium]
+                    total_cve_count: [status, cveCount, total]
+                    unkown_cve_count: [status, cveCount, unknown]
+            - name: source_scan_status
+              help: Source Scan status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: scanning.apps.tanzu.vmware.com
+            version: "v1beta1"
+            kind: ImageScan
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            scan_template: [spec, scanTemplate]
+            scan_policy: [spec, scanPolicy]
+            image: [spec, registry, image]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+            carto_resource: [metadata, labels, carto.run/resource-name]
+            supply_chain: [metadata, labels, carto.run/supply-chain-name]
+            scanner_name: [status, scannedBy, scanner, name]
+            scanner_version: [status, scannedBy, scanner, version]
+          metricNamePrefix: scst
+          metrics:
+            - name: image_scan_info
+              help: Image scan information
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    store_url: [status, metadataUrl]
+                    phase: [status, phase]
+                    critical_cve_count: [status, cveCount, critical]
+                    high_cve_count: [status, cveCount, high]
+                    low_cve_count: [status, cveCount, low]
+                    medium_cve_count: [status, cveCount, medium]
+                    total_cve_count: [status, cveCount, total]
+                    unkown_cve_count: [status, cveCount, unknown]
+            - name: image_scan_status
+              help: Image Scan status from conditions
+              each:
+                type: Gauge
+                gauge:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]
+                    reason: ["reason"]
+                    message: ["message"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: app-scanning.apps.tanzu.vmware.com
+            version: "v1alpha1"
+            kind: ImageVulnerabilityScan
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            image: [spec, registry, image]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+            carto_resource: [metadata, labels, carto.run/resource-name]
+            supply_chain: [metadata, labels, carto.run/supply-chain-name]
+            scanner_name: [status, scannedBy, scanner, name]
+            scanner_version: [status, scannedBy, scanner, version]
+          metricNamePrefix: scst
+          metrics:
+            - name: image_vulnerability_scan_status
+              help: Image vulnerability Scan status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"]  #Unknown
+                    reason: ["reason"]
+                    message: ["message"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: tekton.dev
+            version: "v1beta1"
+            kind: PipelineRun
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: tekton
+          metrics:
+            - name: pipeline_run_info
+              help: Tekton Pipeline Run info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    pipeline: [spec, pipelineRef, name]
+                    carto_resource: [metadata, labels, carto.run/resource-name]
+                    supply_chain: [metadata, labels, carto.run/supply-chain-name]
+                    completion_time: [status, completionTime]
+                    start_time: [status, startTime]
+            - name: pipeline_run_status
+              help: Pipeline Run status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] #Unknown
+                    reason: ["reason"]
+                    message: ["message"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: kpack.io
+            version: "v1alpha2"
+            kind: Build
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: kpack
+          metrics:
+            - name: build_info
+              help: Build info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    owner_image: [metadata, labels, image.kpack.io/image]
+                    build_number: [metadata, labels, image.kpack.io/buildNumber]
+                    builder: [spec, builder, image]
+            - name: build_involved_buildpacks
+              help: Buildpacks involved in a build
+              each:
+                type: Info
+                info:
+                  path: [status, buildMetadata]
+                  labelsFromPath:
+                    version: ["version"]
+                    id: ["id"]
+            - name: build_status
+              help: Image status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] #Unknown
+                    reason: ["reason"]
+                    last_transition_ime: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: kpack.io
+            version: "v1alpha2"
+            kind: Image
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+            component: [metadata, labels, app.kubernetes.io/component]
+            owner: [metadata, ownerReferences, "0", name]
+            owner_type: [metadata, ownerReferences, "0", kind]
+            workload: [metadata, labels, carto.run/workload-name]
+          metricNamePrefix: kpack
+          metrics:
+            - name: image_info
+              help: Image info from status and spec
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    builder: [spec, builder, name]
+                    builder_type: [spec, builder, kind]
+                    build_count: [status, buildCounter]
+                    stack: [status, latestStack]
+                    latest_image: [status, latestImage]
+            - name: image_status
+              help: Image status from conditions
+              each:
+                type: Info
+                info:
+                  path: [status, conditions]
+                  labelsFromPath:
+                    type: ["type"]
+                    status: ["status"] # Unknown
+                    reason: ["reason"]
+                    last_transition_time: ["lastTransitionTime"]
+                  valueFrom: ["status"]
+        - groupVersionKind:
+            group: packaging.carvel.dev
+            version: "*"
+            kind: PackageRepository
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: carvel
+          metrics:
+            - name: packagerepository_info
+              help: PackageRepository info on status and fetch target
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    type: [status, conditions, "0", type]
+                    status: [status, conditions, "0", status]
+                    oci_image: [spec, fetch, imgpkgBundle, image]
+                    git_url: [spec, fetch, git, url]
+                    git_ref: [spec, fetch, git, ref]
+        - groupVersionKind:
+            group: packaging.carvel.dev
+            version: "*"
+            kind: PackageInstall
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: carvel
+          metrics:
+            - name: packageinstall_info
+              help: PackageInstall info on status and fetch target
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    type: [status, conditions, "0", type]
+                    status: [status, conditions, "0", status]
+                    package_name: [spec, packageRef, refName]
+                    package_version: [status, version]
+                    ytt_overlay_secret: [metadata, annotations, ext.packaging.carvel.dev/ytt-paths-from-secret-name.0]
+        - groupVersionKind:
+            group: kappctrl.k14s.io
+            version: "*"
+            kind: App
+          labelsFromPath:
+            name: [metadata, name]
+            namespace: [metadata, namespace]
+          metricNamePrefix: carvel
+          metrics:
+            - name: app_info
+              help: App info on status and fetch target
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    type: [status, conditions, "0", type]
+                    status: [status, conditions, "0", status]
+                    oci_image: [spec, fetch, "0", imgpkgBundle, image]
+                    git_url: [spec, fetch, "0", git, url]
+                    git_ref: [spec, fetch, "0", git, ref]
+            - name: app_namespaces
+              help: App namespaces
+              each:
+                type: Info
+                info:
+                  labelsFromPath:
+                    namespaces_deployed_to: [status, deploy, kapp, associatedResources, namespaces]
+# Enable only the release namespace for collecting resources. By default all namespaces are collected.
+# If releaseNamespace and namespaces are both set a merged list will be collected.
+releaseNamespace: false
+
+# Comma-separated list(string) or yaml list of namespaces to be enabled for collecting resources. By default all namespaces are collected.
+namespaces: ""
+
+# Comma-separated list of namespaces not to be enabled. If namespaces and namespaces-denylist are both set,
+# only namespaces that are excluded in namespaces-denylist will be used.
+namespacesDenylist: ""
+
+## Override the deployment namespace
+##
+namespaceOverride: ""
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 64Mi
+  # requests:
+  #  cpu: 10m
+  #  memory: 32Mi
+
+## Provide a k8s version to define apiGroups for podSecurityPolicy Cluster Role.
+## For example: kubeTargetVersionOverride: 1.14.9
+##
+kubeTargetVersionOverride: ""
+
+# Enable self metrics configuration for service and Service Monitor
+# Default values for telemetry configuration can be overridden
+# If you set telemetryNodePort, you must also set service.type to NodePort
+selfMonitor:
+  enabled: false
+  # telemetryHost: 0.0.0.0
+  # telemetryPort: 8081
+  # telemetryNodePort: 0
+
+# Enable vertical pod autoscaler support for kube-state-metrics
+verticalPodAutoscaler:
+  enabled: false
+
+  # Recommender responsible for generating recommendation for the object.
+  # List should be empty (then the default recommender will generate the recommendation)
+  # or contain exactly one recommender.
+  # recommenders: []
+  # - name: custom-recommender-performance
+
+  # List of resources that the vertical pod autoscaler can control. Defaults to cpu and memory
+  controlledResources: []
+  # Specifies which resource values should be controlled: RequestsOnly or RequestsAndLimits.
+  # controlledValues: RequestsAndLimits
+
+  # Define the max allowed resources for the pod
+  maxAllowed: {}
+  # cpu: 200m
+  # memory: 100Mi
+  # Define the min allowed resources for the pod
+  minAllowed: {}
+  # cpu: 200m
+  # memory: 100Mi
+
+  # updatePolicy:
+    # Specifies minimal number of replicas which need to be alive for VPA Updater to attempt pod eviction
+    # minReplicas: 1
+    # Specifies whether recommended updates are applied when a Pod is started and whether recommended updates
+    # are applied during the life of a Pod. Possible values are "Off", "Initial", "Recreate", and "Auto".
+    # updateMode: Auto
+
+# volumeMounts are used to add custom volume mounts to deployment.
+# See example below
+volumeMounts: []
+#  - mountPath: /etc/config
+#    name: config-volume
+
+# volumes are used to add custom volumes to deployment
+# See example below
+volumes: []
+#  - configMap:
+#      name: cm-for-volume
+#    name: config-volume
+
+# Extra manifests to deploy as an array
+extraManifests: []
+  # - apiVersion: v1
+  #   kind: ConfigMap
+  #   metadata:
+  #   labels:
+  #     name: prometheus-extra
+  #   data:
+  #     extra-data: "value"
+
+## Containers allows injecting additional containers.
+containers: []
+  # - name: crd-init
+  #   image: kiwigrid/k8s-sidecar:latest
+
+## InitContainers allows injecting additional initContainers.
+initContainers: []
+  # - name: crd-sidecar
+  #   image: kiwigrid/k8s-sidecar:latest
+

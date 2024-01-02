@@ -16,25 +16,19 @@
     ]
   },
   "editable": true,
-  "fiscalYearStartMonth": 0,
+  "gnetId": null,
   "graphTooltip": 0,
-  "id": 33,
+  "id": 6,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
-      "datasource": {
-        "type": "prometheus"
-      },
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": -1,
@@ -42,11 +36,11 @@
             "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
+              "graph": false,
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
             "lineInterpolation": "smooth",
             "lineWidth": 1,
             "pointSize": 5,
@@ -54,14 +48,7 @@
               "type": "linear"
             },
             "showPoints": "always",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "spanNulls": false
           },
           "mappings": [],
           "thresholds": {
@@ -99,13 +86,13 @@
         "tooltip": {
           "mode": "multi",
           "sort": "asc"
+        },
+        "tooltipOptions": {
+          "mode": "single"
         }
       },
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus"
-          },
           "editorMode": "code",
           "expr": "count(cartographer_workload_info{type=~\".*\"}) by (type)",
           "instant": false,
@@ -118,9 +105,7 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "prometheus"
-      },
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -128,10 +113,7 @@
           },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -169,7 +151,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "7.5.17",
       "targets": [
         {
           "datasource": {
@@ -299,9 +281,7 @@
       "type": "table"
     },
     {
-      "datasource": {
-        "type": "prometheus"
-      },
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -309,10 +289,7 @@
           },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -350,7 +327,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "7.5.17",
       "targets": [
         {
           "datasource": {
@@ -495,9 +472,7 @@
       "type": "table"
     },
     {
-      "datasource": {
-        "type": "prometheus"
-      },
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -505,10 +480,7 @@
           },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -573,7 +545,7 @@
         "showHeader": true,
         "sortBy": []
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "7.5.17",
       "targets": [
         {
           "datasource": {
@@ -695,9 +667,7 @@
       "type": "table"
     },
     {
-      "datasource": {
-        "type": "prometheus"
-      },
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -705,10 +675,7 @@
           },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -746,7 +713,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "7.5.17",
       "targets": [
         {
           "datasource": {
@@ -866,9 +833,7 @@
       "type": "table"
     },
     {
-      "datasource": {
-        "type": "prometheus"
-      },
+      "datasource": null,
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -876,10 +841,7 @@
           },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
+            "filterable": false
           },
           "mappings": [],
           "thresholds": {
@@ -917,7 +879,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "7.5.17",
       "targets": [
         {
           "datasource": {
@@ -1038,8 +1000,9 @@
       "type": "table"
     }
   ],
-  "refresh": "auto",
-  "schemaVersion": 38,
+  "refresh": "5s",
+  "schemaVersion": 27,
+  "style": "dark",
   "tags": [],
   "templating": {
     "list": []
@@ -1050,7 +1013,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Tap-workload",
-  "version": 30,
-  "weekStart": ""
+  "title": "Tap-Workload-tkg",
+  "uid": "75E__4KSk",
+  "version": 1
 }

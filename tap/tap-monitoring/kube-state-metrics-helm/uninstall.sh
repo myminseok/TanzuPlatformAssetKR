@@ -1,0 +1,1 @@
+helm uninstall  tap-monitoring -n kube-state-metrics-helm

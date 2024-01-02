@@ -23,6 +23,12 @@ helm repo update
 helm upgrade --install tap-monitoring prometheus-community/kube-prometheus-stack -n monitoring --create-namespace -f helm-values-modified.yaml
 ```
 
+```
+helm list -A
+NAME          	NAMESPACE 	REVISION	UPDATED                             	STATUS  	CHART                       	APP VERSION
+tap-monitoring	monitoring	25      	2023-12-29 15:26:27.462314 +0900 KST	deployed	kube-prometheus-stack-55.5.0	v0.70.0
+```
+
 verify
 ```
 kubectl get all -n monitoring

@@ -1,0 +1,32 @@
+#! Load ytt libs
+#@ load("@ytt:library", "library")
+#@ load("@ytt:template", "template")
+#@ load("@ytt:data", "data")
+
+#! export vendored prometheus bundle as a var
+#@ upstream_lib = library.get("bundle/config")
+
+#@ def downstream_values():
+namespace: #@ data.values.namespace
+
+#@overlay/match-child-defaults missing_ok=True
+prometheus:  #@ data.values.prometheus
+
+#@overlay/match-child-defaults missing_ok=True
+ingress:  #@ data.values.ingress
+
+#@overlay/match-child-defaults missing_ok=True
+alertmanager:  #@ data.values.alertmanager
+
+#@overlay/match-child-defaults missing_ok=True
+kube_state_metrics:  #@ data.values.kube_state_metrics
+
+#@overlay/match-child-defaults missing_ok=True
+node_exporter:  #@ data.values.node_exporter
+
+#@overlay/match-child-defaults missing_ok=True
+pushgateway:  #@ data.values.pushgateway
+
+#@ end
+
+--- #@ template.replace(upstream_lib.with_data_values(downstream_values()).eval())

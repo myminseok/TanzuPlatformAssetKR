@@ -1,0 +1,1 @@
+helm show values prometheus-community/kube-state-metrics > ./kube-state-metrics-config-spec.yaml

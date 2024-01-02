@@ -1,0 +1,37 @@
+#! The namespace in which to deploy grafana.
+namespace: tanzu-system-dashboards
+ingress:
+  enabled: true
+  virtual_host_fqdn: "grafana.lab.pcfdemo.net"
+  prefix: "/"
+  servicePort: 80
+  # #! [Optional] The certificate for the ingress if you want to use your own TLS certificate.
+  # #! We will issue the certificate by cert-manager when it's empty.
+  # tlsCertificate:
+  #   #! [Required] the certificate
+  #   tls.crt:
+  #   #! [Required] the private key
+  #   tls.key:
+  #   #! [Optional] the CA certificate
+  #   ca.crt:
+
+grafana:
+  ## only applies on the first installation.
+  secret:
+    admin_user: YWRtaW4= # echo -n "admin" | base64 ## only applies on the first installation.
+    admin_password: Y2hhbmdlbWU= # echo -n "changeme" | base64 ## only applies on the first installation.
+
+  pvc:
+    storageClassName: default
+
+  #! The grafana configuration.
+  config:
+    #! Refer to https://grafana.com/docs/grafana/latest/administration/provisioning/#example-data-source-config-file
+    datasource_yaml: |-
+      apiVersion: 1
+      datasources:
+        - name: Prometheus
+          type: prometheus
+          url: prometheus-server.tanzu-system-monitoring.svc.cluster.local
+          access: proxy
+          isDefault: true

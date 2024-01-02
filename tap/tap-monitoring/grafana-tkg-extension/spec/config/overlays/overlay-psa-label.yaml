@@ -1,0 +1,8 @@
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.subset({"kind": "Namespace", "metadata": {"name": "tanzu-system-dashboards"}}),expects="0+"
+---
+metadata:
+  labels:
+    #@overlay/match missing_ok=True
+    pod-security.kubernetes.io/enforce: baseline

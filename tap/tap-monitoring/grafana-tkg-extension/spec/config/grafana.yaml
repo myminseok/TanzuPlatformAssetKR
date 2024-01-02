@@ -1,0 +1,19 @@
+#! Load ytt libs
+#@ load("@ytt:library", "library")
+#@ load("@ytt:template", "template")
+#@ load("@ytt:data", "data")
+
+#! export vendored grafana bundle as a var
+#@ upstream_lib = library.get("bundle/config")
+
+#@ def downstream_values():
+namespace: #@ data.values.namespace
+
+#@overlay/match-child-defaults missing_ok=True
+grafana:  #@ data.values.grafana
+
+#@overlay/match-child-defaults missing_ok=True
+ingress:  #@ data.values.ingress
+#@ end
+
+--- #@ template.replace(upstream_lib.with_data_values(downstream_values()).eval())

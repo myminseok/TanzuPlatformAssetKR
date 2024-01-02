@@ -1,0 +1,1 @@
+helm upgrade --install tap-monitoring prometheus-community/kube-state-metrics -n kube-state-metrics-helm --create-namespace -f helm-values.yaml

@@ -1,0 +1,46 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: bitnami/kube-state-metrics:2.7.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v2.7.0_vmware.2
+          url: projects.registry.vmware.com/tkg/prometheus/kube-state-metrics:v2.7.0_vmware.2
+  image: projects.registry.vmware.com/tkg/prometheus/kube-state-metrics@sha256:cfb7d49761ae9230a5dd00d82396ca251a4ceb27fabe5ae6d8fe3460d6d2a9dc
+- annotations:
+    kbld.carvel.dev/id: jimmidyson/configmap-reload:v0.7.1
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.7.1_vmware.2
+          url: projects.registry.vmware.com/tkg/prometheus/configmap-reload:v0.7.1_vmware.2
+  image: projects.registry.vmware.com/tkg/prometheus/configmap-reload@sha256:d31647076312c6a755be4a2cc085a0b8a4100b780a58951f0ee75aad37e1689b
+- annotations:
+    kbld.carvel.dev/id: prom/alertmanager:v0.25.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v0.25.0_vmware.1
+          url: projects.registry.vmware.com/tkg/prometheus/alertmanager:v0.25.0_vmware.1
+  image: projects.registry.vmware.com/tkg/prometheus/alertmanager@sha256:c09fe4657ac9c2ab1e75ee2b038fb4a8c63ae73d74b47a2d3dbfbce908c43e87
+- annotations:
+    kbld.carvel.dev/id: prom/prometheus:v2.37.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v2.37.0_vmware.3
+          url: projects.registry.vmware.com/tkg/prometheus/prometheus:v2.37.0_vmware.3
+  image: projects.registry.vmware.com/tkg/prometheus/prometheus@sha256:cef38e43c0e42ad13eb42a673878084d3154c0e2d65f64f560b6237848547c82
+- annotations:
+    kbld.carvel.dev/id: prom/pushgateway:v1.4.3
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v1.4.3_vmware.3
+          url: projects.registry.vmware.com/tkg/prometheus/pushgateway:v1.4.3_vmware.3
+  image: projects.registry.vmware.com/tkg/prometheus/pushgateway@sha256:12671c38a6f90ebf240cc3162f4dd9d58bf325c3dd6132f5b8e07240896dc535
+- annotations:
+    kbld.carvel.dev/id: quay.io/prometheus/node-exporter:v1.4.0
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: v1.4.0_vmware.3
+          url: projects.registry.vmware.com/tkg/prometheus/prometheus_node_exporter:v1.4.0_vmware.3
+  image: projects.registry.vmware.com/tkg/prometheus/prometheus_node_exporter@sha256:3a633447a71dc32f0938985f52d45ab0e47f734ca4e9a7dd58e6b943a6e29447
+kind: ImagesLock

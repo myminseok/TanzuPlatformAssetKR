@@ -1,0 +1,32 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:template", "template")
+
+#@ registry_secret_name = "prometheus-reg-creds"
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: #@ registry_secret_name
+  namespace: #@ data.values.namespace
+  annotations:
+    secretgen.carvel.dev/image-pull-secret: ""
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: e30K
+
+#@ prom_srv = overlay.subset({"kind": "Deployment", "metadata": {"name": "prometheus-server"}})
+#@ prom_kube_state_metrics = overlay.subset({"kind": "Deployment", "metadata": {"name": "prometheus-kube-state-metrics"}})
+#@ prom_pushgateway = overlay.subset({"kind": "Deployment", "metadata": {"name": "prometheus-pushgateway"}})
+#@ prom_alertmanager = overlay.subset({"kind": "Deployment", "metadata": {"name": "alertmanager"}})
+#@ prom_node_exporter = overlay.subset({"kind": "DaemonSet", "metadata": {"name": "prometheus-node-exporter"}})
+
+#@overlay/match by=overlay.or_op(prom_srv, prom_kube_state_metrics, prom_pushgateway, prom_alertmanager, prom_node_exporter), expects="3+"
+---
+spec:
+  template:
+    spec:
+      #@overlay/match missing_ok=True
+      imagePullSecrets:
+        - name: #@ registry_secret_name
