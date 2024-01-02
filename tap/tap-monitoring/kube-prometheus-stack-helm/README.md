@@ -11,7 +11,7 @@ References:
 
 
 there is a sample grafana dashboard [`grafana-dashboard-example-tap-workload.json`](grafana-dashboard-example-tap-workload.json)
-and [`helm-values-modified.yaml`](kube-prometheus-stack-helm/helm-values-modified.yaml) in this repo.
+and [`helm-values-modified.yaml`](helm-values-modified.yaml) in this repo.
 
 ### Setup
 ```
