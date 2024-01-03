@@ -33,7 +33,7 @@ tanzu apps workload apply -f ./workload-tanzu-java-web-app.yaml-sample --yes   -
 supply chain.
 ```
 Supply Chain
-   name:   source-test-scan-to-url-custom
+   name:   source-test-scan-to-url-sonarqube
 
    NAME               READY   HEALTHY   UPDATED   RESOURCE
    source-provider    True    True      32m       imagerepositories.source.apps.tanzu.vmware.com/tanzu-java-web-app
