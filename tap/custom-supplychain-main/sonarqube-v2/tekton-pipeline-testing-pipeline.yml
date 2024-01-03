@@ -8,6 +8,7 @@ metadata:
   namespace: my-space
   labels:
     apps.tanzu.vmware.com/pipeline: test     # (!) required
+    apps.tanzu.vmware.com/language: java
 spec:
   params:
     - name: source-url                       # (!) required
