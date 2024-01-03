@@ -9,7 +9,7 @@ metadata:
     apps.tanzu.vmware.com/has-tests: true
     #apis.apps.tanzu.vmware.com/register-api: "true"
    # apps.tanzu.vmware.com/carvel-package-workflow: true  # for source-to-url-package, no doublequote ""
-    apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
+   # apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
   annotations:
     autoscaling.knative.dev/minScale: "1"
 spec:
@@ -25,6 +25,7 @@ spec:
   ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scc-ootb-supply-chain-testing.html multiple testing pipeline
   - name: testing_pipeline_matching_labels
     value:
+      apps.tanzu.vmware.com/pipeline: test
       apps.tanzu.vmware.com/language: java
   - name: api_descriptor
     value:
