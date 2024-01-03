@@ -1,7 +1,8 @@
+
 apiVersion: carto.run/v1alpha1
 kind: ClusterSupplyChain
 metadata:
-  name: source-test-scan-to-url-custom
+  name: source-test-scan-to-url-simple-gitops
 spec:
   params:
   - default: ""

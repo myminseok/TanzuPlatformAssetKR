@@ -27,7 +27,7 @@ k apply -f rbac.yml -n $DEVELOPER_NAMESPACE
 ```
 
 ```
-tanzu apps workload apply -f ./workload-tanzu-java-web-app.yaml --yes   -n ${DEVELOPER_NAMESPACE}
+tanzu apps workload apply -f ./workload-tanzu-java-web-app.yaml-sample --yes   -n ${DEVELOPER_NAMESPACE}
 ```
 
 supply chain.
