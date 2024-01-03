@@ -15,7 +15,7 @@ refer to https://github.com/x95castle1/custom-cartographer-supply-chain-examples
 k get clustersupplychains source-test-scan-to-url -o yaml > source-test-scan-to-url.yml
 ```
 and update `source-test-scan-to-url-sonarqube.yml` for parameters according to you environment.
-
+* WARNING: please note that modifying OOTB supply-chain such as `source-test-scan-to-url` will be revered back on future TAP upgrade.
 ```
 export DEVELOPER_NAMESPACE=my-space
 
