@@ -39,10 +39,15 @@ tap_gui:
     auth:
       allowGuestAccess: true
       
-## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/app-live-view-install.html
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/app-live-view-install.html
 appliveview:
   ingressEnabled: true
-
+  ## don't use server.tls.enabled only. it requires crt, key values.
+  #server:
+  #  tls:
+  #    enabled: true #! The rest of the tls attributes are needed ONLY if tls is enabled.
+  #    key: ""        #! content of the server key file.
+  #    crt: ""        #! content of the server cert file.
 
 excluded_packages:
 - policy.apps.tanzu.vmware.com # workaround for policy controller error
