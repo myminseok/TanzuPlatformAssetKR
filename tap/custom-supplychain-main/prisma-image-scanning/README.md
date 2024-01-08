@@ -9,8 +9,22 @@
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
 
-### Install AMR for `FULL` profile cluster
-see [AMR documentation](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-install-amr-observer.html)<br>
+### Install metadata_store, AMR for `FULL` profile cluster
+- architecture: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-architecture.html
+- [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-deployment-details.html)
+By default, AMR is not deployed with SCST - Store. There is an amr section inside metadata_store. To deploy AMR, you must set the deploy property under amr to true.
+for `full` profile cluster, tap-values.yml should be:
+```
+metadata_store:
+  ns_for_export_app_cert: "*"
+  app_service_type: ClusterIP
+  amr:
+    deploy: true
+```
+
+You must deploy AMR and AMR CloudEvent Handler if you are using the Full profile.
+https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-install-amr-observer.html#install-2
+
 for `full` profile cluster, tap-values.yml should be:
 ```
 metadata_store:
@@ -81,7 +95,7 @@ kubectl rollout restart -n amr-observer-system deployment.apps/amr-observer-cont
 go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build-profile-cluster-only)
 
 
-###  Install AMR on `VIEW` profile cluster
+###  Install AMR store on `VIEW` profile cluster
 tap-values.yml
 ```
 metadata_store:
@@ -102,7 +116,7 @@ kubectl rollout restart -n metadata-store deployment.apps/amr-persister
 ```
 
 
-###  Install AMR on `BUILD` profile cluster
+###  Install AMR observer on `BUILD` profile cluster
 
 fetch amr info from `view` cluster
 ```
