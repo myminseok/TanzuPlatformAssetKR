@@ -34,6 +34,17 @@ tap_gui:
           Authorization: "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6InYyUUVpaFA3alk0TDNBalZERkNCNlFTbHhsM1A3SHhxZmxnWVpkT1EweVUifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtZXRhZGF0YS1zdG9yZSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQ5OTU0YjBhLThkYTktNGMzMS04NmVmLWM5OGYwZjk2YWNiZSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptZXRhZGF0YS1zdG9yZTptZXRhZGF0YS1zdG9yZS1yZWFkLXdyaXRlLWNsaWVudCJ9.gti4z3bkMuDhqZ3Qp2TGHqyIyhVo8G72Ujg2rtN6VQ9js5gtIlW-HOsU5UN3Dzje9hMUDbW6I0v1cBxlELYGQ9Og276NZLulKOFOmD39L-AQQeI9HnolnSujEClnsG1jv8GxmJ-kvDs4L9EQaaXZJOqrY__AsXBIphoUC423CYyFAR58ZKA4qxqkVFeweubgtVe4EAkcOzMCE6CH-cI9FTLevgluHpwGQajB1lZCfvU-YL1Ob3KTuKa9EYtqIT50Bq8mL-W2EtLFfcRDssAGMQxUYZJMhWfDlTG92P1hVUVnowNZsGv7Sih52wn1eALQo-4gvfyxMDlGgIKH7l0IBw"
           X-Custom-Source: project-star
 
+    # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap.pdf
+    # https://backstage.io/docs/features/software-catalog/configuration/#static-location-configuration
+    # https://backstage.io/docs/integrations/gitlab/locations
+    #@overlay/match missing_ok=True
+    integrations:
+      gitlab:
+        - host: gitlab.lab.pcfdemo.net
+          token: glpat-xxxx ## project > settings> Access Tokens> Add new token> role:owner, scopes: api,read_repository,write_repository scopes
+          apiBaseUrl: https://gitlab.lab.pcfdemo.net/api/v4 ## required!!
+          baseUrl:  https://gitlab.lab.pcfdemo.net # required:  Error: Please provide full path to yaml file from GitLab
+
     #@overlay/match missing_ok=True
     catalog:
       locations:
@@ -47,7 +58,11 @@ tap_gui:
         #   target: https://github.com/dbha/spring-sensors/blob/main/catalog-info.yaml
         # - type: url
         #   target: https://github.com/dbha/tap-catalog/blob/main/catalog-info.yaml
+        - type: url
+          target: https://gitlab.lab.pcfdemo.net/root/tap-catalog-repo-private/-/blob/main/catalog-tanzu-java-web-app-private.yml ## private gitlab project. => worked
 
+
+   
     #@overlay/match missing_ok=True
     ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tap-gui-cluster-view-setup.html
     # app:
