@@ -1,0 +1,12 @@
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: tap-monitoring-kube-state-metrics-httpproxy
+  namespace: kube-state-metrics-helm
+spec:
+  routes:
+    - services:
+      - name: tap-monitoring-kube-state-metrics
+        port: 8080
+  virtualhost:
+    fqdn: tap-monitoring-kube-state-metrics.fullcluster.lab.pcfdemo.net

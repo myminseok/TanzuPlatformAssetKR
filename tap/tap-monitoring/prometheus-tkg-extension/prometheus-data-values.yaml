@@ -28,6 +28,11 @@ prometheus:
     storage: "150Gi"
   #! The prometheus configuration
   ## TODO add kube-state-metrics scrape config
+  ##  static_configs:
+  ##      - targets: 
+  ##          - 'tap-monitoring-kube-state-metrics.kube-state-metrics-helm.svc.cluster.local:8080'
+  ##          - 'tap-monitoring-kube-state-metrics.fullcluster.lab.pcfdemo.net'
+
   config:
     prometheus_yml: |
       global:
@@ -44,9 +49,11 @@ prometheus:
         scrape_interval: 5s
         static_configs:
         - targets: ['localhost:9090']
+        
       - job_name: 'tap-monitoring-kube-state-metrics'
         static_configs:
-        - targets: ['tap-monitoring-kube-state-metrics.kube-state-metrics-helm.svc.cluster.local:8080']
+        - targets: 
+            - 'tap-monitoring-kube-state-metrics.fullcluster.lab.pcfdemo.net'
 
       - job_name: 'kube-state-metrics'
         static_configs:
