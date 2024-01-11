@@ -187,7 +187,17 @@ tanzu package install app-scanning-beta --package app-scanning.apps.tanzu.vmware
 ```
 verify installation status:
 ```
-tanzu package installed get -n tap-install                  app-scanning-beta
+tanzu package installed get -n tap-install                  app-scanning-beta 
+
+NAMESPACE:          tap-install
+NAME:               app-scanning-beta
+PACKAGE-NAME:       app-scanning.apps.tanzu.vmware.com
+PACKAGE-VERSION:    0.1.0-beta.137
+STATUS:             Reconcile succeeded
+CONDITIONS:         - type: ReconcileSucceeded
+  status: "True"
+  reason: ""
+  message: ""
 ```
 
 to uninstall,
@@ -307,10 +317,33 @@ kubectl logs -n metadata-store deployment.apps/amr-persister -f
 {"level":"info","ts":"2023-12-19T08:02:09.211673399Z","caller":"persister/persisteradapter.go:279","msg":"Sending request to: https://artifact-metadata-repository-app.metadata-store.svc.cluster.local:8443/api/v1/apps with payload: {\"locationReference\":\"f2bdcf34-95a3-45b5-96fb-022ffa3d3731\",\"imageUrl\":\"ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space\",\"imageDigest\":\"63d830e4c827bca9bb918f38471217fb5cf7746394e5c91cd12f58c96def725a\",\"namespace\":\"my-space\",\"name\":\"tanzu-java-web-app-00001\",\"instances\":0,\"status\":\"Unavailable\",\"timestamp\":\"2023-12-19T08:02:09Z\"}"}
 
 ```
+#### Troubleshooting  - scan result is not displayed in TAP-GUI
+on build cluster, check logs of amr-observer. 
+```
+kubectl logs -n  amr-observer-system deployment.apps/amr-observer-controller-manager -f
 
+
+1-11T13:43:18Z	INFO	Starting workers	{"controller": "imagevulnerabilityscan", "controllerGroup": "app-scanning.apps.tanzu.vmware.com", "controllerKind": "ImageVulnerabilityScan", "worker count": 1}
+2024-01-11T13:43:18Z	INFO	Starting workers	{"controller": "replicaset", "controllerGroup": "apps", "controllerKind": "ReplicaSet", "worker count": 1}
+2024-01-11T13:43:18Z	INFO	ivs.reconcile	reconciling IVS resource	{"namespacedName": "my-space/tanzu-java-web-app-prisma-scan-z7xbn"}
+2024-01-11T13:43:18Z	INFO	ivs.download	Preparing keychain	{"keychain": {"Namespace":"my-space","ServiceAccountName":"default","ImagePullSecrets":null,"UseMountSecrets":true}}
+2024-01-11T13:43:19Z	INFO	ivs.download	Fetching scan results	{"imageRef": "ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space-scan-results@sha256:6f118737101da478e4b955b27df2d56f7c226bdaaa5bfc9e025d8782f736db7f", "bundleDir": "/tmp/amr-observer1385328797"}
+2024-01-11T13:43:19Z	INFO	ivs.reconcile	Downloaded 2 scanresults	{"namespacedName": "my-space/tanzu-java-web-app-prisma-scan-z7xbn", "filepaths": ["/tmp/amr-observer1385328797/scan.cdx.xml", "/tmp/amr-observer1385328797/twist-scan.json"]}
+2024-01-11T13:43:19Z	INFO	ivs.reconcile	Generated cloudevents successfully	{"namespacedName": "my-space/tanzu-java-web-app-prisma-scan-z7xbn", "count": 1}
+2024-01-11T13:43:19Z	INFO	ivs.reconcile	Sending the request to persister-endpoint...	{"namespacedName": "my-space/tanzu-java-web-app-prisma-scan-z7xbn"}
+2024-01-11T13:43:21Z	INFO	httpclient.circuitbreaker	Received response with status	{"status": "204 No Content"}
+2024-01-11T13:43:21Z	INFO	httpclient.circuitbreaker	Successfully sent CloudEvent
+2024-01-11T13:43:22Z	INFO	ivs.reconcile	Received response with status	{"namespacedName": "my-space/tanzu-java-web-app-prisma-scan-z7xbn", "status": "204 No Content"}
+2024-01-11T13:43:22Z	INFO	ivs.reconcile	Reconcile for IVS SUCCEEDED	{"namespacedName": "my-space/tanzu-java-web-app-prisma-scan-z7xbn"}
+```
+restarting amr-observer might help to re-register workload to TAP-GUI.
+
+```
+kubectl rollout restart -n amr-observer-system deployment.apps/amr-observer-controller-manager
+```
 
 ## TODO
-- image build guide
+- building prisma scanning image  guide
 
 
 
