@@ -33,7 +33,7 @@ spec:
       location:
         #baseURL: http://petclinic-hard-coded.my-apps.tapdemo.vmware.com/
         path: "/v3/api-docs"
-      owner: team-petclinic
+      owner: team-platform
       system: pet-clinics
       description: "A set of API endpoints to manage the resources within the petclinic app.(running on TAP, main)"
 
