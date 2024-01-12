@@ -6,10 +6,10 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: sonarqube-scanner
-  #namespace: my-space
   labels:
     app.kubernetes.io/version: "0.2"
     apps.tanzu.vmware.com/pipeline: test     # (!) required
+    apps.tanzu.vmware.com/language: java
   annotations:
     tekton.dev/pipelines.minVersion: "0.12.1"
     tekton.dev/categories: Security
@@ -42,17 +42,18 @@ spec:
       default: "login"
     - name: SONAR_PASSWORD
       description: Auth for the project
-      default: "password"
+      default: "pass"
     - name: source-url
       description: Location of the source code
     - name: source-revision
       description: Revision of the source code
+    - name: tokenSecretName
+      default: "sonarqube-credentials"
 
   workspaces:
     - name: tmp-workspace
 
   steps:
-  
     - name: compile
       image: gradle:latest
       workingDir: $(workspaces.tmp-workspace.path)
@@ -60,13 +61,36 @@ spec:
         #!/usr/bin/env bash
         set -ex
         wget -qO- $(params.source-url) | tar xvz
-        #./mvnw compile -Dmaven.repo.local=$(workspaces.maven-settings.path) -s $(workspaces.custom-maven-settings.path)/settings.xml
-        ./mvnw compile
+        #./mvnw compile -Dmaven.repo.local=$(workspaces.tmp-workspace.path) -s $(workspaces.tmp-workspace.path)/settings.xml
+        #./mvnw compile
+
     - name: sonar-properties-create
       image: gradle:latest
       workingDir: $(workspaces.tmp-workspace.path)
+      env:
+      - name: SONAR_HOST_URL  ## add this
+        valueFrom:
+          secretKeyRef:
+            name: $(params.tokenSecretName)
+            key: sonar_host_url
+      - name: SONAR_PASSWORD  ## add this
+        valueFrom:
+          secretKeyRef:
+            name: $(params.tokenSecretName)
+            key: sonar_password
+      - name: SONAR_LOGIN  ## add this
+        valueFrom:
+          secretKeyRef:
+            name: $(params.tokenSecretName)
+            key: sonar_login
+      - name: SONAR_TOKEN  ## add this
+        valueFrom:
+          secretKeyRef:
+            name: $(params.tokenSecretName)
+            key: sonar_token
       script: |
         #!/bin/bash
+        
         replaceValues() {
           filename=$1
           thekey=$2
@@ -98,14 +122,29 @@ spec:
         else
           touch sonar-project.properties
           echo "sonar.projectKey=$(params.SONAR_PROJECT_KEY)" >> sonar-project.properties
-          echo "sonar.host.url=$(params.SONAR_HOST_URL)" >> sonar-project.properties
-          echo "sonar.login=$(params.SONAR_LOGIN)" >> sonar-project.properties
-          echo "sonar.password=$(params.SONAR_PASSWORD)" >> sonar-project.properties
+          
+          ## TODO modified
+          if [ "$SONAR_HOST_URL" != "" ]; then  
+            echo "sonar.host.url=$SONAR_HOST_URL" >> sonar-project.properties
+          else
+            echo "sonar.host.url=$(params.SONAR_HOST_URL)" >> sonar-project.properties
+          fi
+          if [ "$SONAR_LOGIN" != "" ]; then  
+            echo "sonar.login=$SONAR_LOGIN" >> sonar-project.properties
+          else
+            echo "sonar.login=$(params.SONAR_LOGIN)" >> sonar-project.properties
+          fi
+
+          if [ "$SONAR_PASSWORD" != "" ]; then  
+            echo "sonar.password=$SONAR_PASSWORD" >> sonar-project.properties
+          else
+            echo "sonar.password=$(params.SONAR_PASSWORD)" >> sonar-project.properties
+          fi
           echo "sonar.sources=." >> sonar-project.properties
           echo "sonar.exclusions=**/*.java" >>  sonar-project.properties
         fi
-        echo "---------------------------"
-        cat $(workspaces.tmp-workspace.path)/sonar-project.properties
+        echo "# sonar-project.properties ---------------------------"
+        cat $(workspaces.tmp-workspace.path)/sonar-project.properties 
 
     - name: sonar-scan
       image: docker.io/sonarsource/sonar-scanner-cli:4.6@sha256:7a976330a8bad1beca6584c1c118e946e7a25fdc5b664d5c0a869a6577d81b4f

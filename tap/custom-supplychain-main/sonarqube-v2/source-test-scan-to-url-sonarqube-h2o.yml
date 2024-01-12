@@ -1,0 +1,191 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterSupplyChain
+metadata:
+  name: source-test-scan-to-url-custom
+spec:
+  params:
+  - default: ""
+    name: ca_cert_data
+  - name: maven_repository_url
+    value: https://repo.maven.apache.org/maven2
+  - default: main
+    name: gitops_branch
+  - default: supplychain
+    name: gitops_user_name
+  - default: supplychain
+    name: gitops_user_email
+  - default: supplychain@cluster.local
+    name: gitops_commit_message
+  - default: ""
+    name: gitops_ssh_secret
+  - default: ""
+    name: gitops_commit_branch
+  - name: image_scanning_service_account_publisher
+    value: default
+  - default: default
+    name: image_scanning_service_account_scanner
+  - name: image_scanning_cli
+    value:
+      image: registry.tanzu.vmware.com/tanzu-application-platform/tap-packages@sha256:9ef533905d900ccb86883eeb78843b965be685f8d7e7c31066b4b1d8d383ab41
+  - default: 4Gi
+    name: image_scanning_workspace_size
+  - name: image_scanning_active_keychains
+    value: []
+  resources:
+  - name: source-provider
+    params:
+    - default: default
+      name: serviceAccount
+    - default: go-git
+      name: gitImplementation
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: source-template
+  - name: source-tester
+    sources:
+    - name: source
+      resource: source-provider
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: testing-pipeline
+
+  - name: sonarqube-sourcescanner
+    sources:
+    - name: source
+      resource: source-tester
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: sonarqube-template
+
+  - name: image-provider
+    sources:
+    - name: source
+      resource: sonarqube-sourcescanner
+    params:
+    - default: default
+      name: serviceAccount
+    - name: registry
+      value:
+        ca_cert_data: ""
+        repository: myminseok/tap-service/minseok-supply-chain
+        server: ghcr.io
+    - default: default
+      name: clusterBuilder
+    - default: ./Dockerfile
+      name: dockerfile
+    - default: ./
+      name: docker_build_context
+    - default: []
+      name: docker_build_extra_args
+
+    templateRef:
+      kind: ClusterImageTemplate
+      options:
+      - name: kpack-template
+        selector:
+          matchFields:
+          - key: spec.params[?(@.name=="dockerfile")]
+            operator: DoesNotExist
+      - name: kaniko-template
+        selector:
+          matchFields:
+          - key: spec.params[?(@.name=="dockerfile")]
+            operator: Exists
+
+  - name: imagescanner
+    images:
+    - name: image
+      resource: image-provider
+    params:
+    - default: scan-policy
+      name: scanning_image_policy
+    - default: private-image-scan-template
+      name: scanning_image_template
+    - name: registry
+      value:
+        ca_cert_data: ""
+        repository: myminseok/tap-service/minseok-supply-chain
+        server: ghcr.io
+    templateRef:
+      kind: ClusterImageTemplate
+      name: image-vulnerability-scan-prisma
+  - images:
+    - name: image
+      resource: imagescanner
+    name: config-provider
+    params:
+    - default: default
+      name: serviceAccount
+    templateRef:
+      kind: ClusterConfigTemplate
+      name: convention-template
+  - configs:
+    - name: config
+      resource: config-provider
+    name: app-config
+    templateRef:
+      kind: ClusterConfigTemplate
+      options:
+      - name: config-template
+        selector:
+          matchLabels:
+            apps.tanzu.vmware.com/workload-type: web
+      - name: server-template
+        selector:
+          matchLabels:
+            apps.tanzu.vmware.com/workload-type: server
+      - name: worker-template
+        selector:
+          matchLabels:
+            apps.tanzu.vmware.com/workload-type: worker
+  - configs:
+    - name: app_def
+      resource: app-config
+    name: service-bindings
+    templateRef:
+      kind: ClusterConfigTemplate
+      name: service-bindings
+  - configs:
+    - name: app_def
+      resource: service-bindings
+    name: api-descriptors
+    templateRef:
+      kind: ClusterConfigTemplate
+      name: api-descriptors
+  - configs:
+    - name: config
+      resource: api-descriptors
+    name: config-writer
+    params:
+    - default: default
+      name: serviceAccount
+    - name: registry
+      value:
+        ca_cert_data: ""
+        repository: myminseok/tap-service/minseok-supply-chain
+        server: ghcr.io
+    templateRef:
+      kind: ClusterTemplate
+      name: config-writer-template
+  - name: deliverable
+    params:
+    - name: registry
+      value:
+        ca_cert_data: ""
+        repository: myminseok/tap-service/minseok-supply-chain
+        server: ghcr.io
+    - default: go-git
+      name: gitImplementation
+    templateRef:
+      kind: ClusterTemplate
+      name: external-deliverable-template
+  selector:
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/use-sonarqube: "true"  # added this as a selector
+  selectorMatchExpressions:
+  - key: apps.tanzu.vmware.com/workload-type
+    operator: In
+    values:
+    - web
+    - server
+    - worker

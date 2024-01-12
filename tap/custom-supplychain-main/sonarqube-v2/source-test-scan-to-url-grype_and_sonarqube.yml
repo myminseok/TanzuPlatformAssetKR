@@ -1,7 +1,7 @@
 apiVersion: carto.run/v1alpha1
 kind: ClusterSupplyChain
 metadata:
-  name: source-test-scan-to-url-sonarqube
+  name: source-test-scan-to-url-custom
 spec:
   params:
   - default: ""
@@ -18,7 +18,6 @@ spec:
     name: gitops_commit_message
   - default: ""
     name: gitops_ssh_secret
-    ##
   - default: ""
     name: gitops_commit_branch
   - name: image_scanning_service_account_publisher
@@ -110,7 +109,7 @@ spec:
           - key: spec.params[?(@.name=="dockerfile")]
             operator: Exists
 
-  - name: grype-imagescanner
+  - name: imagescanner
     images:
     - name: image
       resource: image-provider
@@ -130,7 +129,7 @@ spec:
   - name: config-provider
     images:
     - name: image
-      resource: grype-imagescanner
+      resource: imagescanner
     params:
     - default: default
       name: serviceAccount
