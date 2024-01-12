@@ -22,4 +22,4 @@ spec:
     app: sonarqube
     release: sonarqube
   type: LoadBalancer
-  loadBalancerIP: 192.168.0.27
+  loadBalancerIP: 192.168.0.27 ## TODO update

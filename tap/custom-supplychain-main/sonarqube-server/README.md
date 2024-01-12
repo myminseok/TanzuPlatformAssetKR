@@ -1,17 +1,19 @@
+## setup 
+
 ```
 helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
 helm repo update
 ```
-```
-kubectl create namespace sonarqube
-```
-```
-helm upgrade --install -n sonarqube sonarqube sonarqube/sonarqube
-```
-takes long time... 
 
 ```
-k logs pod/sonarqube-sonarqube-0 -n sonarqube --all-containers -f
+kubectl create namespace sonarqube
+helm upgrade --install -n sonarqube sonarqube sonarqube/sonarqube
+```
+
+it will take long time... 
+
+```
+kubectl logs pod/sonarqube-sonarqube-0 -n sonarqube --all-containers -f
 
 023.09.18 12:39:42 INFO  app[][o.s.a.ProcessLauncherImpl] Launch process[COMPUTE_ENGINE] from [/opt/sonarqube]: /opt/java/openjdk/bin/java -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/opt/sonarqube/temp -XX:-OmitStackTraceInFastThrow --add-opens=java.base/java.util=ALL-UNNAMED --add-exports=java.base/jdk.internal.ref=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED --add-opens=java.management/sun.management=ALL-UNNAMED --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED -Dcom.redhat.fips=false -Xmx512m -Xms128m -XX:+HeapDumpOnOutOfMemoryError -Dhttp.nonProxyHosts=localhost|127.*|[::1] -cp ./lib/sonar-application-10.2.0.77647.jar:/opt/sonarqube/lib/jdbc/postgresql/postgresql-42.6.0.jar org.sonar.ce.app.CeServer /opt/sonarqube/temp/sq-process12303098109636107896properties
 2023.09.18 12:39:43 ERROR web[][o.s.s.w.WebServiceEngine] Fail to process request http://100.96.3.162:9000/api/system/liveness
@@ -47,20 +49,25 @@ WARNING: System::setSecurityManager will be removed in a future release
 ```
 
 ```
-kubectl apply -f service.yml
-
+kubectl apply -f service.yml -n sonarqube
+kubectl apply -f httpproxy.yml -n sonarqube
+kubectl apply -f httpproxy-80.yml -n sonarqube 
 ```
 
 ```
-k get all -n sonarqube
+kubectl get httpproxy -n sonarqube
+
+NAME                     FQDN                                        TLS SECRET          STATUS   STATUS DESCRIPTION
+sonarqube-httpproxy      sonar-server.h2o-2-22280.h2o.vmware.com     sonar-default-tls   valid    Valid HTTPProxy
+sonarqube-httpproxy-80   sonar-server80.h2o-2-22280.h2o.vmware.com                       valid    Valid HTTPProxy
 ```
-
-http://192.168.0.27:9000/projects/create?mode=manual
-
-
-admin/admin
+connect to portal: admin/admin
+- http://sonar-server80.h2o-2-22280.h2o.vmware.com /projects/create?mode=manual
+- https://sonar-server.h2o-2-22280.h2o.vmware.com 
 
 
+
+# others
 
 https://kubernetes.io/docs/concepts/security/pod-security-standards/
 https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/security/podsecurity-privileged.yaml
