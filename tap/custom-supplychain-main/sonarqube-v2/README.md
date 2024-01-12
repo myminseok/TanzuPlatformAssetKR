@@ -1,5 +1,3 @@
-
-
 ## Sonarqube source scan testing
 refer to https://github.com/x95castle1/custom-cartographer-supply-chain-examples/tree/main/code-analysis repo to setup environment.
 
@@ -12,12 +10,42 @@ refer to https://github.com/x95castle1/custom-cartographer-supply-chain-examples
 6. limitation) this custom supplychain includes environment specific information on each installation. it means you have to modify manually or use overlay mechanism.
 
 
-### Detailed steps 
+## Detailed steps 
+
+### Prepare yamls
+
+
+#### `sonarqube-credentials.yaml`
+for sonarqube access credentials. edit sonarqube-credentials.yaml. this will be injected to `task.yml`. 
+fetch sonaqube server CA from view cluster.
+```
+kubectl get secrets -n sonarqube sonar-default-tls -o jsonpath='{.data.ca\.crt}' | base64 -d
+```
+and edit  `sonarqube-credentials.yaml`
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sonarqube-credentials
+type: Opaque
+stringData:
+  sonar_login: admin
+  sonar_password: 'VMware1!'
+  ## http with 80 only. https is planned.
+  sonar_host_url: 'https://sonar-server.h2o-2-22280.h2o.vmware.com'
+  sonar_token: ''
+  ## sonar_ca_crt:  optional if sonar_host_url is on SSL
+  ## fetch sonaqube server CA from view cluster: kubectl get secrets -n sonarqube sonar-default-tls -o jsonpath='{.data.ca\.crt}' | base64 -d
+  sonar_ca_crt: |  
+    -----BEGIN CERTIFICATE-----
+```
+
+#### `source-test-scan-to-url-sonarqube.yml`
+create a new `source-test-scan-to-url-custom` clustersupplychain by duplicate existing `source-test-scan-to-url` clustersupplychain 
 ```
 k get clustersupplychains source-test-scan-to-url -o yaml > source-test-scan-to-url.yml
 cp source-test-scan-to-url.yml source-test-scan-to-url-sonarqube.yml
 ```
-
 and update `source-test-scan-to-url-sonarqube.yml` for parameters according to you environment. 
 ```
 apiVersion: carto.run/v1alpha1
@@ -48,9 +76,14 @@ spec:
 > add `apps.tanzu.vmware.com/use-sonarqube: "true"` selector.
 
 
+#### rbac.yml
+you needs to set permission to serviceaccount to list `Task` resources with `rbac.yml`
+
+kubectl apply -f rbac.yml
+
 #### task.yml
 refer to https://hub.tekton.dev/tekton/task/sonarqube-scanner
-make sure to match metadata.labels with the `spec.params.testing_pipeline_matching_labels` in workload.yml to match and stamp out objects.
+how to inject SSL cert to sonarqube scanner TaskRun? `sonar-properties-create` step in `task.yml` wil fetch the sonarqube server SSL CA from `sonarqube-credentials`. and `sonar-scan` step will import the ca cert into truststore of `sonar-scanner-cl` container.
 ```
 apiVersion: tekton.dev/v1beta1
 kind: Task
@@ -62,51 +95,58 @@ metadata:
     apps.tanzu.vmware.com/language: java
     ...
 ```
-#### sonarqube access credentials
-edit sonarqube-credentials.yaml. this will be injected to `task.yml`
-```
-apiVersion: v1
-kind: Secret
-metadata:
-  name: sonarqube-credentials
-type: Opaque
-stringData:
-  sonar_login: admin
-  sonar_password: 'VMware1!'
-  ## http with 80 only. https is planned.
-  sonar_host_url: 'http://sonar-server80.h2o-2-22280.h2o.vmware.com'
-  sonar_token: ''
-  # caFile: |
-  #   CADATA
-```
+> make sure metadata.labels.`apps.tanzu.vmware.com/pipeline: test`, `apps.tanzu.vmware.com/language: java` to match with `workload.yml` to stamp out objects. 
 
-apply 
+
+#### `workload-tanzu-java-web-app.yaml`
+
+```
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: tanzu-java-web-app
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: tanzu-java-web-app
+    apps.tanzu.vmware.com/has-tests: true
+    apps.tanzu.vmware.com/use-sonarqube: "true"  # added this as a selector
+  annotations:
+    autoscaling.knative.dev/minScale: "1"
+spec:
+ # serviceAccountName: #@ data.values.service_account_name
+  source:
+    git:
+      url: https://github.com/myminseok/tanzu-java-web-app
+      ref:
+        branch: main
+  params:
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/pipeline: test
+      apps.tanzu.vmware.com/language: java
+```
+> make sure spec.params.`testing_pipeline_matching_labels` to match with the labels on `task.yml`
+
+
+#### apply yaml to Developer namespace
 
 ```
 export DEVELOPER_NAMESPACE=my-space
 
-k apply -f task.yml -n $DEVELOPER_NAMESPACE
-k apply -f cluster-run-template.yml -n $DEVELOPER_NAMESPACE
-k apply -f cluster-source-template.yml -n $DEVELOPER_NAMESPACE
-k apply -f source-test-scan-to-url-sonarqube.yml 
-k apply -f rbac.yml -n $DEVELOPER_NAMESPACE
 kubectl apply -f sonarqube-credentials.yaml  -n $DEVELOPER_NAMESPACE
-```
+kubectl apply -f task.yml -n $DEVELOPER_NAMESPACE
+kubectl apply -f cluster-run-template.yml -n $DEVELOPER_NAMESPACE
+kubectl apply -f cluster-source-template.yml -n $DEVELOPER_NAMESPACE
+kubectl apply -f rbac.yml -n $DEVELOPER_NAMESPACE
 
-fetch sonaqube server CA if is on httpproxy on TKG. and update ca cert to TAP build cluster.
-```
-k get httpproxy -n sonarqube
+kubectl apply -f source-test-scan-to-url-sonarqube.yml 
 
-k get secrets -n sonarqube sonar-default-tls -o jsonpath='{.data.ca\.crt}' | base64 -d
-```
-
-```
+tanzu apps workload delete tanzu-java-web-app -n ${DEVELOPER_NAMESPACE} 
 tanzu apps workload apply -f ./workload-tanzu-java-web-app.yaml --yes   -n ${DEVELOPER_NAMESPACE}
 ```
 
-supply chain.
+check supply chain.
 ```
-Supply Chain
    name:   source-test-scan-to-url-custom
 
    NAME               READY   HEALTHY   UPDATED   RESOURCE
@@ -126,15 +166,6 @@ Supply Chain
 login to sonarqube server and check report at http://sonar-server.h2o-2-22280.h2o.vmware.com/dashboard?id=test
 
 
-https://community.sonarsource.com/t/sonar-scanner-cannot-established-to-https-sonarqube-server/68090
-
-
-tanzu apps workload delete tanzu-java-web-app -n my-space   
-tanzu apps workload apply -f ./workload-tanzu-java-web-app-h2o.yaml --yes  -n my-space
-
-
-## TODO
-how to inject SSL cert to task.yml
 
 ## references
 https://community.sonarsource.com/t/sonar-scanner-cannot-established-to-https-sonarqube-server/68090

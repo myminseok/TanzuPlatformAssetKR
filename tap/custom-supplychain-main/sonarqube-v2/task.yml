@@ -8,8 +8,8 @@ metadata:
   name: sonarqube-scanner
   labels:
     app.kubernetes.io/version: "0.2"
-    apps.tanzu.vmware.com/pipeline: test     # (!) required
-    apps.tanzu.vmware.com/language: java
+    apps.tanzu.vmware.com/pipeline: test  # (!) required
+    apps.tanzu.vmware.com/language: java  # (!) make sure to match with workload.yml
   annotations:
     tekton.dev/pipelines.minVersion: "0.12.1"
     tekton.dev/categories: Security
@@ -88,6 +88,11 @@ spec:
           secretKeyRef:
             name: $(params.tokenSecretName)
             key: sonar_token
+      - name: SONAR_CA_CRT  ## add this
+        valueFrom:
+          secretKeyRef:
+            name: $(params.tokenSecretName)
+            key: sonar_ca_crt
       script: |
         #!/bin/bash
         
@@ -143,11 +148,27 @@ spec:
           echo "sonar.sources=." >> sonar-project.properties
           echo "sonar.exclusions=**/*.java" >>  sonar-project.properties
         fi
-        echo "# sonar-project.properties ---------------------------"
+
+        echo "# $(workspaces.tmp-workspace.path)/sonar-project.properties ---------------------------"
         cat $(workspaces.tmp-workspace.path)/sonar-project.properties 
+
+        if [ "$SONAR_CA_CRT" != "" ]; then  
+          echo "# SONAR_CA_CRT env detected ---------------------------"
+          echo "$SONAR_CA_CRT" > $(workspaces.tmp-workspace.path)/sonar_ca.crt
+          cat $(workspaces.tmp-workspace.path)/sonar_ca.crt
+        fi
 
     - name: sonar-scan
       image: docker.io/sonarsource/sonar-scanner-cli:4.6@sha256:7a976330a8bad1beca6584c1c118e946e7a25fdc5b664d5c0a869a6577d81b4f
       workingDir: $(workspaces.tmp-workspace.path)
-      command:
-        - sonar-scanner
+      # command:
+      #   - sonar-scanner
+      script: |
+        #!/bin/bash
+        echo "# importing sonarqube server CA to truststore ---------------------------"
+        cat $(workspaces.tmp-workspace.path)/sonar_ca.crt
+        echo "JAVA_HOME:$JAVA_HOME" ## JAVA_HOME:/usr/lib/jvm/java-11-openjdk
+        keytool -importcert -trustcacerts -cacerts -file $(workspaces.tmp-workspace.path)/sonar_ca.crt -alias myCert -storepass changeit  -noprompt 
+        sonar-scanner
+
+        

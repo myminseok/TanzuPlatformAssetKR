@@ -36,7 +36,7 @@ metadata:
   namespace: sonarqube
 spec:
   dnsNames:
-  - sonar-server.lab.pcfdemo.net
+  - sonar-server.h2o-2-22280.h2o.vmware.com ## TODO
   issuerRef:
     kind: Issuer
     name: sonar-ca-issuer

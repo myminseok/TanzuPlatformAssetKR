@@ -48,11 +48,30 @@ WARNING: System::setSecurityManager will be removed in a future release
 
 ```
 
+update certificate.yml, httpproxy.yml for domain url.
+```
+spec:
+  dnsNames:
+  - sonar-server.h2o-2-22280.h2o.vmware.com ## TODO
+```
+
+update service.yml for loadbalancer IP
+```
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 192.168.0.27 ## TODO update
+```
+
+
+apply
 ```
 kubectl apply -f service.yml -n sonarqube
+kubectl apply -f certificate.yml -n sonarqube
 kubectl apply -f httpproxy.yml -n sonarqube
 kubectl apply -f httpproxy-80.yml -n sonarqube 
 ```
+
+check httpproxy.
 
 ```
 kubectl get httpproxy -n sonarqube
@@ -61,16 +80,52 @@ NAME                     FQDN                                        TLS SECRET 
 sonarqube-httpproxy      sonar-server.h2o-2-22280.h2o.vmware.com     sonar-default-tls   valid    Valid HTTPProxy
 sonarqube-httpproxy-80   sonar-server80.h2o-2-22280.h2o.vmware.com                       valid    Valid HTTPProxy
 ```
+
 connect to portal: admin/admin
 - http://sonar-server80.h2o-2-22280.h2o.vmware.com /projects/create?mode=manual
 - https://sonar-server.h2o-2-22280.h2o.vmware.com 
 
 
 
-# others
+#### quick testing for sonar scanner cli.
+
+```
+mkdir ./cacerts/
+k get secrets -n sonarqube sonar-default-tls -o jsonpath='{.data.ca\.crt}' | base64 -d > ./cacerts/sonar_ca.crt
+git clone https://github.com/myminseok/tanzu-java-web-app
+docker pull sonarsource/sonar-scanner-cli
+
+docker run  --rm \
+    -v $PWD/cacerts:/tmp/cacerts \
+    -v $PWD/tanzu-java-web-app:/usr/src \
+    -e SONAR_HOST_URL='https://sonar-server.h2o-2-22280.h2o.vmware.com' \
+    -e SONAR_PASSWORD='VMware1!' -e SONAR_LOGIN=admin \
+    sonarsource/sonar-scanner-cli
+```
+and there should be error but it should be OK other than similar to SSLPeerUnverifiedException, PKIX failure
+```
+WARNING: The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested
+Warning: use -cacerts option to access cacerts keystore
+
+Certificate was added to keystore
+INFO: Scanner configuration file: /opt/sonar-scanner/conf/sonar-scanner.properties
+INFO: Project root configuration file: NONE
+INFO: SonarScanner 5.0.1.3006
+INFO: Java 17.0.8 Alpine (64-bit)
+INFO: Linux 5.15.49-linuxkit-pr amd64
+INFO: User cache: /opt/sonar-scanner/.sonar/cache
+
+...
+Caused by: java.lang.IllegalStateException: Fail to download sonar-scanner-engine-shaded-10.3.0.82913-all.jar to /opt/sonar-scanner/.sonar/cache/_tmp/fileCache11037789544637144048.tmp
+...
+
+```
+
+#### optional POD security
 
 https://kubernetes.io/docs/concepts/security/pod-security-standards/
 https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/security/podsecurity-privileged.yaml
+
 ```
 apiVersion: v1
 kind: Namespace
