@@ -49,7 +49,7 @@ tap-install                  gitlab-auth                                        
 tap-install                  gitlab-auth-install
 ```
 
-tap-values.yaml [see TAP 1.7 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/namespace-provisioner-use-case3.html#git-authentication-for-private-repository-for-workloads-and-supply-chain-3) - click `Using GitOps tab`.
+[tap-values.yaml](tap-full-values.yml) [see TAP 1.7 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/namespace-provisioner-use-case3.html#git-authentication-for-private-repository-for-workloads-and-supply-chain-3) - click `Using GitOps tab`.
 ```
 ...
 namespace_provisioner:
