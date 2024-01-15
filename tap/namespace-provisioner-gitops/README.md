@@ -23,7 +23,7 @@ tap-install  namespace-provisioner  namespace-provisioner.apps.tanzu.vmware.com 
         └── secret.yml
 ```
 
-desired-namespaces.yaml 
+[desired-namespaces.yaml](nsp-config-repo/nsp/desired-namespaces.yaml)
 ```
 #@data/values
 ---
@@ -37,9 +37,12 @@ namespaces:
 ```
 
 
-### tap-values.yaml
+### [tap-values.yaml](tap-full-values.yml)
 
 create gitlab secrets by following [docs](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/namespace-provisioner-use-case7.html). There is a current limitation in kapp-controller which does not allow you to re-use the same Git secret multiple time: [see TAP 1.7 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/namespace-provisioner-use-case3.html#git-private) - click `Using GitOps tab`.
+
+[gitlab-auth-install.yml](gitlab-auth-install.yaml) 
+
 ```
 k get secrets -A  | grep gitlab-auth
 tap-install                  gitlab-auth                                                    Opaque                                2      141m
