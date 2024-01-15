@@ -1,0 +1,142 @@
+profile: full
+ceip_policy_disclosed: true
+shared:
+  ingress_domain: TAP_DOMAIN
+  image_registry:
+    project_path: ghcr.io/tap
+    secret:
+      name: registry-credentials
+      namespace: tap-install
+  kubernetes_distribution: ""
+  # ca_cert_data: |
+
+supply_chain: testing_scanning
+ootb_supply_chain_basic:
+  registry:
+    server: ghcr.io
+    repository: youraccount/tap-service/my-supply-chain
+  gitops:
+    ssh_secret: ""
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+      loadBalancerIP: 192.168.0.27
+buildservice:
+  kp_default_repository: ghcr.io/youraccount/tap-service/my-build-service
+  kp_default_repository_username: user
+  kp_default_repository_password: pass
+  stack_configuration: jammy-only
+  exclude_dependencies: true
+
+tap_gui:
+  service_type: ClusterIP
+  metadataStoreAutoconfiguration: true
+  app_config:
+    customize:
+      custom_name: Developer Portal
+    organization:
+      name: DevOps Team
+    auth:
+      allowGuestAccess: true
+    catalog:
+      locations:
+      - type: url
+        target: https://github.com/youraccount/tap-catalog/blob/main/blank/catalog-info.yaml
+
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        allowedHeaders:
+        - Accept
+        - Report-Type-Format
+        headers:
+          Authorization: Bearer eyJhbG
+          X-Custom-Source: project-star
+  tls:
+    namespace: tap-gui
+    secretName: tap-gui-cert
+
+scanning:
+  metadataStore: {}
+
+cnrs:
+  domain_template: '{{.Name}}-{{.Namespace}}.{{.Domain}}'
+  default_tls_secret: tanzu-system-ingress/cnrs-default-tls
+
+metadata_store:
+  ns_for_export_app_cert: '*'
+  app_service_type: ClusterIP
+
+appliveview:
+  ingressEnabled: true
+
+appliveview_connector:
+  backend:
+    ingressEnabled: true
+
+
+ootb_supply_chain_testing:
+  registry:
+    server: ghcr.io
+    repository: youraccount/tap-service/your-supply-chain
+  gitops:
+    server_address: https://github.com/
+    repository_owner: youraccount
+    username: youraccount
+    repository_name: tap-gitops-repo
+    ssh_secret: gitops-basic
+    commit_strategy: direct
+  cluster_builder: default
+  service_account: default
+ootb_supply_chain_testing_scanning:
+  image_scanner_template_name: image-vulnerability-scan-prisma
+  registry:
+    server: ghcr.io
+    repository: youraccount/tap-service/your-supply-chain
+  gitops:
+    ssh_secret: ""
+
+# package_overlays:
+# - name: cnrs
+#   secrets:
+#   - name: cnrs-default-tls-overlay
+
+accelerator:
+  server:
+    service_type: ClusterIP
+    watched_namespace: accelerator-system
+    engine_skip_tls_verify: true
+  samples:
+    include: true
+  sources:
+    skip_tls_verify: true
+
+
+namespace_provisioner:
+  controller: false
+  gitops_install:
+    ref: origin/main
+    subPath: nsp
+    url: https://gitlab.lab.pcfdemo.net/root/nsp-config-repo.git
+    secretRef:
+      name: gitlab-auth-install
+      namespace: tap-install
+      create_export: true
+  additional_sources:
+  - git:
+      ref: origin/main
+      subPath: others
+      url: https://gitlab.lab.pcfdemo.net/root/nsp-config-repo.git
+      secretRef:
+        name: gitlab-auth
+        namespace: tap-install
+        create_export: true
+  default_parameters:
+    supply_chain_service_account:
+      secrets:
+      - from-nsp-gitops
+      imagePullSecrets:
+      - from-nsp-gitops

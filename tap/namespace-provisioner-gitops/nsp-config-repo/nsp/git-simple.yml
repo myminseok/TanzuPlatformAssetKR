@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: test-simple-from-nsp-gitops
+  annotations:
+    tekton.dev/git-0: gitlab.lab.pcfdemo.net
+type: kubernetes.io/basic-auth
+stringData:
+  username: x
+  password: x
