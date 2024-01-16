@@ -35,24 +35,21 @@ run following script with existing tap-env file or new file path.
 ```
 > it will create the given target folder(`~/.tapconfig`) if not exists
 > it will copy `tap/install-tap/tap-env.template` as `tap-env` under the target folder if not exists
-> it will copy all tap-values-TEMPLATE.yml to $TAP_ENV_DIR if the file doesn't exist in the $TAP_ENV_DIR
+> it will copy all tap-values-TEMPLATE.yml to directory where TAP_ENV file is located if the file is not already exists.
 
 `tap-env` file will be created as following.
 ```
-export TAP_ENV=/home/ubuntu/tap-config/tap-env
-export TAP_ENV_DIR=/home/ubuntu/tap-config
+export TAP_ENV=/home/ubuntu/tap-config/tap-env-file
 ```
 
 ##### how `TAP_ENV` works
-to separate config file from scripts, this script uses `~/.tapconfig` file and `TAP_ENV`, `TAP_ENV_DIR` environment variables
+to separate config file from installation scripts, this script uses `~/.tapconfig` file and `TAP_ENV` environment variables
 
 `~/.tapconfig` simply points to TAP_ENV file path
 ```
-export TAP_ENV=/home/ubuntu/tap-config/tap-env
-export TAP_ENV_DIR=/home/ubuntu/tap-config
+export TAP_ENV=/home/ubuntu/tap-config/tap-env-file
 ```
-- `TAP_ENV_DIR` has all config files required to this scripts.
--  `tap-env` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
+-  `TAP_ENV` file is key=value store where the KEY will be applied to tap-values file while installing and updating tap later on.
 
 for example, following key in the `tap-env` file,
 ```
@@ -128,11 +125,6 @@ relocate images to image registry (check TAP_ENV)
 ```
 tanzu package available list buildservice.tanzu.vmware.com --namespace tap-install
 ```
-the `tap-env` file
-```
-TBS_FULL_DEPS_VERSION=1.10.8
-```
-
 By default, if no option, Download and upload packages DIRECTLY to $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO WITHOUT saving to tar.
 ```
 04-relocate-images-tbs-full-deps.sh
@@ -291,7 +283,7 @@ configure any changes from previous step
 ```
 $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
->  TAP_ENV_DIR: defined in  ~/.tapconfig 
+>  TAP_ENV_DIR: will be derived from `TAP_ENV` in  ~/.tapconfig 
 
 ### update tap with VIEW profile (23-update-tap.sh)
 apply changes. repeats until successful.
@@ -383,7 +375,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ```
 $TAP_ENV_DIR/tap-values-{profile}-1st-TEMPLATE.yml
 ```
->  TAP_ENV_DIR: defined in  ~/.tapconfig 
+>  TAP_ENV_DIR: will be derived from `TAP_ENV` in  ~/.tapconfig 
 original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
 
 
@@ -420,7 +412,7 @@ configure any changes from previous step
 ```
 $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
->  TAP_ENV_DIR: defined in  ~/.tapconfig 
+>  TAP_ENV_DIR: will be derived from `TAP_ENV` in  ~/.tapconfig 
 
 optionally you can change supply_chain as following.
 ```
@@ -479,7 +471,7 @@ see 'Check for All Workload cluster (View, Build, Run, Iterate)' section
 ```
 $TAP_ENV_DIR/tap-values-{profile}-1st-TEMPLATE.yml
 ```
->  TAP_ENV_DIR: defined in  ~/.tapconfig 
+>  TAP_ENV_DIR: will be derived from `TAP_ENV` in  ~/.tapconfig 
 original copy is in `install-tap/multi-{profile}-cluster/tap-values-{profile}-1st-TEMPLATE.yml`
 
 
@@ -507,7 +499,7 @@ configure any changes from previous step
 ```
 $TAP_ENV_DIR/tap-values-{profile}-2nd-overlay-TEMPLATE.yml
 ```
->  TAP_ENV_DIR: defined in  ~/.tapconfig 
+>  TAP_ENV_DIR: will be derived from `TAP_ENV` in  ~/.tapconfig 
 
 
 ### update tap with profile (23-update-tap.sh)
