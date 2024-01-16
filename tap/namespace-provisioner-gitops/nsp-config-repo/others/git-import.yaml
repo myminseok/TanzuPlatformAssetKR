@@ -1,0 +1,14 @@
+
+#! https://github.com/vmware-tanzu/application-accelerator-samples/blob/main/ns-provisioner-samples/credentials/git.yaml
+#@ load("@ytt:data", "data")
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: others-imported-from-nsp-gitops
+  annotations:
+    tekton.dev/git-0: #@ data.values.imported.git.host 
+type: kubernetes.io/basic-auth
+stringData:
+  username: #@ data.values.imported.git.username
+  password: #@ data.values.imported.git.password

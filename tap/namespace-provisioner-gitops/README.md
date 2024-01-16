@@ -127,5 +127,57 @@ qa                           others-role-from-nsp-gitops                       2
 
 ```
 
+
+### namespace_provisioner.import_data_values_secrets
+https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/namespace-provisioner-use-case3.html
+
+create [user-defined-secrets-for-import.yaml](user-defined-secrets-for-import.yaml)
+
+define [git-import.yaml](nsp-config-repo/others/git-import.yaml)
+
+apply to  [tap-values.yaml](tap-full-values.yml)
+
+```
+namespace_provisioner:
+  controller: false
+  gitops_install:
+  ...
+  additional_sources:
+  ...
+  import_data_values_secrets:
+  - name: user-defined-secrets
+    namespace: tap-install
+    create_export: true
+```
+
+verify resources.
+```
+
+k get secrets -A | grep import
+dev                          others-imported-from-nsp-gitops                                kubernetes.io/basic-auth              2      12m
+my-space                     others-imported-from-nsp-gitops                                kubernetes.io/basic-auth              2      12m
+qa                           others-imported-from-nsp-gitops                                kubernetes.io/basic-auth              2      12m'
+
+
+➜  namespace-provisioner-gitops git:(main) ✗ k get secrets -n dev                          others-imported-from-nsp-gitops -o yaml
+apiVersion: v1
+data:
+  password: dmFsdWUy
+  username: dmFsdWUx
+kind: Secret
+metadata:
+  ...
+  labels:
+    kapp.k14s.io/app: "1705329201740697674"
+    kapp.k14s.io/association: v1.4f712478e6e3567f39cfbe78624f8011
+  name: others-imported-from-nsp-gitops
+  namespace: dev
+type: kubernetes.io/basic-auth
+
+```
+
+
+## TODO list
 ytt_lib
 https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/namespace-provisioner-customize-installation.html
+
