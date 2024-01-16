@@ -19,9 +19,9 @@ fi
 
 check_executable "ytt"
 
-if [ "$UPDATE" == "y" ]; then
+if [ "$UPDATE" == "y" ]; then ## "--update"
   ## select default yml file if no yml given with -f option
-  if [ is_yml_arg_exist "$@" ]; then
+  if  is_yml_arg_exist "$@" ; then
      echo "[YML] Using Given YML file: $YML"
   else
     TAP_ENV_DIR=${TAP_ENV_DIR:-$SCRIPTDIR}
@@ -83,8 +83,25 @@ else
 fi
 
 echo "[YML] Final '$FINAL_YML'"
-echo ""
-print_current_k8s
+
+
+
+PROFILE_UPPPER=$( echo $PROFILE | awk '{print toupper($0)}' )
+KEY="TARGET_CONTEXT_${PROFILE_UPPPER}"
+eval "export "TARGET_CONTEXT_ENV='$'$KEY""
+
+
+if [ "$TARGET_CONTEXT_ENV" == "" ]; then
+  TARGET_CONTEXT=$(kubectl config current-context)
+  TARGET_CONTEXT_ORIGIN="kubeconfig"
+  
+else
+  TARGET_CONTEXT="$TARGET_CONTEXT_ENV"
+  TARGET_CONTEXT_ORIGIN=$TAP_ENV
+  
+fi
+
+
 echo ""
 if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
  echo "following k8s resource will be created (profile is '$PROFILE')"
@@ -93,21 +110,24 @@ if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
 fi
 
 echo "================================"
+echo ""
+COMMAND="tanzu package          install --kubeconfig-context=$TARGET_CONTEXT tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML"
+if [ "$UPDATE" == "y" ]; then
+  COMMAND="tanzu package installed update --kubeconfig-context=$TARGET_CONTEXT tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML"
+fi
+echo "$COMMAND"
+echo ""
+
+echo "!!! TARGET_CONTEXT: $TARGET_CONTEXT. it comes from '$TARGET_CONTEXT_ORIGIN'"
+
 
 
 if [ "$YES" != "y" ]; then
- confirm_target_k8s "Are you sure the TARGET CLUSTER: "
- confirm_target_k8s "TARGET CLUSTER is "
+ confirm_target_context "$TARGET_CONTEXT" "Are you sure the target? "
+ confirm_target_context "$TARGET_CONTEXT" "TARGET CLUSTER is "
 fi
 
-### TODO: commenting out this on TAP 1.5, because overlaying to scantemplate broke scan job validation webhook. 
-# if [ "full" == "$PROFILE" ] || [ "build" == "$PROFILE" ]; then
-#  create_k8s_resources_BUILDSERVICE_REGISTRY_CA_CERTIFICATE
-# fi
+set -x
+$COMMAND
 
-if [ "$UPDATE" == "y" ]; then
-  tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML 
-else
-  tanzu package          install tap -p tap.tanzu.vmware.com -v $TAP_VERSION -n tap-install --values-file $FINAL_YML
-fi
 

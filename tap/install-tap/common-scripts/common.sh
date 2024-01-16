@@ -34,7 +34,6 @@ function print_help_customizing {
   echo "    it will do:"
   echo "      cp -r install-tap/tap-env.template /any/path/tap-env"
   echo "      export TAP_ENV=/path/to/tap-env > ~/.tapconfig"
-  echo "      export TAP_ENV_DIR=/path/to/ > ~/.tapconfig" 
   echo "      copy tap-values-templates.yml to TAP_ENV_DIR"
   echo ""
 }
@@ -72,7 +71,6 @@ function setup_envconfig {
 
   echo "Creating ~/.tapconfig for ABS_ENV_FILE: $ABS_ENV_FILE"
   echo "export TAP_ENV=$ABS_ENV_FILE" > ~/.tapconfig
-  echo "export TAP_ENV_DIR=$ABS_ENV_DIR" >> ~/.tapconfig
   echo "Created ~/.tapconfig"
   cat ~/.tapconfig
   echo ""
@@ -113,7 +111,7 @@ function _decide_tapconfig {
   echo "[ENV] Using env from '$TAP_ENV'"
   source $TAP_ENV
   export TAP_ENV=$TAP_ENV
-  export TAP_ENV_DIR=$TAP_ENV_DIR
+  export TAP_ENV_DIR=$(dirname "${TAP_ENV}" ) ## modified. 2024.1.16
 }
 
 function trim_string {
@@ -324,7 +322,20 @@ function print_current_k8s {
    echo "Kubernetes current-context: $CONTEXT"
 }
 
-function confirm_target_k8s {
+function confirm_target_context {
+    CONTEXT=$1
+    echo ""
+    read -p "$2 '$CONTEXT'? (Y/y) " -n 1 -r
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+      echo "Quitting"
+      exit 1
+    fi
+    echo ""
+}
+
+
+function confirm_current_target_k8s {
     CONTEXT=$(kubectl config current-context)
 
     echo ""
