@@ -62,6 +62,8 @@ if [ ! -z $DOWNLOAD_TAR_PATH ]; then
   imgpkg copy -b $public_repo_url \
     --to-tar ${DOWNLOAD_TAR_PATH} \
     --include-non-distributable-layers $REGISTRY_CA_PATH_ARG
+    ## --debug 2>&1 | tee download.log
+        
   echo ""
   echo "Successfully downloaded to $DOWNLOAD_TAR_PATH"
   exit 0 
