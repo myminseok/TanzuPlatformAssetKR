@@ -335,7 +335,7 @@ function confirm_target_context {
 }
 
 
-function confirm_current_target_k8s {
+function confirm_target_k8s {
     CONTEXT=$(kubectl config current-context)
 
     echo ""
