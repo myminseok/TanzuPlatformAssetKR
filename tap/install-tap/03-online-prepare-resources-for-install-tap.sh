@@ -11,6 +11,8 @@ verify_tap_env_param "INSTALL_REGISTRY_PASSWORD", "$INSTALL_REGISTRY_PASSWORD"
 echo "==============================================================="
 echo "[MANUAL] PREREQUSITE "
 echo "---------------------------------------------------------------"
+echo "tanzu cli is configured"
+echo "   - tanzu cluster list"
 echo "PREREQUSITE: please make sure the value of INSTALL_REGISTRY_USERNAME: $INSTALL_REGISTRY_USERNAME and secret for registry.tanzu.vmware.com in tap-env file"
 
 
