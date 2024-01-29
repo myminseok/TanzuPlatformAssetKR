@@ -49,7 +49,7 @@ else
 fi
 echo ""
 echo "---------------------------------------------------------------------------------------"
-echo "[MANUAL]: Manully update tap-values file on VIEW cluster( Not Required on FULL Cluster)"
+echo "[MANUAL]: Manully update tap-values file on FULL/ VIEW cluster
 echo "---------------------------------------------------------------------------------------"
 echo "  update file: $TAP_ENV_DIR/tap-values-view-2nd-overlay-TEMPLATE.yml"
 echo "  > tap_gui.app_config.proxy./metadata-store.headers.Authorization"
