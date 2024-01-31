@@ -1,5 +1,13 @@
 ### NOTE: This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
 
+## Contents
+- [Prerequisites](#prerequisites)
+- [Architecture](#architecture)
+- [setup guide for full profile cluster](#for-full-profile-cluster)
+- [setup guide for multi cluster deployment](#for-multi-cluster)
+- [Testing Out of the box IVS (grype)](#testing-out-of-the-box-ivs-grype)
+- [Authoring custom Prisma IVS](#authoring-custom-prisma-ivs)
+- [Troubleshooting](#troubleshooting)
 
 ## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
@@ -10,13 +18,13 @@ tanzu package installed delete amr-observer -n tap-install  -y
 ## Architecture
 - [architecture](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-architecture.html)
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-deployment-details.html)
--  amr package status is GA on TAP 1.7
--  app-scanning package status is beta on TAP 1.7
+-  amr package status is `GA` on TAP 1.7
+-  app-scanning package status is `beta` on TAP 1.7
 
 
 ## Setup 
-- [for full profile cluster](README-TAP-1.7.md#for-full-profile-cluster)
-- [for multi cluster deployment](README-TAP-1.7.md#for-multi-cluster)
+- [for full profile cluster](#for-full-profile-cluster)
+- [for multi cluster deployment](#for-multi-cluster)
 
 
 ### For `FULL` profile cluster, 
@@ -117,10 +125,10 @@ tanzu package installed delete app-scanning-beta  -n tap-install  -y
 
 
 ## Testing Out of the box IVS (grype)
-see [README.md](README.md)
+see [README.md#testing-out-of-the-box-ivs-grype ](README.md#testing-out-of-the-box-ivs-grype)
 
 ## Authoring custom Prisma IVS
-see [README.md](README.md)
+see [README.md#authoring-custom-prisma-ivs](README.md#authoring-custom-prisma-ivs)
 
 ## Troubleshooting
-see [README.md](README.md)
+see [README.md#troubleshooting](README.md#troubleshooting)

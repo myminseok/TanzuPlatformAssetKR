@@ -1,6 +1,15 @@
 
 # IVS(image-vulnerability-scan)
 
+## Contents
+- [Prerequisites](#prerequisites)
+- [Architecture](#architecture)
+- [setup guide for TAP-1.6](README-TAP-1.6.md)
+- [setup guide for TAP-1.7](README-TAP-1.7.md)
+- [Testing Out of the box IVS (grype)](#testing-out-of-the-box-ivs-grype)
+- [Authoring custom Prisma IVS](#authoring-custom-prisma-ivs)
+- [Troubleshooting](#troubleshooting)
+
 ## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)

@@ -1,6 +1,15 @@
 
 ### NOTE: This sample is only for TAP 1.6.3 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
+## Contents
+- [Prerequisites](#prerequisites)
+- [Architecture](#architecture)
+- [setup guide for full profile cluster](#for-full-profile-cluster)
+- [setup guide for multi cluster deployment](#for-multi-cluster)
+- [Testing Out of the box IVS (grype)](#testing-out-of-the-box-ivs-grype)
+- [Authoring custom Prisma IVS](#authoring-custom-prisma-ivs)
+- [Troubleshooting](#troubleshooting)
+
 ## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
@@ -8,9 +17,8 @@ see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Plat
 ## Architecture
 - [architecture](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-architecture.html)
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-deployment-details.html)
--  amr package is alpha status.
--  app-scanning package is beta status.
-
+-  amr package is `alpha` status.
+-  app-scanning package is `beta` status.
 
 ## Setup 
 - [for full profile cluster](README-TAP-1.6.md#for-full-profile-cluster)
@@ -212,11 +220,10 @@ tanzu package installed delete app-scanning-beta  -n tap-install  -y
 ```
 
 ## Testing Out of the box IVS (grype)
-see [README.md](README.md)
+see [README.md#testing-out-of-the-box-ivs-grype ](README.md#testing-out-of-the-box-ivs-grype)
 
 ## Authoring custom Prisma IVS
-see [README.md](README.md)
+see [README.md#authoring-custom-prisma-ivs](README.md#authoring-custom-prisma-ivs)
 
 ## Troubleshooting
-see [README.md](README.md)
-
+see [README.md#troubleshooting](README.md#troubleshooting)

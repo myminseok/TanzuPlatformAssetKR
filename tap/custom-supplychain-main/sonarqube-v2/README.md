@@ -12,7 +12,7 @@ refer to https://github.com/x95castle1/custom-cartographer-supply-chain-examples
 
 ## Detailed steps 
 
-### Setup Supplychain resources
+### Prepare Supplychain resources
 
 #### `sonarqube-credentials.yaml`
 for sonarqube access credentials. edit sonarqube-credentials.yaml. this will be injected to `task.yml`. 
