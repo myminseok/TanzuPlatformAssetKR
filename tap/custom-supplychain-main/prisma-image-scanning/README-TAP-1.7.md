@@ -3,8 +3,8 @@
 ## Contents
 - [Prerequisites](#prerequisites)
 - [Architecture](#architecture)
-- [setup guide for full profile cluster](#for-full-profile-cluster)
-- [setup guide for multi cluster deployment](#for-multi-cluster)
+- [setup guide for `full` profile cluster](#for-full-profile-cluster)
+- [setup guide for `multi cluster` deployment](#for-multi-cluster)
 - [Testing Out of the box IVS (grype)](#testing-out-of-the-box-ivs-grype)
 - [Authoring custom Prisma IVS](#authoring-custom-prisma-ivs)
 - [Troubleshooting](#troubleshooting)
