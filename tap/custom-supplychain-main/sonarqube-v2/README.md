@@ -1,14 +1,21 @@
 # Sonarqube source scan testing
-refer to https://github.com/x95castle1/custom-cartographer-supply-chain-examples/tree/main/code-analysis repo to setup environment.
+-  NOTE: This sample is tested on TAP 1.6, TAP 1.7
+- and follows from https://github.com/x95castle1/custom-cartographer-supply-chain-examples/tree/main/code-analysis repo to setup environment.
 
-## Steps summary
+## Contents
+- [Prerequisites](#prerequisites)
+- [Setup summary](#setup-summary)
+- [Prepare Supplychain resources](#prepare-supplychain-resources)
+- [Deploy workloads to Developer namespace](#deploy-workloads-to-developer-namespace)
+
+## Prerequisites
+- prepare sonarqube server for testing. note that sonar source scan result will be saved to sonarqube server. there is no report on TAP-GUI.
+
+## Setup summary
 1. will create scanning resources such as ClusterSourceTemplate, ClusterRunTemplate, Tekton Task
 2. you needs to set permission to serviceaccount to list `Task` resources=> rbac.yml
 3. will duplicate existing `source-test-scan-to-url` clustersupplychain. this all supplychain includes environment specific information on each installation
 4. you have to prepare sonarqube server. and sonarqube credentials secret  (https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/deploy-on-kubernetes/deploy-sonarqube-on-kubernetes/)
-5. limitation as of TAP 1.6) sonar source scan result will be saved to sonarqube server. there is no resport in TAP-GUI.
-6. limitation as of TAP 1.6) TAP-gui doesn't visualize the parallel tasks.
-
 
 ## Detailed steps 
 
