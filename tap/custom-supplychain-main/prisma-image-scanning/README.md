@@ -1,7 +1,5 @@
 
 # IVS(image-vulnerability-scan)
-- [README-TAP-1.6](README-TAP-1.6.md)
-- [README-TAP-1.7](README-TAP-1.7.md)
 
 ## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
@@ -12,8 +10,8 @@ see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Plat
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-deployment-details.html)
 
 ## Setup Metadata store, AMR
-- [README-TAP-1.6](README-TAP-1.6.md)
-- [README-TAP-1.7](README-TAP-1.7.md)
+- [for TAP-1.6](README-TAP-1.6.md)
+- [for TAP-1.7](README-TAP-1.7.md)
 
 ## Testing Out of the box IVS (grype)
 

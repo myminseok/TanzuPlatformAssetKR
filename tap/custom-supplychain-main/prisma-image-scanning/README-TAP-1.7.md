@@ -1,5 +1,6 @@
 ### NOTE: This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
 
+
 ## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 - uninstall beta package from TAP 1.6.x
@@ -11,6 +12,12 @@ tanzu package installed delete amr-observer -n tap-install  -y
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-deployment-details.html)
 -  amr package status is GA on TAP 1.7
 -  app-scanning package status is beta on TAP 1.7
+
+
+## Setup 
+- [for full profile cluster](README-TAP-1.7.md#for-full-profile-cluster)
+- [for multi cluster deployment](README-TAP-1.7.md#for-multi-cluster)
+
 
 ### For `FULL` profile cluster, 
 ### Install metadata_store, AMR

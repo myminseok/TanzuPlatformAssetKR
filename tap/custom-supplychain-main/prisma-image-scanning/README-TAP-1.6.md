@@ -1,17 +1,23 @@
 
 ### NOTE: This sample is only for TAP 1.6.3 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
-### Prerequisites
+## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
-### Architecture
+## Architecture
 - [architecture](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-architecture.html)
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-deployment-details.html)
 -  amr package is alpha status.
 -  app-scanning package is beta status.
 
-### For `FULL` profile cluster, 
+
+## Setup 
+- [for full profile cluster](README-TAP-1.6.md#for-full-profile-cluster)
+- [for multi cluster deployment](README-TAP-1.6.md#for-multi-cluster)
+
+### For `FULL` profile cluster
+
 #### Install Metadata store, AMR for `FULL` profile cluster
 
 on TAP 1.6, AMR is not deployed with SCST - Store. To deploy AMR, you must set the deploy property under amr to true.
