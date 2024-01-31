@@ -170,19 +170,66 @@ tanzu apps workload apply -f ./workload-tanzu-java-web-app.yaml --yes   -n ${DEV
 
 check supply chain.
 ```
+Overview
+   name:        tanzu-java-web-app
+   type:        web
+   namespace:   my-space
+
+Source
+   type:       git
+   url:        https://github.com/myminseok/tanzu-java-web-app
+   branch:     main
+   revision:   main@sha1:0523f9bbe4995541cc832ef7bfaec654a34a35c2
+
+Supply Chain
    name:   source-test-scan-to-url-custom
 
-   NAME               READY   HEALTHY   UPDATED   RESOURCE
-   source-provider    True    True      32m       imagerepositories.source.apps.tanzu.vmware.com/tanzu-java-web-app
-   source-tester      True    True      31m       runnables.carto.run/tanzu-java-web-app
-   sonarqube-scan     True    True      16m       runnables.carto.run/tanzu-java-web-app-code-analysis
-   image-provider     True    True      7m        images.kpack.io/tanzu-java-web-app
-   image-scanner      True    True      6m6s      imagescans.scanning.apps.tanzu.vmware.com/tanzu-java-web-app
-   config-provider    True    True      5m58s     podintents.conventions.carto.run/tanzu-java-web-app
-   app-config         True    True      5m58s     configmaps/tanzu-java-web-app
-   service-bindings   True    True      5m58s     configmaps/tanzu-java-web-app-with-claims
-   api-descriptors    True    True      5m58s     configmaps/tanzu-java-web-app-with-api-descriptors
-   config-writer      True    True      87s       runnables.carto.run/tanzu-java-web-app-config-writer
+   NAME                      READY   HEALTHY   UPDATED   RESOURCE
+   source-provider           True    True      142m      gitrepositories.source.toolkit.fluxcd.io/tanzu-java-web-app
+   source-tester             True    True      3m25s     runnables.carto.run/tanzu-java-web-app
+   sonarqube-sourcescanner   True    True      3m25s     runnables.carto.run/tanzu-java-web-app-sonar-code-analysis
+   image-provider            True    True      3m25s     images.kpack.io/tanzu-java-web-app
+   imagescanner              True    True      3m25s     imagevulnerabilityscans.app-scanning.apps.tanzu.vmware.com/tanzu-java-web-app-p
+risma-scan-s7nqn
+   config-provider           True    True      3m25s     podintents.conventions.carto.run/tanzu-java-web-app
+   app-config                True    True      3m25s     configmaps/tanzu-java-web-app
+   service-bindings          True    True      3m25s     configmaps/tanzu-java-web-app-with-claims
+   api-descriptors           True    True      3m25s     configmaps/tanzu-java-web-app-with-api-descriptors
+   config-writer             True    True      3m25s     runnables.carto.run/tanzu-java-web-app-config-writer
+   deliverable               True    True      142m      configmaps/tanzu-java-web-app-deliverable
+
+```
+
+for node-express workload example.
+```
+Overview
+   name:        node-express
+   type:        web
+   namespace:   my-space
+
+Source
+   type:       git
+   url:        https://github.com/myminseok/tanzu-workload-samples
+   branch:     main
+   sub-path:   node-express
+   revision:   main@sha1:af461516b58042f03b92d4be63230a713caa82ff
+
+Supply Chain
+   name:   source-test-scan-to-url-custom
+
+   NAME                      READY   HEALTHY   UPDATED   RESOURCE
+   source-provider           True    True      133m      gitrepositories.source.toolkit.fluxcd.io/node-express
+   source-tester             True    True      133m      runnables.carto.run/node-express
+   sonarqube-sourcescanner   True    True      7m57s     runnables.carto.run/node-express-sonar-code-analysis
+   image-provider            True    True      7m57s     images.kpack.io/node-express
+   imagescanner              True    True      7m56s     imagevulnerabilityscans.app-scanning.apps.tanzu.vmware.com/node-express-prisma-scan-frzc8
+   config-provider           True    True      7m56s     podintents.conventions.carto.run/node-express
+   app-config                True    True      7m56s     configmaps/node-express
+   service-bindings          True    True      7m56s     configmaps/node-express-with-claims
+   api-descriptors           True    True      7m56s     configmaps/node-express-with-api-descriptors
+   config-writer             True    True      7m56s     runnables.carto.run/node-express-config-writer
+   deliverable               True    True      133m      configmaps/node-express-deliverable
+
 
 ```
 
