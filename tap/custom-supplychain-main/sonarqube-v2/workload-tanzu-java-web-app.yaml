@@ -15,3 +15,9 @@ spec:
       url: https://github.com/myminseok/tanzu-java-web-app
       ref:
         branch: main
+  params:
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scc-ootb-supply-chain-testing.html multiple testing pipeline
+  - name: testing_pipeline_matching_labels
+    value:
+      #apps.tanzu.vmware.com/pipeline: test       # only for testing pipeline
+      apps.tanzu.vmware.com/language: java       # only for testing pipeline
