@@ -1,8 +1,7 @@
-This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
+### NOTE: This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
 
 ## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
-
 - uninstall beta package from TAP 1.6.x
 ```
 tanzu package installed delete amr-observer -n tap-install  -y
@@ -10,6 +9,8 @@ tanzu package installed delete amr-observer -n tap-install  -y
 ## Architecture
 - [architecture](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-architecture.html)
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-deployment-details.html)
+-  amr package status is GA on TAP 1.7
+-  app-scanning package status is beta on TAP 1.7
 
 ### For `FULL` profile cluster, 
 ### Install metadata_store, AMR
@@ -35,7 +36,6 @@ amr:
       kubernetes_service_accounts: true ## default true, #Enable authentication and authorization for services accessing Artifact Metadata Repository
       autoconfigure: true  ## default true, Delegate creation of authentication token secret to the artifact metadata repository
 ```
-
 
 ####  Install AMR observer on `BUILD`,`RUN` profile cluster
 The `AMR Observer` is deployed by default on the Tanzu Application Platform Build and Run profiles
@@ -77,4 +77,43 @@ amr:
       image_vulnerability_scans: 1
 ```
 
+##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
+it is required for CRD of scanning v2. refer to [SCST(Supply Chain Security Tools) - scan 2.0 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-scan-install-app-scanning.html)
 
+```
+tanzu package available list app-scanning.apps.tanzu.vmware.com --namespace tap-install
+
+tanzu package install app-scanning-beta --package app-scanning.apps.tanzu.vmware.com \
+    --version 0.1.0-beta \
+    --namespace tap-install \
+    --values-file tap-app-scanning-values.yaml
+```
+verify installation status:
+```
+tanzu package installed get -n tap-install                  app-scanning-beta 
+
+NAMESPACE:          tap-install
+NAME:               app-scanning-beta
+PACKAGE-NAME:       app-scanning.apps.tanzu.vmware.com
+PACKAGE-VERSION:    0.1.0-beta
+STATUS:             Reconcile succeeded
+CONDITIONS:         - type: ReconcileSucceeded
+  status: "True"
+  reason: ""
+  message: ""
+```
+
+to uninstall,
+```
+tanzu package installed delete app-scanning-beta  -n tap-install  -y
+```
+
+
+## Testing Out of the box IVS (grype)
+see [README.md](README.md)
+
+## Authoring custom Prisma IVS
+see [README.md](README.md)
+
+## Troubleshooting
+see [README.md](README.md)
