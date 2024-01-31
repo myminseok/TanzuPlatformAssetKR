@@ -1,5 +1,9 @@
 
-### NOTE: This sample is for TAP 1.6.3 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
+### NOTE
+Please note that there are two scanning standard in TAP 1.6
+- [SCST(Supply Chain Security Tools) - Scan](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-overview.html)=> [Prisma Scanner for Supply Chain Security Tools - Scan (Alpha)](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-prisma-integration.html)
+- [SCST(Supply Chain Security Tools) - scan 2.0](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
+this sample follows `Prisma Scanner for Supply Chain Security Tools - Scan 2.0`. 
 
 ## Contents
 - [Prerequisites](#prerequisites)
@@ -189,7 +193,7 @@ go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build
 
 
 ##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
-it is required for CRD of scanning v2. refer to [SCST(Supply Chain Security Tools) - scan 2.0 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html#install-2)
+it is required for CRD of scanning v2. refer to [SCST(Supply Chain Security Tools) - scan 2.0 (beta) ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html#install-2)
 
 ```
 tanzu package available list app-scanning.apps.tanzu.vmware.com --namespace tap-install

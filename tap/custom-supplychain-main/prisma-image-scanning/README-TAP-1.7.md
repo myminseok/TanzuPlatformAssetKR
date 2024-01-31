@@ -1,4 +1,8 @@
-### NOTE: This sample is for TAP 1.7 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
+### NOTE
+Please note that there are two scanning standard in TAP 1.7
+- [SCST(Supply Chain Security Tools) - Scan](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-scan-overview.html)=> [Prisma Scanner for Supply Chain Security Tools - Scan (Alpha)](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-scan-install-prisma-integration.html)
+- [SCST(Supply Chain Security Tools) - scan 2.0](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-scan-install-app-scanning.html)
+this sample follows `Prisma Scanner for Supply Chain Security Tools - Scan 2.0`. 
 
 ## Contents
 - [Prerequisites](#prerequisites)
@@ -93,7 +97,7 @@ amr:
 ```
 
 ##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
-it is required for CRD of scanning v2. refer to [SCST(Supply Chain Security Tools) - scan 2.0 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-scan-install-app-scanning.html)
+it is required for CRD of scanning v2. refer to [SCST(Supply Chain Security Tools) - scan 2.0 (beta) ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-scan-install-app-scanning.html)
 
 ```
 tanzu package available list app-scanning.apps.tanzu.vmware.com --namespace tap-install
