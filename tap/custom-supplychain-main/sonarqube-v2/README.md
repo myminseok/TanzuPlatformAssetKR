@@ -1,19 +1,18 @@
-## Sonarqube source scan testing
+# Sonarqube source scan testing
 refer to https://github.com/x95castle1/custom-cartographer-supply-chain-examples/tree/main/code-analysis repo to setup environment.
 
-### Steps summary
-1. will duplicate existing `source-test-scan-to-url` clustersupplychain 
+## Steps summary
+1. will create scanning resources such as ClusterSourceTemplate, ClusterRunTemplate, Tekton Task
 2. you needs to set permission to serviceaccount to list `Task` resources=> rbac.yml
-3. you have to prepare sonarqube server. (https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/deploy-on-kubernetes/deploy-sonarqube-on-kubernetes/)
-4. limitation as of TAP 1.6) sonar source scan result will be saved to sonarqube server. there is no resport in TAP-GUI.
-5. limitation as of TAP 1.6) TAP-gui doesn't visualize the parallel tasks.
-6. limitation) this custom supplychain includes environment specific information on each installation. it means you have to modify manually or use overlay mechanism.
+3. will duplicate existing `source-test-scan-to-url` clustersupplychain. this all supplychain includes environment specific information on each installation
+4. you have to prepare sonarqube server. and sonarqube credentials secret  (https://docs.sonarsource.com/sonarqube/latest/setup-and-upgrade/deploy-on-kubernetes/deploy-sonarqube-on-kubernetes/)
+5. limitation as of TAP 1.6) sonar source scan result will be saved to sonarqube server. there is no resport in TAP-GUI.
+6. limitation as of TAP 1.6) TAP-gui doesn't visualize the parallel tasks.
 
 
 ## Detailed steps 
 
-### Prepare yamls
-
+### Setup Supplychain resources
 
 #### `sonarqube-credentials.yaml`
 for sonarqube access credentials. edit sonarqube-credentials.yaml. this will be injected to `task.yml`. 
@@ -77,12 +76,12 @@ spec:
 > add `apps.tanzu.vmware.com/use-sonarqube: "true"` selector.
 
 
-#### rbac.yml
+#### `rbac.yml`
 you needs to set permission to serviceaccount to list `Task` resources with `rbac.yml`
 
 kubectl apply -f rbac.yml
 
-#### task.yml
+#### `task.yml`
 - refer to https://hub.tekton.dev/tekton/task/sonarqube-scanner
 - how to inject SSL cert to sonarqube scanner TaskRun? `sonar-properties-create` step in `task.yml` wil fetch the sonarqube server SSL CA from `sonarqube-credentials`. and `sonar-scan` step will import the ca cert into truststore of `sonar-scanner-cl` container.
 
@@ -98,7 +97,7 @@ metadata:
 ```
 > make sure metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `workload.yml` to stamp out objects. this task.yml can take multiple language workload as long as matching labels.
 
-####  cluster-run-template.yml
+####  `cluster-run-template.yml`
 this will invoke task defined above
 ```
 apiVersion: carto.run/v1alpha1
@@ -109,7 +108,7 @@ metadata:
    ...
 ```
 
-####  cluster-source-template.yml
+####  `cluster-source-template.yml`
 this will invoke ClusterRunTemplate  defined above
 ```
 apiVersion: carto.run/v1alpha1
@@ -122,7 +121,7 @@ spec:
 ```
 
 
-#### apply all resources to tap.
+#### Apply all resources to TAP.
 
 ```
 kubectl apply -f cluster-run-template.yml 
@@ -138,7 +137,7 @@ kubectl apply -f rbac.yml -n $DEVELOPER_NAMESPACE
 
 
 
-#### deploy workloads to Developer namespace
+### Deploy workloads to Developer namespace
 the custom supply-chain can support polygot language workload. suchas spring boot, nodejs.
 
 springboot sample `workload-tanzu-java-web-app.yaml`
@@ -165,8 +164,8 @@ spec:
       apps.tanzu.vmware.com/pipeline: test       # only for testing pipeline
       apps.tanzu.vmware.com/language: java       # only for testing pipeline
 ```
-> make sure to add metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `task.yml`. task.yml can take multiple language workload.
-> make sure to add  spec.params.`testing_pipeline_matching_labels` to match with testing pipeline for specific language.( no relation to sonarqube)
+> * make sure to add metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `task.yml`. task.yml can take multiple language workload.
+> * make sure to add  spec.params.`testing_pipeline_matching_labels` to match with testing pipeline for specific language.( no relation to sonarqube)
 
 
 ```
@@ -241,7 +240,7 @@ Supply Chain
 
 ```
 
-login to sonarqube server and check report at http://sonar-server.h2o-2-22280.h2o.vmware.com/dashboard?id=test
+login to sonarqube server and check report at http://SONARQUBE_SERVER/dashboard?id=my-space-tanzu-java-web-app
 
 
 
