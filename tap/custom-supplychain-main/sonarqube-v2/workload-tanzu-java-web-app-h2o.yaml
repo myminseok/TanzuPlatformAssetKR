@@ -6,7 +6,7 @@ metadata:
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/has-tests: true
-    apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
+    apps.tanzu.vmware.com/use-sonarqube: "true"  # added this as a scanner task selector
   annotations:
     autoscaling.knative.dev/minScale: "1"
 spec:

@@ -132,7 +132,7 @@ metadata:
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/has-tests: true
-    apps.tanzu.vmware.com/use-sonarqube: "true"  # added this as a selector
+    apps.tanzu.vmware.com/use-sonarqube: "true"   # added this as a scanner task selector
   annotations:
     autoscaling.knative.dev/minScale: "1"
 spec:
@@ -143,13 +143,13 @@ spec:
       ref:
         branch: main
   params:
-  - name: testing_pipeline_matching_labels
+  - name: testing_pipeline_matching_labels   
     value:
-      apps.tanzu.vmware.com/pipeline: test
-      apps.tanzu.vmware.com/language: java
+      apps.tanzu.vmware.com/pipeline: test       # only for testing pipeline
+      apps.tanzu.vmware.com/language: java       # only for testing pipeline
 ```
 > make sure to add metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `task.yml`. task.yml can take multiple language workload.
-> make sure to add  spec.params.`testing_pipeline_matching_labels` to match with testing pipeline for specific language.
+> make sure to add  spec.params.`testing_pipeline_matching_labels` to match with testing pipeline for specific language.( no relation to sonarqube)
 
 #### apply yaml to Developer namespace
 
