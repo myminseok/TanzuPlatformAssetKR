@@ -1,0 +1,21 @@
+
+## https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cnrs-cm-overlay
+  namespace: tap-install
+stringData:
+  overlay-gc-cm.yaml: |
+    #@ load("@ytt:overlay", "overlay")
+    #@overlay/match by=overlay.subset({"kind":"ConfigMap","metadata":{"name":"config-gc","namespace":"knative-serving"}})
+    ---
+    data:
+      #@overlay/match missing_ok=True
+      min-non-active-revisions: "1"
+      #@overlay/match missing_ok=True
+      max-non-active-revisions: "2"
+      #@overlay/match missing_ok=True
+      retain-since-create-time: "4h"
+      #@overlay/match missing_ok=True
+      retain-since-last-active-time: "1h"

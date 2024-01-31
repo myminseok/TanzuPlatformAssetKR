@@ -13,6 +13,8 @@ cnrs:
   ingress:
     external:
       namespace: tanzu-system-ingress
+  # allow_manual_configmap_update: false  # for package_overlay to take effect. if you don't want to allow modifying configmaps manually (i.e. editing configmaps with kubectl edit)
+
 
 #@overlay/match missing_ok=True
 api_auto_registration:
@@ -46,3 +48,4 @@ package_overlays:
   - name: cnrs-default-tls-overlay
   # ## for pvc support on knative.
   # - name: "knative-serving-overlay"
+  # - name: cnrs-cm-overlay
