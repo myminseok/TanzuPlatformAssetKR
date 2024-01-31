@@ -1,24 +1,20 @@
 This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
 
-## prerequisites
+## Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 
 - uninstall beta package from TAP 1.6.x
 ```
 tanzu package installed delete amr-observer -n tap-install  -y
 ```
-
-## install AMR
-https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-auth-k8s-sa-autoconfiguration.html
-
-
-### Install metadata_store, AMR for `FULL` profile cluster
-- architecture: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-architecture.html
+## Architecture
+- [architecture](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-architecture.html)
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-deployment-details.html)
 
-- it is embedded in metadata_store in TAP full profile.
+### For `FULL` profile cluster, 
+### Install metadata_store, AMR
 
-
+it is embedded in metadata_store in TAP full profile.
 ```
 kubectl get all -n metadata-store
 
@@ -27,8 +23,9 @@ kubectl rollout restart -n metadata-store deployment.apps/amr-cloudevent-handler
 kubectl logs -n metadata-store deployment.apps/amr-cloudevent-handler -f
 ```
 
-###  Install AMR cloud event handler on `VIEW` profile cluster
-- https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-cloudevent-handler.html
+### For Multi cluster
+####  Install AMR cloud event handler on `VIEW` profile cluster
+https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-cloudevent-handler.html
 
 tap-values.yml
 ```
@@ -40,9 +37,8 @@ amr:
 ```
 
 
-###  Install AMR observer on `Full`,`BUILD`,`RUN` profile cluster
-The `AMR Observer` is deployed by default on the Tanzu Application Platform Full, Build and Run profiles
-
+####  Install AMR observer on `BUILD`,`RUN` profile cluster
+The `AMR Observer` is deployed by default on the Tanzu Application Platform Build and Run profiles
 - https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-configuration.html#amr-observer-0
 - https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html
 

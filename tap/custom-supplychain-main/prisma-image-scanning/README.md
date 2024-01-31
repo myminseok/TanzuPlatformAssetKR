@@ -7,12 +7,18 @@
 ### Prerequisites
 - get prisma cloud access credentials which is only for supply chain. supply chain doesn't require prisma cloud app access permission in https://apps.paloaltonetworks.com/apps
 see [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
+- for TAP 1.7, refer to [README-TAP-1.7.md](README-TAP-1.7.md)
 
-
-### Install metadata_store, AMR for `FULL` profile cluster
-- architecture: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-architecture.html
+### Architecture
+- [architecture](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-amr-architecture.html)
 - [Supply Chain Security Tools - Store](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-store-deployment-details.html)
-By default, AMR is not deployed with SCST - Store. There is an amr section inside metadata_store. To deploy AMR, you must set the deploy property under amr to true.
+-  amr package is alpha status. (it is GAed in TAP 1.7)
+-  app-scanning is beta status. (it is GAed in TAP 1.7)
+
+### For `FULL` profile cluster, 
+#### Install Metadata store, AMR for `FULL` profile cluster
+
+on TAP 1.6, AMR is not deployed with SCST - Store. To deploy AMR, you must set the deploy property under amr to true.
 for `full` profile cluster, tap-values.yml should be:
 ```
 metadata_store:
@@ -71,7 +77,7 @@ kubectl rollout restart -n metadata-store deployment.apps/amr-persister
 
 install amr-observer without any values file 
 - no need on single cluster
-- no need to install on TAP installation with [gitops sops)(https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/install-gitops-sops.html)`amr-observer` is installed automatically with `build` profile. tested on TAP 1.6.3 with gitops Reference Implementation for TAP 1.7.
+- no need to install on TAP installation with [gitops sops)(https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/install-gitops-sops.html). `amr-observer` is installed automatically with `build` profile. tested on TAP 1.6.3 with `gitops Reference Implementation for TAP 1.7`.
 
 ```
 tanzu package available list amr-observer.apps.tanzu.vmware.com -n tap-install
@@ -94,8 +100,8 @@ kubectl rollout restart -n amr-observer-system deployment.apps/amr-observer-cont
 
 go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build-profile-cluster-only)
 
-
-###  Install AMR store on `VIEW` profile cluster
+### For Multi cluster
+####  Install AMR store on `VIEW` profile cluster
 tap-values.yml
 ```
 metadata_store:
@@ -115,8 +121,7 @@ kubectl rollout restart -n metadata-store deployment.apps/amr-persister
 
 ```
 
-
-###  Install AMR observer on `BUILD` profile cluster
+#### Install AMR observer on `BUILD` profile cluster
 
 fetch amr info from `view` cluster
 ```
@@ -176,7 +181,7 @@ go to [`install SCST - scan 2.0` section](#install-scst---scan-20-for-full-build
 ##  Install SCST - scan 2.0 (for `FULL`, `BUILD` profile cluster only)
 this follows [SCST - scan 2.0 doc ](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html#install-2)<br>
 
-it is required for CRD of scanning v2. donot install to `view` profile cluster.
+it is required for CRD of scanning v2.
 ```
 tanzu package available list app-scanning.apps.tanzu.vmware.com --namespace tap-install
 
