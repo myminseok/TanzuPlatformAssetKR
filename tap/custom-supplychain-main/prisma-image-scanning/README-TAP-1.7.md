@@ -1,4 +1,4 @@
-### NOTE: This sample follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
+### NOTE: This sample is for TAP 1.7 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/scst-store-amr-install-amr-observer.html)
 
 ## Contents
 - [Prerequisites](#prerequisites)

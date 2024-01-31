@@ -1,5 +1,5 @@
 
-### NOTE: This sample is only for TAP 1.6.3 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
+### NOTE: This sample is for TAP 1.6.3 and follows [scanning v2 guide](https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scst-scan-install-app-scanning.html)
 
 ## Contents
 - [Prerequisites](#prerequisites)
