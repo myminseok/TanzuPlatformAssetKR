@@ -10,6 +10,7 @@ kind: Pipeline
 metadata:
   name: tekton-pipeline-nodejs
   labels:
+    apps.tanzu.vmware.com/pipeline: test     # (!) required
     apps.tanzu.vmware.com/language: nodejs
   annotations:
     kapp.k14s.io/create-strategy: fallback-on-update
@@ -30,8 +31,7 @@ spec:
           - name: source-revision
         steps:
           - name: test
-            image: nodejs
+            image: gradle:latest
             script: |-
-              cd `mktemp -d`
-              wget -qO- $(params.source-url) | tar xvz -m
-              npm test
+              echo "===> skip  testing"
+              

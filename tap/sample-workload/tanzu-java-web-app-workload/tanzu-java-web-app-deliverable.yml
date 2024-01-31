@@ -6,16 +6,17 @@ metadata:
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/auto-configure-actuators: "false"
     apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/use-sonarqube: "true"
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/component: deliverable
     app.tanzu.vmware.com/deliverable-type: web
     carto.run/cluster-template-name: external-deliverable-template
     carto.run/resource-name: deliverable
-    carto.run/supply-chain-name: source-test-scan-to-url
+    carto.run/supply-chain-name: source-test-scan-to-url-custom
     carto.run/template-kind: ClusterTemplate
     carto.run/template-lifecycle: mutable
     carto.run/workload-name: tanzu-java-web-app
     carto.run/workload-namespace: my-space
 spec:
   source:
-    image: ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space-bundle:2bb85f8a-7b62-4b82-867c-98f7db4972b8
+    image: ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space-bundle:271a7ed4-1bd9-4f6c-8fde-bd7ae73329c8

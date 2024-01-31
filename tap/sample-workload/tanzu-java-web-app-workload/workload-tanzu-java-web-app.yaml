@@ -9,7 +9,7 @@ metadata:
     apps.tanzu.vmware.com/has-tests: true
     #apis.apps.tanzu.vmware.com/register-api: "true"
    # apps.tanzu.vmware.com/carvel-package-workflow: true  # for source-to-url-package, no doublequote ""
-   # apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
+    apps.tanzu.vmware.com/use-sonarqube: "true"  # We added this as a selector
   annotations:
     autoscaling.knative.dev/minScale: "1"
 spec:
