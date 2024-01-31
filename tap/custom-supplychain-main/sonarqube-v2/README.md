@@ -46,6 +46,7 @@ create a new `source-test-scan-to-url-custom` clustersupplychain by duplicate ex
 k get clustersupplychains source-test-scan-to-url -o yaml > source-test-scan-to-url.yml
 cp source-test-scan-to-url.yml source-test-scan-to-url-sonarqube.yml
 ```
+
 and update `source-test-scan-to-url-sonarqube.yml` for parameters according to you environment. 
 ```
 apiVersion: carto.run/v1alpha1
@@ -82,8 +83,9 @@ you needs to set permission to serviceaccount to list `Task` resources with `rba
 kubectl apply -f rbac.yml
 
 #### task.yml
-refer to https://hub.tekton.dev/tekton/task/sonarqube-scanner
-how to inject SSL cert to sonarqube scanner TaskRun? `sonar-properties-create` step in `task.yml` wil fetch the sonarqube server SSL CA from `sonarqube-credentials`. and `sonar-scan` step will import the ca cert into truststore of `sonar-scanner-cl` container.
+- refer to https://hub.tekton.dev/tekton/task/sonarqube-scanner
+- how to inject SSL cert to sonarqube scanner TaskRun? `sonar-properties-create` step in `task.yml` wil fetch the sonarqube server SSL CA from `sonarqube-credentials`. and `sonar-scan` step will import the ca cert into truststore of `sonar-scanner-cl` container.
+
 ```
 apiVersion: tekton.dev/v1beta1
 kind: Task
@@ -91,12 +93,33 @@ metadata:
   name: sonarqube-scanner
   labels:
     app.kubernetes.io/version: "0.2"
-    apps.tanzu.vmware.com/pipeline: test     # (!) required
-    apps.tanzu.vmware.com/language: java
+    apps.tanzu.vmware.com/use-sonarqube: "true"
     ...
 ```
-> make sure metadata.labels.`apps.tanzu.vmware.com/pipeline: test`, `apps.tanzu.vmware.com/language: java` to match with `workload.yml` to stamp out objects. 
+> make sure metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `workload.yml` to stamp out objects. this task.yml can take multiple language workload as long as matching labels.
 
+####  cluster-run-template.yml
+this will invoke task defined above
+```
+apiVersion: carto.run/v1alpha1
+kind: ClusterRunTemplate
+metadata:
+  name: tekton-sonarqube-taskrun
+  labels:
+   ...
+```
+
+####  cluster-source-template.yml
+this will invoke ClusterRunTemplate  defined above
+```
+apiVersion: carto.run/v1alpha1
+kind: ClusterSourceTemplate
+metadata:
+  annotations:
+  name: sonarqube-template
+spec:
+   ...
+```
 
 #### `workload-tanzu-java-web-app.yaml`
 
@@ -125,8 +148,8 @@ spec:
       apps.tanzu.vmware.com/pipeline: test
       apps.tanzu.vmware.com/language: java
 ```
-> make sure spec.params.`testing_pipeline_matching_labels` to match with the labels on `task.yml`
-
+> make sure to add metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `task.yml`. task.yml can take multiple language workload.
+> make sure to add  spec.params.`testing_pipeline_matching_labels` to match with testing pipeline for specific language.
 
 #### apply yaml to Developer namespace
 

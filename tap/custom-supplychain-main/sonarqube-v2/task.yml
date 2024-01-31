@@ -5,11 +5,13 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: sonarqube-scanner
+  name: sonarqube-scanner-java
   labels:
     app.kubernetes.io/version: "0.2"
-    apps.tanzu.vmware.com/pipeline: test  # (!) required
-    apps.tanzu.vmware.com/language: java  # (!) make sure to match with workload.yml
+    apps.tanzu.vmware.com/use-sonarqube: "true"
+
+    #apps.tanzu.vmware.com/pipeline: test  # (!) required
+    #apps.tanzu.vmware.com/language: java  # (!) make sure to match with workload.yml
   annotations:
     tekton.dev/pipelines.minVersion: "0.12.1"
     tekton.dev/categories: Security
@@ -54,15 +56,15 @@ spec:
     - name: tmp-workspace
 
   steps:
-    - name: compile
-      image: gradle:latest
-      workingDir: $(workspaces.tmp-workspace.path)
-      script: |
-        #!/usr/bin/env bash
-        set -ex
-        wget -qO- $(params.source-url) | tar xvz
-        #./mvnw compile -Dmaven.repo.local=$(workspaces.tmp-workspace.path) -s $(workspaces.tmp-workspace.path)/settings.xml
-        #./mvnw compile
+    # - name: compile
+    #   image: gradle:latest
+    #   workingDir: $(workspaces.tmp-workspace.path)
+    #   script: |
+    #     #!/usr/bin/env bash
+    #     set -ex
+    #     wget -qO- $(params.source-url) | tar xvz
+    #     #./mvnw compile -Dmaven.repo.local=$(workspaces.tmp-workspace.path) -s $(workspaces.tmp-workspace.path)/settings.xml
+    #     #./mvnw compile
 
     - name: sonar-properties-create
       image: gradle:latest
