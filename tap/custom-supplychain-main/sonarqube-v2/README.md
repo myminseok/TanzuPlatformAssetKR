@@ -121,8 +121,27 @@ spec:
    ...
 ```
 
-#### `workload-tanzu-java-web-app.yaml`
 
+#### apply all resources to tap.
+
+```
+kubectl apply -f cluster-run-template.yml 
+kubectl apply -f cluster-source-template.yml 
+kubectl apply -f source-test-scan-to-url-sonarqube.yml 
+
+export DEVELOPER_NAMESPACE=my-space
+kubectl apply -f sonarqube-credentials.yaml  -n $DEVELOPER_NAMESPACE
+kubectl apply -f task.yml -n $DEVELOPER_NAMESPACE
+kubectl apply -f rbac.yml -n $DEVELOPER_NAMESPACE
+```
+
+
+
+
+#### deploy workloads to Developer namespace
+the custom supply-chain can support polygot language workload. suchas spring boot, nodejs.
+
+springboot sample `workload-tanzu-java-web-app.yaml`
 ```
 apiVersion: carto.run/v1alpha1
 kind: Workload
@@ -133,10 +152,8 @@ metadata:
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/has-tests: true
     apps.tanzu.vmware.com/use-sonarqube: "true"   # added this as a scanner task selector
-  annotations:
-    autoscaling.knative.dev/minScale: "1"
+
 spec:
- # serviceAccountName: #@ data.values.service_account_name
   source:
     git:
       url: https://github.com/myminseok/tanzu-java-web-app
@@ -151,18 +168,9 @@ spec:
 > make sure to add metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `task.yml`. task.yml can take multiple language workload.
 > make sure to add  spec.params.`testing_pipeline_matching_labels` to match with testing pipeline for specific language.( no relation to sonarqube)
 
-#### apply yaml to Developer namespace
 
 ```
 export DEVELOPER_NAMESPACE=my-space
-
-kubectl apply -f sonarqube-credentials.yaml  -n $DEVELOPER_NAMESPACE
-kubectl apply -f task.yml -n $DEVELOPER_NAMESPACE
-kubectl apply -f cluster-run-template.yml -n $DEVELOPER_NAMESPACE
-kubectl apply -f cluster-source-template.yml -n $DEVELOPER_NAMESPACE
-kubectl apply -f rbac.yml -n $DEVELOPER_NAMESPACE
-
-kubectl apply -f source-test-scan-to-url-sonarqube.yml 
 
 tanzu apps workload delete tanzu-java-web-app -n ${DEVELOPER_NAMESPACE} 
 tanzu apps workload apply -f ./workload-tanzu-java-web-app.yaml --yes   -n ${DEVELOPER_NAMESPACE}
@@ -200,7 +208,7 @@ risma-scan-s7nqn
 
 ```
 
-for node-express workload example.
+for node-express workload `workload-node-express.yaml`
 ```
 Overview
    name:        node-express
