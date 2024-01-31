@@ -1,6 +1,8 @@
 apiVersion: carto.run/v1alpha1
 kind: ClusterSourceTemplate
 metadata:
+  labels:
+    apps.tanzu.vmware.com/use-sonarqube: "true" # for sonarqube workload
   annotations:
   name: sonarqube-template
 spec:
@@ -17,9 +19,9 @@ spec:
       default: ""
     - name: wait_on_sonar_analysis
       default: ""
-    - name: testing_pipeline_matching_labels
-      default: 
-        apps.tanzu.vmware.com/pipeline: test
+    # - name: testing_pipeline_matching_labels
+    #   default: 
+    #     apps.tanzu.vmware.com/pipeline: test
 
   ytt: |
     #@ load("@ytt:data", "data")
@@ -76,10 +78,12 @@ spec:
         resource:
           apiVersion: tekton.dev/v1beta1
           kind: Task
-          
-        #@ not hasattr(data.values, "testing_pipeline_matching_labels") or fail("testing_pipeline_matching_labels param is required")
-        matchingLabels: #@ data.values.params["testing_pipeline_matching_labels"] or fail("testing_pipeline_matching_labels param cannot be empty")
 
+        #! comment out this for language neutral.
+        #! #@ not hasattr(data.values, "testing_pipeline_matching_labels") or fail("testing_pipeline_matching_labels param is required")
+        #! matchingLabels: #@ data.values.params["testing_pipeline_matching_labels"] or fail("testing_pipeline_matching_labels param cannot be empty")
+        matchingLabels:
+          apps.tanzu.vmware.com/use-sonarqube: "true"
           
       inputs:
         #@ if hasattr(data.values.workload.spec, "serviceAccountName"):
