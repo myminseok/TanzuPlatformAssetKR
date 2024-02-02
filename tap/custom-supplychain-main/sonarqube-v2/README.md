@@ -101,6 +101,26 @@ metadata:
     app.kubernetes.io/version: "0.2"
     apps.tanzu.vmware.com/use-sonarqube: "true"
     ...
+spec:
+  steps:
+    ...
+    - name: sonar-scan
+      image: docker.io/sonarsource/sonar-scanner-cli:4.6@sha256:7a976330a8bad1beca6584c1c118e946e7a25fdc5b664d5c0a869a6577d81b4f
+      workingDir: $(workspaces.tmp-workspace.path)
+      # command:
+      #   - sonar-scanner
+      script: |
+        #!/bin/bash
+        set -ex
+        ## (!) requires to download source code 
+        wget -qO- $(params.source-url) | tar xvz
+
+        echo "# importing sonarqube server CA to truststore ---------------------------"
+        cat $(workspaces.tmp-workspace.path)/sonar_ca.crt
+        echo "JAVA_HOME:$JAVA_HOME" ## JAVA_HOME:/usr/lib/jvm/java-11-openjdk
+        keytool -importcert -trustcacerts -cacerts -file $(workspaces.tmp-workspace.path)/sonar_ca.crt -alias myCert -storepass changeit  -noprompt 
+        sonar-scanner
+
 ```
 > make sure metadata.labels.`apps.tanzu.vmware.com/use-sonarqube: true` to match with `workload.yml` to stamp out objects. this task.yml can take multiple language workload as long as matching labels.
 
