@@ -5,13 +5,12 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: sonarqube-scanner-java
+  name: sonarqube-scanner-task
   labels:
     app.kubernetes.io/version: "0.2"
-    apps.tanzu.vmware.com/use-sonarqube: "true"
-
-    #apps.tanzu.vmware.com/pipeline: test  # (!) required
-    #apps.tanzu.vmware.com/language: java  # (!) make sure to match with workload.yml
+    apps.tanzu.vmware.com/use-sonarqube: "true"  # (!) required
+    # apps.tanzu.vmware.com/pipeline: test  # (!) no need
+    # apps.tanzu.vmware.com/language: java  # (!) no need
   annotations:
     tekton.dev/pipelines.minVersion: "0.12.1"
     tekton.dev/categories: Security
@@ -56,7 +55,7 @@ spec:
     - name: tmp-workspace
 
   steps:
-    # - name: compile
+    # - name: compile                                ## (!) no need this step.
     #   image: gradle:latest
     #   workingDir: $(workspaces.tmp-workspace.path)
     #   script: |
@@ -167,6 +166,10 @@ spec:
       #   - sonar-scanner
       script: |
         #!/bin/bash
+        set -ex
+        ## (!) requires to download source code 
+        wget -qO- $(params.source-url) | tar xvz
+
         echo "# importing sonarqube server CA to truststore ---------------------------"
         cat $(workspaces.tmp-workspace.path)/sonar_ca.crt
         echo "JAVA_HOME:$JAVA_HOME" ## JAVA_HOME:/usr/lib/jvm/java-11-openjdk

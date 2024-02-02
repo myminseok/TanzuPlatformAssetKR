@@ -19,7 +19,7 @@ spec:
       default: ""
     - name: wait_on_sonar_analysis
       default: ""
-    # - name: testing_pipeline_matching_labels
+    # - name: testing_pipeline_matching_labels  ## (!) no need
     #   default: 
     #     apps.tanzu.vmware.com/pipeline: test
 
