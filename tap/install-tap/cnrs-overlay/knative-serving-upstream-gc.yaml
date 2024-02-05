@@ -1,32 +1,16 @@
-
-
-## problem
-workload revision will be keep growing as workload is updated. and wants to limit rol number of revision history.
-
-```
-
-NAME                                                  READY   UP-TO-DATE   AVAILABLE   AGE
-deployment.apps/node-express-00007-deployment         1/1     1            1           3d1h
-deployment.apps/node-express-00009-deployment         0/0     0            0           173m
-deployment.apps/node-express-00010-deployment         0/0     0            0           110m
-deployment.apps/node-express-00011-deployment         0/1     1            0           106m
-deployment.apps/tanzu-java-web-app-00010-deployment   0/0     0            0           127m
-deployment.apps/tanzu-java-web-app-00011-deployment   0/0     0            0           123m
-deployment.apps/tanzu-java-web-app-00012-deployment   1/1     1            1           103m
-
-```
-
-
-## solutions
-knavie(CNRS) has configuration to control the revision history via configmap under `knative-serving` namespace. this configmap is managed by TAP package. and we can overlay those config via package overlay feature. for more reference: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
-
-####
-it is not set by default. and will use default value from package(`overlay-knative-gc-defaults.yaml`). fetch example config.
-```
-kubectl get configmap config-gc --namespace knative-serving --output jsonpath='{.data._example}
-```
-
-```
+# Copyright 2018 The Knative Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 apiVersion: v1
 kind: ConfigMap
@@ -99,28 +83,16 @@ data:
     #      retain-since-last-active-time: "15h"
     #      min-non-active-revisions: "2"
     #      max-non-active-revisions: "1000"
-```
 
-#### steps
-1. create secrets for overlay via `cnrs-cm-overlay.yml`
-```
-kubectl apply -f cnrs-cm-overlay.yml -n tap-install 
+    # Duration since creation before considering a revision for GC or "disabled".
+    retain-since-create-time: "48h"
 
-kubectl get secrets cnrs-cm-overlay -n tap-install -o jsonpath='{.data.overlay-gc-cm\.yaml}' | base64 -d
+    # Duration since active before considering a revision for GC or "disabled".
+    retain-since-last-active-time: "15h"
 
+    # Minimum number of non-active revisions to retain.
+    min-non-active-revisions: "20"
 
-```
-2. apply the overlay to tap-values.yml(run profile)
-
-```
-package_overlays:
-- name: cnrs
-  secrets:
-  - name: cnrs-cm-overlay
-
-```
-
-3. update TAP and see if configmap is reconciled.
-```
-kubectl get configmap config-gc --namespace knative-serving --output jsonpath='{.data.max-non-active-revisions}
-```
+    # Maximum number of non-active revisions to retain
+    # or "disabled" to disable any maximum limit.
+    max-non-active-revisions: "1000"
