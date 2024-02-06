@@ -74,6 +74,9 @@ tap_gui:
         - host: gitlab.lab.pcfdemo.net
           paths:
           - /root/tap-catalog-repo-private
+        - host: gitlab.lab.pcfdemo.net
+          paths:
+          - /*
     ## gitlab integration(self-signed CA)
     # https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.0/tap.pdf
     # https://backstage.io/docs/features/software-catalog/configuration/#static-location-configuration
