@@ -81,7 +81,7 @@ tap_gui:
     integrations:
       gitlab:
       - host: gitlab.lab.pcfdemo.net
-        token: glpat-UC8xMoLsczNAaQTyK8UW
+        token: glpat-xxx
         apiBaseUrl: https://gitlab.lab.pcfdemo.net/api/v4
         baseUrl: https://gitlab.lab.pcfdemo.net
     catalog:
