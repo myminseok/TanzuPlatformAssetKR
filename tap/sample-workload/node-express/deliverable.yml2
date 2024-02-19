@@ -1,10 +1,9 @@
 apiVersion: carto.run/v1alpha1
 kind: Deliverable
 metadata:
-  name: tanzu-java-web-app
+  name: node-express
   labels:
-    app.kubernetes.io/part-of: tanzu-java-web-app
-    apps.tanzu.vmware.com/auto-configure-actuators: "false"
+    app.kubernetes.io/part-of: node-express
     apps.tanzu.vmware.com/has-tests: "true"
     apps.tanzu.vmware.com/use-sonarqube: "true"
     apps.tanzu.vmware.com/workload-type: web
@@ -15,8 +14,8 @@ metadata:
     carto.run/supply-chain-name: source-test-scan-to-url-custom
     carto.run/template-kind: ClusterTemplate
     carto.run/template-lifecycle: mutable
-    carto.run/workload-name: tanzu-java-web-app
+    carto.run/workload-name: node-express
     carto.run/workload-namespace: my-space
 spec:
   source:
-    image: ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space-bundle:d498df51-e14e-4831-8920-157919a55ca5
+    image: ghcr.io/myminseok/tap-service/minseok-supply-chain/node-express-my-space-bundle:980362f3-aea0-48ee-b03e-78a37a1059ff

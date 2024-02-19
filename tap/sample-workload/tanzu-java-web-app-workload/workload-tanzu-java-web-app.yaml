@@ -27,6 +27,8 @@ spec:
     value:
       apps.tanzu.vmware.com/pipeline: test
       apps.tanzu.vmware.com/language: java
+  - name: clusterBuilder
+    value: custom-base-jammy
   - name: api_descriptor
     value:
       type: openapi

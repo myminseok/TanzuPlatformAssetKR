@@ -1,0 +1,80 @@
+node-express-build-1-build-pod[detect] Warning: Buildpack 'tanzu-buildpacks/dotnet-core@2.5.1' requests deprecated API '0.6'
+node-express-build-1-build-pod[detect] Warning: Buildpack 'tanzu-buildpacks/go@2.0.8' requests deprecated API '0.6'
+node-express-build-1-build-pod[detect] Warning: Buildpack 'tanzu-buildpacks/nodejs@2.1.0' requests deprecated API '0.6'
+node-express-build-1-build-pod[detect] ======== Output: tanzu-buildpacks/node-run-script@1.0.1 ========
+node-express-build-1-build-pod[detect] could not find script(s) [build] in package.json
+node-express-build-1-build-pod[detect] err:  tanzu-buildpacks/node-run-script@1.0.1 (1)
+node-express-build-1-build-pod[detect] ======== Output: tanzu-buildpacks/node-run-script@1.0.1 ========
+node-express-build-1-build-pod[detect] could not find script(s) [build] in package.json
+node-express-build-1-build-pod[detect] err:  tanzu-buildpacks/node-run-script@1.0.1 (1)
+node-express-build-1-build-pod[detect] ======== Output: tanzu-buildpacks/node-run-script@1.0.1 ========
+node-express-build-1-build-pod[detect] could not find script(s) [build] in package.json
+node-express-build-1-build-pod[detect] err:  tanzu-buildpacks/node-run-script@1.0.1 (1)
+node-express-build-1-build-pod[detect] ======== Output: tanzu-buildpacks/node-run-script@1.0.1 ========
+node-express-build-1-build-pod[detect] could not find script(s) [build] in package.json
+node-express-build-1-build-pod[detect] err:  tanzu-buildpacks/node-run-script@1.0.1 (1)
+node-express-build-1-build-pod[detect] ======== Output: tanzu-buildpacks/node-run-script@1.0.1 ========
+node-express-build-1-build-pod[detect] could not find script(s) [build] in package.json
+node-express-build-1-build-pod[detect] err:  tanzu-buildpacks/node-run-script@1.0.1 (1)
+node-express-build-1-build-pod[detect] ======== Output: tanzu-buildpacks/node-run-script@1.0.1 ========
+node-express-build-1-build-pod[detect] could not find script(s) [build] in package.json
+node-express-build-1-build-pod[detect] err:  tanzu-buildpacks/node-run-script@1.0.1 (1)
+node-express-build-1-build-pod[detect] 6 of 19 buildpacks participating
+node-express-build-1-build-pod[detect] paketo-buildpacks/ca-certificates 3.5.1
+node-express-build-1-build-pod[detect] tanzu-buildpacks/node-engine      1.2.0
+node-express-build-1-build-pod[detect] tanzu-buildpacks/npm-install      1.0.2
+node-express-build-1-build-pod[detect] tanzu-buildpacks/node-module-bom  0.3.4
+node-express-build-1-build-pod[detect] tanzu-buildpacks/node-start       1.0.2
+node-express-build-1-build-pod[detect] paketo-buildpacks/image-labels    4.4.0
+- node-express-build-1-build-pod › detect
++ node-express-build-1-build-pod › restore
+node-express-build-1-build-pod[restore] Warning: No cached data will be used, no cache specified.
+- node-express-build-1-build-pod › restore
++ node-express-build-1-build-pod › build
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build] Paketo Buildpack for CA Certificates 3.5.1
+node-express-build-1-build-pod[build]   https://github.com/paketo-buildpacks/ca-certificates
+node-express-build-1-build-pod[build]   Launch Helper: Contributing to layer
+node-express-build-1-build-pod[build]     Creating /layers/paketo-buildpacks_ca-certificates/helper/exec.d/ca-certificates-helper
+node-express-build-1-build-pod[build] Tanzu Node Engine Buildpack 1.2.0
+node-express-build-1-build-pod[build]   Resolving Node Engine version
+node-express-build-1-build-pod[build]     Candidate version sources (in priority order):
+node-express-build-1-build-pod[build]                 -> ""
+node-express-build-1-build-pod[build]       <unknown> -> ""
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]     Selected Node Engine version (using ): 18.14.1
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]   Executing build process
+node-express-build-1-build-pod[build]     Installing Node Engine 18.14.1
+node-express-build-1-build-pod[build]       Completed in 4.936s
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]   Generating SBOM for /layers/tanzu-buildpacks_node-engine/node
+node-express-build-1-build-pod[build]       Completed in 0s
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]   Configuring build environment
+node-express-build-1-build-pod[build]     NODE_ENV     -> "production"
+node-express-build-1-build-pod[build]     NODE_HOME    -> "/layers/tanzu-buildpacks_node-engine/node"
+node-express-build-1-build-pod[build]     NODE_OPTIONS -> "--use-openssl-ca"
+node-express-build-1-build-pod[build]     NODE_VERBOSE -> "false"
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]   Configuring launch environment
+node-express-build-1-build-pod[build]     NODE_ENV     -> "production"
+node-express-build-1-build-pod[build]     NODE_HOME    -> "/layers/tanzu-buildpacks_node-engine/node"
+node-express-build-1-build-pod[build]     NODE_OPTIONS -> "--use-openssl-ca"
+node-express-build-1-build-pod[build]     NODE_VERBOSE -> "false"
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]     Writing exec.d/0-optimize-memory
+node-express-build-1-build-pod[build]       Calculates available memory based on container limits at launch time.
+node-express-build-1-build-pod[build]       Made available in the MEMORY_AVAILABLE environment variable.
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build] Tanzu NPM Install Buildpack 1.0.2
+node-express-build-1-build-pod[build]   Resolving installation process
+node-express-build-1-build-pod[build]     Process inputs:
+node-express-build-1-build-pod[build]       node_modules      -> "Not found"
+node-express-build-1-build-pod[build]       npm-cache         -> "Found"
+node-express-build-1-build-pod[build]       package-lock.json -> "Found"
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]     Selected NPM build process: 'npm ci'
+node-express-build-1-build-pod[build]
+node-express-build-1-build-pod[build]   Executing build environment install process
+node-express-build-1-build-pod[build]     Running 'npm ci --unsafe-perm --cache /layers/tanzu-buildpacks_npm-install/npm-cache'

@@ -1,0 +1,28 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: node-express
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: node-express
+    apps.tanzu.vmware.com/has-tests: true
+    apps.tanzu.vmware.com/use-sonarqube: "true"
+  annotations:
+    autoscaling.knative.dev/minScale: "1"
+spec:
+  source:
+    subPath: node-express
+    git:
+      #url: https://github.com/vmware-tanzu/application-accelerator-samples
+      url : https://github.com/myminseok/tanzu-workload-samples
+      ### subPath: node-express  ## warning: don't put here, otherwise there will be error
+      ref:
+        branch: main
+  params:
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scc-ootb-supply-chain-testing.html multiple testing pipeline
+  - name: testing_pipeline_matching_labels
+    value:
+     # apps.tanzu.vmware.com/pipeline: test
+      apps.tanzu.vmware.com/language: nodejs
+  - name: clusterBuilder
+    value: custom-base-jammy

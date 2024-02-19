@@ -5,6 +5,10 @@ kubectl create ns my-space-source
 kubectl apply -n my-space-source -f secret.yml
 kubectl apply -n my-space-source -f secretexport.yml
 ```
+```
+kubectl get secretexports.secretgen.carvel.dev -A
+kubectl get secretimports.secretgen.carvel.dev -A
+```
 
 ```
 kubectl get secrets -n my-space-source

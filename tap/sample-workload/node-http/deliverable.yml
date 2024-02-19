@@ -1,22 +1,20 @@
 apiVersion: carto.run/v1alpha1
 kind: Deliverable
 metadata:
-  name: tanzu-java-web-app
+  name: node-http
   labels:
-    app.kubernetes.io/part-of: tanzu-java-web-app
-    apps.tanzu.vmware.com/auto-configure-actuators: "false"
+    app.kubernetes.io/part-of: node-http
     apps.tanzu.vmware.com/has-tests: "true"
-    apps.tanzu.vmware.com/use-sonarqube: "true"
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/component: deliverable
     app.tanzu.vmware.com/deliverable-type: web
     carto.run/cluster-template-name: external-deliverable-template
     carto.run/resource-name: deliverable
-    carto.run/supply-chain-name: source-test-scan-to-url-custom
+    carto.run/supply-chain-name: source-test-scan-to-url
     carto.run/template-kind: ClusterTemplate
     carto.run/template-lifecycle: mutable
-    carto.run/workload-name: tanzu-java-web-app
+    carto.run/workload-name: node-http
     carto.run/workload-namespace: my-space
 spec:
   source:
-    image: ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space-bundle:d498df51-e14e-4831-8920-157919a55ca5
+    image: ghcr.io/myminseok/tap-service/minseok-supply-chain/node-http-my-space-bundle:41b79c9e-9caa-46a1-8bd3-02cb2f37868c
