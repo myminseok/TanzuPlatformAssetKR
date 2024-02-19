@@ -28,7 +28,12 @@ spec:
       apps.tanzu.vmware.com/pipeline: test
       apps.tanzu.vmware.com/language: java
   - name: clusterBuilder
-    value: custom-base-jammy
+    value: base-jammy
+  - name: serviceType
+    value: ClusterIP
+  - name: ingressClass
+    value: avi-lb
+
   - name: api_descriptor
     value:
       type: openapi
