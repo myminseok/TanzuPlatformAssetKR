@@ -64,7 +64,7 @@ metadata:
   labels: #@ merge_labels({ "app.kubernetes.io/component": "run", "carto.run/workload-name": data.values.workload.metadata.name })
 spec:
   selector: #@ data.values.config.metadata.labels
-  type: #@ data.values.params.serviceType  #! Added
+  type: #@ data.values.params.serviceType 
   ports:
   #@ hasattr(data.values.params, "ports") and len(data.values.params.ports) or assert.fail("one or more ports param must be provided.")
   #@ declared_ports = {}
@@ -84,13 +84,11 @@ kind: Ingress
 metadata:
   name: #@ data.values.workload.metadata.name
   annotations:
-    cert-manager.io/cluster-issuer: tap-ingress-selfsigned
     ingress.kubernetes.io/force-ssl-redirect: "true"
     kubernetes.io/tls-acme: "true"
     kapp.k14s.io/change-rule: "upsert after upserting Services"
   labels: #@ merge_labels({ "app.kubernetes.io/component": "run", "carto.run/workload-name": data.values.workload.metadata.name })
 spec:
-  ingressClassName: #@ data.values.params.ingressClass
   tls:
   - secretName: #@ data.values.workload.metadata.name
     hosts:

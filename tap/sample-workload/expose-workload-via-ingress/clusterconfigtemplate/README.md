@@ -3,9 +3,18 @@ https://docs.vmware.com/en/VMware-Tanzu-Reference-Architecture/services/tanzu-so
 ```
 kubectl get ClusterConfigTemplate server-template -o yaml -ojsonpath='{.spec.ytt}' > spec-ytt.yaml
 
+
 SPEC_YTT=$(cat spec-ytt.yaml) yq eval -i '.spec.ytt |= strenv(SPEC_YTT)' avi-l4-l7-server-template.yaml
 
+
+SPEC_YTT=$(cat spec-ytt-contour.yaml) yq eval -i '.spec.ytt |= strenv(SPEC_YTT)' avi-l4-l7-server-template.yaml
+
+
 yq eval -i '.metadata.name = "avi-l4-l7-server-template"' avi-l4-l7-server-template.yaml
+
+
+kubectl delete -f avi-l4-l7-server-template.yaml
+
 
 kubectl apply -f avi-l4-l7-server-template.yaml
 
@@ -33,8 +42,19 @@ status:
 
 
 
+tanzu apps workload apply --yes  -n my-space -f ./workload-tanzu-java-web-app-lb.yaml 
+
+kubectl get svc -n my-space                                                                                                                         kminseokM7WYK.vmware.com: Mon Feb 19 17:33:40 2024
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)                       AGE
+tanzu-java-web-app   LoadBalancer   100.71.21.118   192.168.0.25   8080:32643/TCP,80:31569/TCP   6m48s
+
+curl http://192.168.0.25:80
+
+
+
+tanzu apps workload apply --yes  -n my-space -f ./workload-tanzu-java-web-app-ingress.yaml
+
 kubectl get ingress -A
-
-
 
 ```
