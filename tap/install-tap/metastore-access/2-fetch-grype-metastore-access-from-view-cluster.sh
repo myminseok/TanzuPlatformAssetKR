@@ -9,6 +9,7 @@ if [[  "x$NOT_READY_CERT" != "x" ]]; then
   echo "  [ERROR] some certificates is not ready "
   echo "    kubectl get certificates -A  "
   echo ""
+  kubectl get certificates -A  
   exit 1
 fi
 

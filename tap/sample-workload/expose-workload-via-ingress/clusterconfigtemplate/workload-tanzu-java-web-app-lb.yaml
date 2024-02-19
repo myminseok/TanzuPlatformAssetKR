@@ -5,7 +5,7 @@ metadata:
   labels:
     apps.tanzu.vmware.com/workload-type: avi-l4-l7-server
     app.kubernetes.io/part-of: tanzu-java-web-app
-    apps.tanzu.vmware.com/auto-configure-actuators: "false" ## appliveview will be enabled and be shown on tap-gui automatically even if this annotation is false.
+    apps.tanzu.vmware.com/auto-configure-actuators: "true" ## appliveview will be enabled and be shown on tap-gui automatically even if this annotation is false.
     apps.tanzu.vmware.com/has-tests: true
   annotations:
     autoscaling.knative.dev/minScale: "1"
