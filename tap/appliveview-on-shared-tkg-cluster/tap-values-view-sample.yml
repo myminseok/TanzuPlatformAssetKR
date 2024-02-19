@@ -1,0 +1,142 @@
+profile: view
+ceip_policy_disclosed: true
+shared:
+  ingress_issuer: tap-ingress-selfsigned  ### ADDED
+  ingress_domain: view.tap.lab.pcfdemo.net
+  image_registry:
+    project_path: IMGPKG_REGISTRY_HOSTNAME/tap
+    secret:
+      name: registry-credentials
+      namespace: tap-install
+  kubernetes_distribution: ""
+  ca_cert_data: |
+    -----BEGIN CERTIFICATE-----
+    Zv0+hwgpeQUFe2ZsoKGcpfI=
+    -----END CERTIFICATE-----
+tap_gui:
+  service_type: ClusterIP
+  app_config:
+    customize:
+      custom_name: Developer Portal
+    organization:
+      name: DevOps Team
+    auth:
+      allowGuestAccess: true
+      environment: development
+      providers:
+        github:
+          development:
+            clientId: 
+            clientSecret: 
+    backend:
+      reading:
+        allow:
+        - host: raw.githubusercontent.com
+          paths:
+          - /OWNER/tap-config-repo-private
+        - host: raw.githubusercontent.com
+          paths:
+          - /OWNER/tap-config-repo-private/main
+        - host: gitlab.lab.pcfdemo.net
+          paths:
+          - /root/tap-catalog-repo
+        - host: gitlab.lab.pcfdemo.net
+          paths:
+          - /root/tap-catalog-repo-private
+    proxy:
+      /metadata-store:
+        target: https://metadata-store-app.metadata-store:8443/api/v1
+        changeOrigin: true
+        secure: false
+        allowedHeaders:
+        - Accept
+        - Report-Type-Format
+        headers:
+          Authorization: Bearer  xA
+          X-Custom-Source: project-star
+      /grafana/api:
+        target: https://grafana.lab.pcfdemo.net
+        headers:
+          Authorization: Bearer eyJrIjoiV2JWS2tqUzkxa01IYjdvN0ZqZlo0MnVLdnNXbUhIMDkiLCJuIjoidGVzdCIsImlkIjoxfQ==
+    grafana:
+      domain: https://grafana.lab.pcfdemo.net
+      unifiedAlerting: true
+    permission:
+      enabled: false
+      adminRefs:
+      - group:default/editor
+      - group:default/viewer
+      - group:default/tanzuplatform
+    kubernetes:
+      serviceLocatorMethod:
+        type: multiTenant
+      clusterLocatorMethods:
+      - type: config
+        clusters:
+        - url: https://192.168.0.30:6443
+          name: full
+          authProvider: serviceAccount
+          serviceAccountToken: uGEqBEarg
+          skipTLSVerify: true
+    integrations:
+      gitlab:
+      - host: gitlab.lab.pcfdemo.net
+        token: glpat-UC8xMoLsczNAaQTyK8UW
+        apiBaseUrl: https://gitlab.lab.pcfdemo.net/api/v4
+        baseUrl: https://gitlab.lab.pcfdemo.net
+    catalog:
+      locations:
+      - type: url
+        target: https://github.com/OWNER/tanzu-java-web-app/blob/main/config/catalog-tanzu-java-web-app.yml
+      - type: url
+        target: https://github.com/OWNER/tanzu-java-web-app/blob/main/config/catalog-tanzu-python-web.yml
+      - type: url
+        target: https://gitlab.lab.pcfdemo.net/root/tap-catalog-repo-private/-/blob/main/catalog-tanzu-java-web-app-private.yml
+      - type: url
+        target: https://gitlab.lab.pcfdemo.net/root/tap-catalog-repo/-/blob/main/catalog-tanzu-java-web-app-public-gitlab.yml
+      - type: url
+        target: https://github.com/OWNER/tap-catalog/blob/main/catalog-grafana.lab.pcfdemo.net.yml
+  metadataStoreAutoconfiguration: false
+  tls:
+    namespace: tap-gui
+    secretName: tap-wildcard-cert
+
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/app-live-view-install.html
+appliveview:
+  ingressEnabled: true
+  ## don't use server.tls.enabled only. it requires crt, key values.
+  #server:
+  #  tls:
+  #    enabled: true #! The rest of the tls attributes are needed ONLY if tls is enabled.
+  #    key: ""        #! content of the server key file.
+  #    crt: ""        #! content of the server cert file.
+  tls:
+    namespace: tap-gui
+    secretName: tap-wildcard-cert
+
+excluded_packages:
+- cert-manager.tanzu.vmware.com  ### ADDED
+- contour.tanzu.vmware.com       ### ADDED
+- learningcenter.tanzu.vmware.com
+- workshops.learningcenter.tanzu.vmware.com
+- tap-telemetry.tanzu.vmware.com
+
+scanning:
+  metadataStore:
+    url: ""
+api_auto_registration:
+  tap_gui_url: https://tap-gui.view.tap.lab.pcfdemo.net
+  cluster_name: view-cluster
+  ca_cert_data: |
+    -----BEGIN CERTIFICATE-----
+    8EeV701AaKCa
+    -----END CERTIFICATE-----
+accelerator:
+  server:
+    service_type: ClusterIP
+    watched_namespace: accelerator-system
+    engine_skip_tls_verify: true
+  samples:
+    include: true
+  sources:
+    skip_tls_verify: true
