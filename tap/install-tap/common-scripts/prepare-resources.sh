@@ -11,3 +11,7 @@ if [ "$YES" != "y" ]; then
  confirm_target_k8s
 fi
 
+if [ "$YES" != "y" ]; then
+ confirm_target_k8s
+fi
+

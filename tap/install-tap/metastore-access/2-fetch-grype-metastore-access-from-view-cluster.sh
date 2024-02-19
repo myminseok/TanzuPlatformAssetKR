@@ -2,6 +2,17 @@
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 echo "This script should run on VIEW cluster"
 
+NOT_READY_CERT=$(kubectl get certificates -A | grep -v READ | grep -v True)
+
+if [[  "x$NOT_READY_CERT" != "x" ]]; then
+  echo ""
+  echo "  [ERROR] some certificates is not ready "
+  echo "    kubectl get certificates -A  "
+  echo ""
+  exit 1
+fi
+
+
 set +e
 CA_CERT=$(kubectl get secret -n metadata-store ingress-cert -o json | jq -r ".data.\"ca.crt\"")
 set -e
