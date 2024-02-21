@@ -11,8 +11,8 @@ kubectl create secret generic cnrs-default-tls-overlay -n tap-install \
   --from-file=$SCRIPTDIR/cnrs-default-tls.yml \
   | kubectl apply -f-
 
-## added in TAP 1.7??
-kubectl apply -f $SCRIPTDIR/delegation-cnrs-default-tls.yml
+# ## added in TAP 1.7??
+# kubectl apply -f $SCRIPTDIR/delegation-cnrs-default-tls.yml
 
 kubectl get secret  cnrs-default-tls-overlay -n tap-install
 
