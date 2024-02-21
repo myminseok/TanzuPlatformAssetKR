@@ -19,8 +19,20 @@ kubectl delete -f avi-l4-l7-server-template.yaml
 kubectl apply -f avi-l4-l7-server-template.yaml
 
 
-
-
+apply to tap-values
+```
+ootb_supply_chain_testing_scanning:
+...
+  supported_workloads:
+  - type: web
+    cluster_config_template_name: config-template
+  - type: server
+    cluster_config_template_name: server-template
+  - type: worker
+    cluster_config_template_name: worker-template
+  - type: avi-l4-l7-server
+    cluster_config_template_name: avi-l4-l7-server-template
+```
 
 k get clustersupplychains
 NAME                         READY   REASON   AGE
