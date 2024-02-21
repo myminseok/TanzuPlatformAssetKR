@@ -26,7 +26,7 @@ The ingress issuer is designated by the single Tanzu Application Platform config
 https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/security-and-compliance-tls-and-certificates-ingress-issuer.html
 
 #### 1) Create missing Self Signed ClusterIssuer amd Certs manually
-Ingress certificates inventory in Tanzu Application Platform (tap-selfsigned-issuer.yml)[tap-selfsigned-issuer.yml] and delegates those to TAP components by (delegation-custom-cert-tls.yml)[delegation-custom-cert-tls.yml]
+for certificate, ClusterIssuer for Tanzu Application Platform, see [tap-selfsigned-issuer.yml](tap-selfsigned-issuer.yml) and delegates those to TAP components by [delegation-custom-cert-tls.yml](delegation-custom-cert-tls.yml)
 
 #### 2) Install TAP (with default self signed issuer)
 install TAP with default tap-values.yml. then all certs and secrets should be ready.
@@ -57,7 +57,7 @@ k apply -f delegation-custom-cert-tls.yml
 k apply -f  tap-selfsigned-issuer.yml
 ```
 #### apply custom certs to TAP components.
-refer to default tap-values. (tap-values-view-sample.yml)[tap-values-view-sample.yml], (tap-values-run-sample.yml)[tap-values-run-sample.yml]. 
+refer to default tap-values. [tap-values-view-sample.yml](tap-values-view-sample.yml), [tap-values-run-sample.yml](tap-values-run-sample.yml).
 - see https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/tap-gui-tls-enable-tls-existing-cert.html
 - for TAP components list, see https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/security-and-compliance-tls-and-certificates-ingress-inventory.html
 
