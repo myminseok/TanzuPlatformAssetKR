@@ -5,7 +5,7 @@ metadata:
   labels:
     apps.tanzu.vmware.com/workload-type: web
     app.kubernetes.io/part-of: tanzu-java-web-app
-    apps.tanzu.vmware.com/auto-configure-actuators: "true" ## appliveview will be enabled and be shown on tap-gui automatically even if this annotation is false.
+    apps.tanzu.vmware.com/auto-configure-actuators: "false" ## appliveview will be enabled and be shown on tap-gui automatically even if this annotation is false.
     apps.tanzu.vmware.com/has-tests: true
     #apis.apps.tanzu.vmware.com/register-api: "true"
    # apps.tanzu.vmware.com/carvel-package-workflow: true  # for source-to-url-package, no doublequote ""
