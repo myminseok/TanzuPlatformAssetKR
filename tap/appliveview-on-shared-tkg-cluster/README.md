@@ -57,7 +57,7 @@ k apply -f delegation-custom-cert-tls.yml
 k apply -f  tap-selfsigned-issuer.yml
 ```
 #### apply custom certs to TAP components.
-refer to default tap-values. [tap-values-view-sample.yml](tap-values-view-sample.yml), [tap-values-run-sample.yml](tap-values-run-sample.yml).
+refer to tap-values sample. [tap-values-view-sample.yml](tap-values-view-sample.yml), [tap-values-run-sample.yml](tap-values-run-sample.yml).
 - see https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/tap-gui-tls-enable-tls-existing-cert.html
 - for TAP components list, see https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/security-and-compliance-tls-and-certificates-ingress-inventory.html
 
