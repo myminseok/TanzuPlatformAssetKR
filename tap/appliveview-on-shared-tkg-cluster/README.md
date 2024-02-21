@@ -50,11 +50,11 @@ kubectl create secret tls tap-wildcard-cert --key="domain.key" --cert="domain.cr
 ```
 
 ```
-k apply -f delegation-custom-cert-tls.yml
+k apply -f delegation-custom-cert-tls.yml. make sure to create this on the same namespace with custom cert is on.
 ```
 
 ```
-k apply -f  tap-selfsigned-issuer.yml
+k apply -f  tap-selfsigned-issuer.yml -n tap-gui
 ```
 #### apply custom certs to TAP components.
 refer to tap-values sample. [tap-values-view-sample.yml](tap-values-view-sample.yml), [tap-values-run-sample.yml](tap-values-run-sample.yml).
