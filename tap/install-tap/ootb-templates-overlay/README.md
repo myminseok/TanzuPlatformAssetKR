@@ -1,7 +1,7 @@
 ## problem
 workload image by default will have sha based tag. and [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
 
-so resulting tag will have additional tags.
+for example, there will be additional tags as following:
 ```
 ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space@sha256:60942671e40498742e8feb463a002593e53eb693e4e23b07899d936da8711b6b
 
