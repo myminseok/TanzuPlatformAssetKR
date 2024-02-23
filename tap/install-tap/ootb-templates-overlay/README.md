@@ -1,5 +1,5 @@
 ## problem
-workload image by default will have sha based tag. and OOTB options from pak additionalTags # this is [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
+workload image by default will have sha based tag. and [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
 
 so resulting tag will have additional tags.
 ```
