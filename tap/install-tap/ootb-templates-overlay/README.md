@@ -1,6 +1,13 @@
 ## problem
 workload image by default will have sha based tag. and OOTB options from pak additionalTags # this is [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
-- tested on TAP 1.7.2
+
+so resulting tag will have additional tags.
+```
+ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space@sha256:60942671e40498742e8feb463a002593e53eb693e4e23b07899d936da8711b6b
+
+ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:my_additional_tag
+```
+tested on TAP 1.7.2
 
 ## author and verify overlay 
 ```
@@ -77,13 +84,13 @@ spec:
     - ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:additionalTags1
   - name: additional_tags # can put just tag portion only. customized kpack-template can generate acutal FQDN tag
     value:
-    - "additional_tags_1"
+    - "my_additional_tag"
 ```
 
 
 then, image will have the additional tags besides of default sha tag.
 ```
-    ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:additional_tags_no_quote
+    ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:my_additional_tag
 
 ```
 
