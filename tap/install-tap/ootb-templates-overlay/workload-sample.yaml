@@ -1,0 +1,38 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: my-npm-vue
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: my-npm-vue
+    apps.tanzu.vmware.com/has-tests: true
+  annotations:
+    autoscaling.knative.dev/minScale: "1"
+spec:
+  source:
+    subPath: node-vue/my-npm-vue
+    git:
+      url : https://github.com/myminseok/tanzu-workload-samples
+      ref:
+        branch: main
+  params:
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/language: nodejs
+  - name: additionalTags # it requires to tag as FQDN
+    value: 
+    - ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:additionalTags1
+  - name: additional_tags # can put just tag portion only. customized kpack-template can generate acutal FQDN tag
+    value:
+    - "additional_tags_1"
+  
+  # build:
+  #   env:
+    # - name: BP_NODE_RUN_SCRIPTS #https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/getting-started-customize-dev-portal.html
+    #   value: 'set-tpb-config,portal:pack'
+    # - name: BP_LAUNCHPOINT
+    #   value: "./src/main.js"
+
+  env:
+  - name: BP_LOG_LEVEL
+    value: DEBUG

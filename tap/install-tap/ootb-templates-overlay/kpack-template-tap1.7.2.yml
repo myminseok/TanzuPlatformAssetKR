@@ -1,0 +1,125 @@
+apiVersion: carto.run/v1alpha1
+kind: ClusterImageTemplate
+metadata:
+  annotations:
+    kapp.k14s.io/identity: v1;/carto.run/ClusterImageTemplate/kpack-template;carto.run/v1alpha1
+    kapp.k14s.io/original: '{"apiVersion":"carto.run/v1alpha1","kind":"ClusterImageTemplate","metadata":{"labels":{"kapp.k14s.io/app":"1708499108192651308","kapp.k14s.io/association":"v1.4543b39a9204f82bc4eba330b4fc99ba"},"name":"kpack-template"},"spec":{"healthRule":{"multiMatch":{"healthy":{"matchConditions":[{"status":"True","type":"BuilderReady"},{"status":"True","type":"Ready"}]},"unhealthy":{"matchConditions":[{"status":"False","type":"BuilderReady"},{"status":"False","type":"Ready"}]}}},"imagePath":".status.latestImage","params":[{"default":"default","name":"serviceAccount"},{"default":"default","name":"clusterBuilder"},{"default":{},"name":"registry"},{"default":[],"name":"buildServiceBindings"},{"default":[],"name":"additionalTags"}],"ytt":"#@
+      load(\"@ytt:data\", \"data\")\n#@ load(\"@ytt:regexp\", \"regexp\")\n\n#@ def
+      merge_labels(fixed_values):\n#@   labels = {}\n#@   if hasattr(data.values.workload.metadata,
+      \"labels\"):\n#@     exclusions = [\"kapp.k14s.io/app\", \"kapp.k14s.io/association\"]\n#@     for
+      k,v in dict(data.values.workload.metadata.labels).items():\n#@       if k not
+      in exclusions:\n#@         labels[k] = v\n#@       end\n#@     end\n#@   end\n#@   labels.update(fixed_values)\n#@   return
+      labels\n#@ end\n\n#@ def param(key):\n#@   if not key in data.values.params:\n#@     return
+      None\n#@   end\n#@   return data.values.params[key]\n#@ end\n\n#@ def maven_param(key):\n#@   if
+      not key in data.values.params[\"maven\"]:\n#@     return None\n#@   end\n#@   return
+      data.values.params[\"maven\"][key]\n#@ end\n\n#@ def maven_repository_url():\n#@   if
+      maven_param(\"repository\") and \"url\" in maven_param(\"repository\"):\n#@     return
+      maven_param(\"repository\")[\"url\"]\n#@   elif param(\"maven_repository_url\"):\n#@     return
+      param(\"maven_repository_url\")\n#@   else:\n#@     return None\n#@   end   \n#@
+      end\n\n#@ def image():\n#@   return \"/\".join([\n#@    data.values.params.registry.server,\n#@    data.values.params.registry.repository,\n#@    \"-\".join([\n#@      data.values.workload.metadata.name,\n#@      data.values.workload.metadata.namespace,\n#@    ])\n#@   ])\n#@
+      end\n\n#@ def correlationId():\n#@   if hasattr(data.values.workload, \"annotations\")
+      and hasattr(data.values.workload.annotations, \"apps.tanzu.vmware.com/correlationid\"):\n#@     return
+      data.values.workload.annotations[\"apps.tanzu.vmware.com/correlationid\"]\n#@   end\n#@   url
+      = \"\"\n#@   if hasattr(data.values.workload.spec, \"source\"):\n#@     if hasattr(data.values.workload.spec.source,
+      \"git\"):\n#@       url = data.values.workload.spec.source.git.url\n#@     elif
+      hasattr(data.values.workload.spec.source, \"image\"):\n#@       url = data.values.workload.spec.source.image.split(\"@\")[0]\n#@     end\n#@     url
+      = url + \"?sub_path=\" + getattr(data.values.workload.spec.source, \"subPath\",
+      \"/\")\n#@   end\n#@   if param(\"maven\"):\n#@     url = maven_repository_url()
+      + \"/\" + maven_param(\"groupId\").replace(\".\", \"/\") + \"/\" + maven_param(\"artifactId\")  \n#@   end\n#@   return
+      url\n#@ end\n\napiVersion: kpack.io/v1alpha2\nkind: Image\nmetadata:\n  name:
+      #@ data.values.workload.metadata.name\n  labels: #@ merge_labels({ \"app.kubernetes.io/component\":
+      \"build\" })\n  annotations:\n    apps.tanzu.vmware.com/correlationid: #@ correlationId()\nspec:\n  tag:
+      #@ image()\n  additionalTags: #@ data.values.params.additionalTags\n  serviceAccountName:
+      #@ data.values.params.serviceAccount\n  builder:\n    kind: ClusterBuilder\n    name:
+      #@ data.values.params.clusterBuilder\n  source:\n    blob:\n      url: #@ data.values.source.url\n    #@
+      if hasattr(data.values.workload.spec, \"source\"):\n    #@ if/end hasattr(data.values.workload.spec.source,
+      \"subPath\"):\n    subPath: #@ data.values.workload.spec.source.subPath\n    #@
+      end\n  build:\n    env:\n    - name: BP_OCI_SOURCE\n      value: #@ data.values.source.revision\n    #@  if
+      regexp.match(\"^([a-zA-Z0-9\\/_-]+)(\\@sha1:)?[0-9a-f]{40}$\", data.values.source.revision):\n    -
+      name: BP_OCI_REVISION\n      value: #@ data.values.source.revision\n    #@ end\n    #@
+      if/end param(\"live-update\"):\n    - name: BP_LIVE_RELOAD_ENABLED\n      value:
+      ''true''\n    #@ if hasattr(data.values.workload.spec.build, \"env\"):\n    #@
+      for var in data.values.workload.spec.build.env:\n    - name: #@ var.name\n      #@
+      if/end hasattr(var, \"value\"):\n      value: #@ var.value\n      #@ if/end
+      hasattr(var, \"valueFrom\"):\n      valueFrom: #@ var.valueFrom\n    #@ end\n    #@
+      end\n    services: #@ data.values.params.buildServiceBindings\n"}}'
+    kapp.k14s.io/original-diff-md5: 8e1ca9893e5a176f4f857f553ca2442f
+  creationTimestamp: "2024-02-23T04:36:51Z"
+  generation: 1
+  labels:
+    kapp.k14s.io/app: "1708499108192651308"
+    kapp.k14s.io/association: v1.4543b39a9204f82bc4eba330b4fc99ba
+  name: kpack-template
+  resourceVersion: "1538202"
+  uid: d41b0543-8c80-4db3-b9ee-c95e27e25576
+spec:
+  healthRule:
+    multiMatch:
+      healthy:
+        matchConditions:
+        - status: "True"
+          type: BuilderReady
+        - status: "True"
+          type: Ready
+      unhealthy:
+        matchConditions:
+        - status: "False"
+          type: BuilderReady
+        - status: "False"
+          type: Ready
+  imagePath: .status.latestImage
+  lifecycle: mutable
+  params:
+  - default: default
+    name: serviceAccount
+  - default: default
+    name: clusterBuilder
+  - default: {}
+    name: registry
+  - default: []
+    name: buildServiceBindings
+  - default: []
+    name: additionalTags
+  ytt: "#@ load(\"@ytt:data\", \"data\")\n#@ load(\"@ytt:regexp\", \"regexp\")\n\n#@
+    def merge_labels(fixed_values):\n#@   labels = {}\n#@   if hasattr(data.values.workload.metadata,
+    \"labels\"):\n#@     exclusions = [\"kapp.k14s.io/app\", \"kapp.k14s.io/association\"]\n#@
+    \    for k,v in dict(data.values.workload.metadata.labels).items():\n#@       if
+    k not in exclusions:\n#@         labels[k] = v\n#@       end\n#@     end\n#@   end\n#@
+    \  labels.update(fixed_values)\n#@   return labels\n#@ end\n\n#@ def param(key):\n#@
+    \  if not key in data.values.params:\n#@     return None\n#@   end\n#@   return
+    data.values.params[key]\n#@ end\n\n#@ def maven_param(key):\n#@   if not key in
+    data.values.params[\"maven\"]:\n#@     return None\n#@   end\n#@   return data.values.params[\"maven\"][key]\n#@
+    end\n\n#@ def maven_repository_url():\n#@   if maven_param(\"repository\") and
+    \"url\" in maven_param(\"repository\"):\n#@     return maven_param(\"repository\")[\"url\"]\n#@
+    \  elif param(\"maven_repository_url\"):\n#@     return param(\"maven_repository_url\")\n#@
+    \  else:\n#@     return None\n#@   end   \n#@ end\n\n#@ def image():\n#@   return
+    \"/\".join([\n#@    data.values.params.registry.server,\n#@    data.values.params.registry.repository,\n#@
+    \   \"-\".join([\n#@      data.values.workload.metadata.name,\n#@      data.values.workload.metadata.namespace,\n#@
+    \   ])\n#@   ])\n#@ end\n\n#@ def correlationId():\n#@   if hasattr(data.values.workload,
+    \"annotations\") and hasattr(data.values.workload.annotations, \"apps.tanzu.vmware.com/correlationid\"):\n#@
+    \    return data.values.workload.annotations[\"apps.tanzu.vmware.com/correlationid\"]\n#@
+    \  end\n#@   url = \"\"\n#@   if hasattr(data.values.workload.spec, \"source\"):\n#@
+    \    if hasattr(data.values.workload.spec.source, \"git\"):\n#@       url = data.values.workload.spec.source.git.url\n#@
+    \    elif hasattr(data.values.workload.spec.source, \"image\"):\n#@       url
+    = data.values.workload.spec.source.image.split(\"@\")[0]\n#@     end\n#@     url
+    = url + \"?sub_path=\" + getattr(data.values.workload.spec.source, \"subPath\",
+    \"/\")\n#@   end\n#@   if param(\"maven\"):\n#@     url = maven_repository_url()
+    + \"/\" + maven_param(\"groupId\").replace(\".\", \"/\") + \"/\" + maven_param(\"artifactId\")
+    \ \n#@   end\n#@   return url\n#@ end\n\napiVersion: kpack.io/v1alpha2\nkind:
+    Image\nmetadata:\n  name: #@ data.values.workload.metadata.name\n  labels: #@
+    merge_labels({ \"app.kubernetes.io/component\": \"build\" })\n  annotations:\n
+    \   apps.tanzu.vmware.com/correlationid: #@ correlationId()\nspec:\n  tag: #@
+    image()\n  additionalTags: #@ data.values.params.additionalTags\n  serviceAccountName:
+    #@ data.values.params.serviceAccount\n  builder:\n    kind: ClusterBuilder\n    name:
+    #@ data.values.params.clusterBuilder\n  source:\n    blob:\n      url: #@ data.values.source.url\n
+    \   #@ if hasattr(data.values.workload.spec, \"source\"):\n    #@ if/end hasattr(data.values.workload.spec.source,
+    \"subPath\"):\n    subPath: #@ data.values.workload.spec.source.subPath\n    #@
+    end\n  build:\n    env:\n    - name: BP_OCI_SOURCE\n      value: #@ data.values.source.revision\n
+    \   #@  if regexp.match(\"^([a-zA-Z0-9\\/_-]+)(\\@sha1:)?[0-9a-f]{40}$\", data.values.source.revision):\n
+    \   - name: BP_OCI_REVISION\n      value: #@ data.values.source.revision\n    #@
+    end\n    #@ if/end param(\"live-update\"):\n    - name: BP_LIVE_RELOAD_ENABLED\n
+    \     value: 'true'\n    #@ if hasattr(data.values.workload.spec.build, \"env\"):\n
+    \   #@ for var in data.values.workload.spec.build.env:\n    - name: #@ var.name\n
+    \     #@ if/end hasattr(var, \"value\"):\n      value: #@ var.value\n      #@
+    if/end hasattr(var, \"valueFrom\"):\n      valueFrom: #@ var.valueFrom\n    #@
+    end\n    #@ end\n    services: #@ data.values.params.buildServiceBindings\n"

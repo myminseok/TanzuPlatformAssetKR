@@ -1,0 +1,139 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:regexp", "regexp")
+#@ load("@ytt:data", "data")
+
+#@overlay/match by=overlay.subset({"kind": "ClusterImageTemplate","metadata":{"name":"kpack-template"}}), expects="0+"
+---
+spec:
+  ytt: |
+    #@ load("@ytt:data", "data")
+
+    #@ def merge_labels(fixed_values):
+    #@   labels = {}
+    #@   if hasattr(data.values.workload.metadata, "labels"):
+    #@     labels.update(data.values.workload.metadata.labels)
+    #@   end
+    #@   labels.update(fixed_values)
+    #@   return labels
+    #@ end
+
+    #@ def param(key):
+    #@   if not key in data.values.params:
+    #@     return None
+    #@   end
+    #@   return data.values.params[key]
+    #@ end
+
+    #@ def maven_param(key):
+    #@   if not key in data.values.params["maven"]:
+    #@     return None
+    #@   end
+    #@   return data.values.params["maven"][key]
+    #@ end
+
+    #@ def maven_repository_url():
+    #@   if maven_param("repository") and "url" in maven_param("repository"):
+    #@     return maven_param("repository")["url"]
+    #@   elif param("maven_repository_url"):
+    #@     return param("maven_repository_url")
+    #@   else:
+    #@     return None
+    #@   end   
+    #@ end
+
+    #@ def additional_tags():
+    #@   tags = []
+    #@   for val in param("additional_tags"):
+    #@     tags.append("{}:{}".format( image(), val))
+    #@   end
+    #@   return tags
+    #@ end
+
+    #@ def image_by_namespace():
+    #@   return "/".join([
+    #@    data.values.params.registry.server,
+    #@    "/".join([
+    #@      data.values.params.registry.repository,
+    #@      data.values.workload.metadata.namespace,
+    #@    ]),
+    #@    "-".join([
+    #@      data.values.workload.metadata.name,
+    #@      data.values.workload.metadata.namespace,
+    #@    ])
+    #@   ])
+    #@ end
+
+    #@ def image():
+    #@   return "/".join([
+    #@    data.values.params.registry.server,
+    #@    data.values.params.registry.repository,
+    #@    "-".join([
+    #@      data.values.workload.metadata.name,
+    #@      data.values.workload.metadata.namespace,
+    #@    ])
+    #@   ])
+    #@ end
+
+    #@ def git_revision():
+    #@   return data.values.source.revision.split(":")[1]
+    #@ end
+
+    #@ def correlationId():
+    #@   if hasattr(data.values.workload, "annotations") and hasattr(data.values.workload.annotations, "apps.tanzu.vmware.com/correlationid"):
+    #@     return data.values.workload.annotations["apps.tanzu.vmware.com/correlationid"]
+    #@   end
+    #@   url = ""
+    #@   if hasattr(data.values.workload.spec, "source"):
+    #@     if hasattr(data.values.workload.spec.source, "git"):
+    #@       url = data.values.workload.spec.source.git.url
+    #@     elif hasattr(data.values.workload.spec.source, "image"):
+    #@       url = data.values.workload.spec.source.image.split("@")[0]
+    #@     end
+    #@     url = url + "?sub_path=" + getattr(data.values.workload.spec.source, "subPath", "/")
+    #@   end
+    #@   if param("maven"):
+    #@     url = maven_repository_url() + "/" + maven_param("groupId").replace(".", "/") + "/" + maven_param("artifactId")  
+    #@   end
+    #@   return url
+    #@ end
+
+    apiVersion: kpack.io/v1alpha2
+    kind: Image
+    metadata:
+      name: #@ data.values.workload.metadata.name
+      labels: #@ merge_labels({ "app.kubernetes.io/component": "build" })
+      annotations:
+        apps.tanzu.vmware.com/correlationid: #@ correlationId()
+    spec:
+      tag: #@ image()
+      #@ if hasattr(data.values.params, "additional_tags"):
+      additionalTags: #@ additional_tags()
+      #@ end
+      serviceAccountName: #@ data.values.params.serviceAccount
+      builder:
+        kind: ClusterBuilder
+        name: #@ data.values.params.clusterBuilder
+      source:
+        blob:
+          url: #@ data.values.source.url
+        #@ if hasattr(data.values.workload.spec, "source"):
+        #@ if/end hasattr(data.values.workload.spec.source, "subPath"):
+        subPath: #@ data.values.workload.spec.source.subPath
+        #@ end
+      build:
+        env:
+        - name: BP_OCI_SOURCE
+          value: #@ data.values.source.revision
+        #@ if/end param("live-update"):
+        - name: BP_LIVE_RELOAD_ENABLED
+          value: 'true'
+        #@ if hasattr(data.values.workload.spec.build, "env"):
+        #@ for var in data.values.workload.spec.build.env:
+        - name: #@ var.name
+          #@ if/end hasattr(var, "value"):
+          value: #@ var.value
+          #@ if/end hasattr(var, "valueFrom"):
+          valueFrom: #@ var.valueFrom
+        #@ end
+        #@ end
+        services: #@ data.values.params.buildServiceBindings
