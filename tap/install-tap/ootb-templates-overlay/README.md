@@ -73,13 +73,18 @@ spec:
       ref:
         branch: main
   params:
-  - name: testing_pipeline_matching_labels
-    value:
-      apps.tanzu.vmware.com/language: nodejs
   - name: additionalTags # it requires to tag as FQDN
     value: 
     - ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:additionalTags1
   - name: additional_tags # can put just tag portion only. customized kpack-template can generate acutal FQDN tag
     value:
     - "additional_tags_1"
-    ```
+```
+
+
+then, image will have the additional tags besides of default sha tag.
+```
+    ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:additional_tags_no_quote
+
+```
+
