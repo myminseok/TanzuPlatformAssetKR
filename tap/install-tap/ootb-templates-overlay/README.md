@@ -1,5 +1,9 @@
 ## problem
-workload image by default will have sha based tag. and [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml. for more reference: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html and https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/customize-package-installation.html
+workload image by default will have sha based tag. and [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. 
+- it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml.
+- for more reference: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
+- and https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/customize-package-installation.html
+- additionalTags: https://github.com/buildpacks-community/kpack/blob/main/docs/image.md
 
 for example, there will be additional tags as following:
 ```
