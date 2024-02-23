@@ -1,4 +1,4 @@
-https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
+referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
 
 
 ## test overlay.
