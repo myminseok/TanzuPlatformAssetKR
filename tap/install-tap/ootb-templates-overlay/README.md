@@ -12,8 +12,8 @@ ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:my_additi
 - customizing package: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/customize-package-installation.html
 - customizing cnrs package: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
 - additionalTags from buipdpack: https://github.com/buildpacks-community/kpack/blob/main/docs/image.md
-- additionalTags from TAP: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/workloads-spec-reference.html#imageprovider-5
-- 
+- workload parameters: additionalTags from TAP: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/workloads-spec-reference.html#imageprovider-5
+
 ## author and verify overlay 
 ```
 kubectl get ClusterImageTemplate kpack-template  -o yaml > kpack-template.yml
