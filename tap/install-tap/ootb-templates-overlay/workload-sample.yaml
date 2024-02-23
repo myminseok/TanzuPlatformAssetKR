@@ -19,10 +19,10 @@ spec:
   - name: testing_pipeline_matching_labels
     value:
       apps.tanzu.vmware.com/language: nodejs
-  - name: additionalTags # it requires to tag as FQDN
+  - name: additionalTags # this is OOTB options. it requires to tag as FQDN
     value: 
     - ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:additionalTags1
-  - name: additional_tags # can put just tag portion only. customized kpack-template can generate acutal FQDN tag
+  - name: additional_tags # by customizing kpack-template, can put just tag portion only. then, the customized kpack-template can generate acutal FQDN tag
     value:
     - "additional_tags_1"
   
