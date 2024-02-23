@@ -18,7 +18,7 @@ deployment.apps/tanzu-java-web-app-00012-deployment   1/1     1            1    
 
 
 ## solutions
-knavie(CNRS) has configuration to control the revision history via configmap under `knative-serving` namespace. this configmap is managed by TAP package. and we can overlay those config via package overlay feature. for more reference: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
+knavie(CNRS) has configuration to control the revision history via configmap under `knative-serving` namespace. this configmap is managed by TAP package. and we can overlay those config via package overlay feature. for more reference: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html and https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/customize-package-installation.html
 
 ####
 it is not set by default. and will use default value from package(`overlay-knative-gc-defaults.yaml`). fetch example config.
