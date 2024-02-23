@@ -1,16 +1,15 @@
-referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
+## problem
+workload image by default will have sha based tag. and OOTB options from pak additionalTags # this is [OOTB option from TBS](https://docs.vmware.com/en/Tanzu-Build-Service/1.12/vmware-tanzu-build-service/managing-images.html) requires to tag as FQDN which is complicated. this docs shows how to add simple additional tags via workload yml. it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml
+- tested on TAP 1.7.2
 
-
-## test overlay.
+## author and verify overlay 
 ```
 kubectl get ClusterImageTemplate kpack-template  -o yaml > kpack-template.yml
-
 ytt -f kpack-template.yml -f kpack-template-overlay.yml | grep additional_tags
 
 ```
 
-## apply to tap.
-
+## apply to tap
 ```
 kubectl create secret generic kpack-template-overlay -n tap-install --from-file=./kpack-template-overlay.yml 
 
