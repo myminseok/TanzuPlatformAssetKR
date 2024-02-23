@@ -124,3 +124,7 @@ package_overlays:
 ```
 kubectl get configmap config-gc --namespace knative-serving --output jsonpath='{.data.max-non-active-revisions}
 ```
+if it doesn't apply, delete the configmap and wait until it is reconciled automatically.
+```
+kubectl delete configmap config-gc -n knative-serving 
+```
