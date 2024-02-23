@@ -9,9 +9,10 @@ ghcr.io/myminseok/tap-service/minseok-supply-chain/my-npm-vue-my-space:my_additi
 ```
 - tested on TAP 1.7.2
 - it is referenced from https://github.com/Mpluya/tap-install-azure/blob/main/build-packaging/ootb-templates-overlay.yaml.
-- for more reference: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
-- and https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/customize-package-installation.html
-- additionalTags: https://github.com/buildpacks-community/kpack/blob/main/docs/image.md
+- customizing package: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/customize-package-installation.html
+- customizing cnrs package: https://docs.vmware.com/en/Cloud-Native-Runtimes-for-VMware-Tanzu/2.3/tanzu-cloud-native-runtimes/customizing-cnrs.html
+- additionalTags from buipdpack: https://github.com/buildpacks-community/kpack/blob/main/docs/image.md
+- additionalTags from TAP: https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.7/tap/workloads-spec-reference.html#imageprovider-5
 - 
 ## author and verify overlay 
 ```
