@@ -7,6 +7,8 @@ with this overlay, in the workload.yml, you can:
 
 this overlay works for `web` workload type, you can extend to other workload type by applying similar pattern. 
 
+tested on TAP 1.7.2
+
 ### Test overlay
 fetch ClusterConfigTemplate and apply the overlay and check PodDisruptionBudget
 ```
