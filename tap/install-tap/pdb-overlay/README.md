@@ -97,7 +97,7 @@ kubectl delete podintents.conventions.carto.run/tanzu-java-web-app -n my-space
 kubectl delete apps.kappctrl.k14s.io/tanzu-java-web-app -n my-space
 ```
 
-## Reference
+## Reference to POD distribution
 - [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
 - [podAntiAffinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#more-practical-use-cases): preferredDuringSchedulingIgnoredDuringExecution, requiredDuringSchedulingIgnoredDuringExecution
 - [Cluster-level default constraints: KubeSchedulerConfiguration](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#cluster-level-default-constraints)
