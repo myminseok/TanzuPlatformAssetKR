@@ -17,7 +17,7 @@ kubectl delete -f avi-l4-l7-server-template.yaml
 
 
 kubectl apply -f avi-l4-l7-server-template.yaml
-
+```
 
 apply to tap-values
 ```
