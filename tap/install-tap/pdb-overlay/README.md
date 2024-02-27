@@ -1,5 +1,5 @@
 ## Motivation
-add PodDisruptionBudget for workload by adding overlaying the existing `config-template` ClusterConfigTemplate. 
+add [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) for workload by adding overlaying the existing `config-template` ClusterConfigTemplate. 
 
 with this overlay, in the workload.yml, you can:
 - set PDB minAvailable, maxUnavailable 
@@ -97,3 +97,9 @@ kubectl delete podintents.conventions.carto.run/tanzu-java-web-app -n my-space
 kubectl delete apps.kappctrl.k14s.io/tanzu-java-web-app -n my-space
 ```
 
+## Reference
+- [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/)
+- [podAntiAffinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#more-practical-use-cases): preferredDuringSchedulingIgnoredDuringExecution, requiredDuringSchedulingIgnoredDuringExecution
+- [Cluster-level default constraints: KubeSchedulerConfiguration](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#cluster-level-default-constraints)
+- [pod.spec.topologySpreadConstraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field): There's no guarantee that the constraints remain satisfied when Pods are removed. For example, scaling down a Deployment may result in imbalanced Pods distribution.
+- [descheduler](https://github.com/kubernetes-sigs/descheduler)
