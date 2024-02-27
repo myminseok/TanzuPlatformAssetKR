@@ -1,0 +1,29 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+#@overlay/match by=overlay.subset({"kind":"ClusterConfigTemplate", "metadata": {"name": "config-template"}})
+---
+spec:
+  #@overlay/replace via=lambda left, right: "{}\n{}".format(left, '\n'.join(['  {}'.format(x) for x in right.split('\n')]))
+  ytt: |
+    #@yaml/text-templated-strings
+    pdb.yaml: |
+      (@ if hasattr(data.values.workload.metadata, "annotations") and hasattr(data.values.workload.metadata.annotations, "autoscaling.knative.dev/minScale") and int(getattr(data.values.workload.metadata.annotations, "autoscaling.knative.dev/minScale")) >= 2 : @)
+      ---
+      apiVersion: policy/v1
+      kind: PodDisruptionBudget
+      metadata:
+        name: (@= data.values.workload.metadata.name @)
+      spec:
+        (@ if hasattr(data.values.params, "pdb_minAvailable"): @)
+        minAvailable: (@= data.values.params.pdb_minAvailable @)
+        (@ elif hasattr(data.values.params, "pdb_maxUnavailable"): @)
+        maxUnavailable: (@= data.values.params.pdb_maxUnavailable @)
+        (@ else: @)
+        minAvailable: 1
+        (@ end @)
+        
+        selector:
+          matchLabels:
+            app.kubernetes.io/part-of: (@= data.values.workload.metadata.name @)
+            app.kubernetes.io/component: run
+      (@ end @)
