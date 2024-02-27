@@ -7,7 +7,7 @@ with this overlay, in the workload.yml, you can:
 
 this overlay works for `web` workload type, you can extend to other workload type by applying similar pattern. 
 
-tested on TAP 1.7.2
+tested on TAP 1.7.2. this is revised from the original [github.com/categolj/k8s-manifests](https://github.com/categolj/k8s-manifests/blob/main/lime-build/config/platform/tap/overlays/ootb-templates-overlay-pdb.yaml)
 
 ### Test overlay
 fetch ClusterConfigTemplate and apply the overlay and check PodDisruptionBudget
@@ -96,3 +96,6 @@ sometime delete following resources and wait for pdb
 kubectl delete podintents.conventions.carto.run/tanzu-java-web-app -n my-space
 kubectl delete apps.kappctrl.k14s.io/tanzu-java-web-app -n my-space
 ```
+
+### reference
+- 
