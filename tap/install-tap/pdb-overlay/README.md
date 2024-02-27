@@ -78,10 +78,10 @@ spec:
   - name: pdb_maxUnavailable
     value: 50%
 ```
-> workload-type should be `web` to use the updated config-template
-> autoscaling.knative.dev/minScale: if more than 2, PDB is created. if less than 2 or empty, then PDB will be removed if exists.
-> pdb_minAvailable: set any value as string. default is 1 if empty.
-> pdb_maxUnavailable: set any value as string. if pdb_minAvailable is set, then pdb_maxUnavailable is ignored.
+- > workload-type should be `web` to use the updated config-template
+- > autoscaling.knative.dev/minScale: if more than 2, PDB is created. if less than 2 or empty, then PDB will be removed if exists.
+- > pdb_minAvailable: set any value as string. default is 1 if empty.
+- > pdb_maxUnavailable: set any value as string. if pdb_minAvailable is set, then pdb_maxUnavailable is ignored.
 
 ```
 tanzu apps workload apply --yes  -n my-space -f ./workload-tanzu-java-web-app.yaml
@@ -97,5 +97,3 @@ kubectl delete podintents.conventions.carto.run/tanzu-java-web-app -n my-space
 kubectl delete apps.kappctrl.k14s.io/tanzu-java-web-app -n my-space
 ```
 
-### reference
-- 
