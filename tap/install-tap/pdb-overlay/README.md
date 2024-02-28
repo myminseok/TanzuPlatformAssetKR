@@ -79,7 +79,7 @@ spec:
     value: 50%
 ```
 - > workload-type should be `web` to use the updated config-template
-- > autoscaling.knative.dev/minScale: if more than 2, PDB is created. if less than 2 or empty, then PDB will be removed if exists.
+- > autoscaling.knative.dev/minScale: if 2+, PDB is created. if less than 2 or empty, then PDB will be removed if exists.
 - > pdb_minAvailable: set any value as string. default is 1 if empty.
 - > pdb_maxUnavailable: set any value as string. if pdb_minAvailable is set, then pdb_maxUnavailable is ignored.
 
