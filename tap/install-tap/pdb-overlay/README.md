@@ -75,8 +75,10 @@ spec:
       ref:
         branch: main
   params:
-  - name: pdb_maxUnavailable
-    value: 50%
+  - name: pdb_minAvailable
+    value: 50%    
+  # - name: pdb_maxUnavailable 
+  #   value: 50%   
 ```
 - > workload-type should be `web` to use the updated config-template
 - > autoscaling.knative.dev/minScale: if 2+, PDB is created. if less than 2 or empty, then PDB will be removed if exists.
