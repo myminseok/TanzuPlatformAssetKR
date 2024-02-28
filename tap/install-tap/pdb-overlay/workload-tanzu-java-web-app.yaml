@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/part-of: tanzu-java-web-app
     apps.tanzu.vmware.com/has-tests: true
   annotations:
-    autoscaling.knative.dev/minScale: "2" ## should be greater than 2 to create PDB, if less than 2 or empty, then PDB will be removed if exists.
+    autoscaling.knative.dev/minScale: "2" ## should be 2+ to create PDB, if less than 2 or empty, then PDB will be removed if exists.
 spec:
   source:
     git:
