@@ -19,7 +19,7 @@ spec:
     value:
       apps.tanzu.vmware.com/pipeline: test
       apps.tanzu.vmware.com/language: java
-  - name: pdb_maxUnavailable
+  - name: pdb_minAvailable
     value: 50%    ## set any value as string. default is 1 if empty.
-  # - name: pdb_minAvailable
+  # - name: pdb_maxUnavailable
   #   value: 50%     ## set any value as string. if pdb_minAvailable is set, then pdb_maxUnavailable is ignored.
