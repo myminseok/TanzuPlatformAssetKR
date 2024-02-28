@@ -9,7 +9,7 @@ this overlay works for `web` workload type, you can extend to other workload typ
 
 tested on TAP 1.7.2. this is revised from the original [github.com/categolj/k8s-manifests](https://github.com/categolj/k8s-manifests/blob/main/lime-build/config/platform/tap/overlays/ootb-templates-overlay-pdb.yaml)
 
-### Test overlay
+### Test the overlay
 fetch ClusterConfigTemplate and apply the overlay and check PodDisruptionBudget
 ```
 kubectl get ClusterConfigTemplate config-template -o yaml > config-template.yaml
