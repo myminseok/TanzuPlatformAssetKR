@@ -3,7 +3,7 @@ add [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/confi
 
 with this overlay, in the workload.yml, you can:
 - set PDB minAvailable, maxUnavailable 
-- if autoscaling.knative.dev/minScale is more than 2, PDB is created. if less than 2 or empty, then PDB will be removed if exists.
+- if autoscaling.knative.dev/minScale is 2 or higher, then PDB is created. if less than 2 or empty, then PDB will be removed if exists.
 
 this overlay works for `web` workload type, you can extend to other workload type by applying similar pattern. 
 
