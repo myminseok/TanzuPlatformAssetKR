@@ -1,7 +1,7 @@
-https://docs.vmware.com/en/VMware-Tanzu-Reference-Architecture/services/tanzu-solutions-workbooks/solution-workbooks-tap-workloads-avi-l4-l7.html
+this sample exlaborates from [official guide(https://docs.vmware.com/en/VMware-Tanzu-Reference-Architecture/services/tanzu-solutions-workbooks/solution-workbooks-tap-workloads-avi-l4-l7.html
+) and added some opinions
 
 ```
-
 kubectl get ClusterConfigTemplate server-template -o yaml > avi-l4-l7-server-template.yaml
 
 kubectl get ClusterConfigTemplate server-template -o yaml -ojsonpath='{.spec.ytt}' > spec-ytt.yaml
