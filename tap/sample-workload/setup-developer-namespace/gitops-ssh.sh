@@ -1,7 +1,9 @@
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-source $SCRIPTDIR/../common-scripts/common.sh
-load_env_file $SCRIPTDIR/../tap-env
+source $SCRIPTDIR/../../install-tap/common-scripts/common.sh
+load_env_file $SCRIPTDIR/tap-env
+
+set -x
 
 DEVELOPER_NAMESPACE=${1:-$DEVELOPER_NAMESPACE}
 
