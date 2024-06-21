@@ -11,7 +11,7 @@ app will be built on build cluster
 and  build cluster will create:
 - configmap for app. it will have deployment, service, etc that will be stamped out from clusterconfigtemplate
 ```
-k get clusterconfigtemplate  server-template   > buildcluster-clusterconfigtemplate.yml    
+k get clusterconfigtemplate  server-template -o yaml  > buildcluster-clusterconfigtemplate.yml    
 
 k get clusterconfigtemplate  server-template  -o jsonpath='{.spec.ytt}' > buildcluster-clusterconfigtemplate-server-template.yml
 
