@@ -1,0 +1,71 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: tanzu-java-web-app.my-space.tap.20240621075123.0.0+build.763ba0d
+spec:
+  refName: tanzu-java-web-app.my-space.tap
+  version: 20240621075123.0.0+build.763ba0d
+  releaseNotes: |
+    Release v20240621075123.0.0+build.763ba0d of package tanzu-java-web-app.my-space.tap
+  template:
+    spec:
+      fetch:
+      - imgpkgBundle:
+          image: ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space-bundle@sha256:20a251f26d082e2d89c02e5c25c0f67894a9b32f676661a670f8fa0af1a68dbf
+      template:
+      - ytt:
+          paths:
+          - .
+      - kbld:
+          paths:
+          - .imgpkg/images.yml
+          - '-'
+      deploy:
+      - kapp: {}
+  valuesSchema:
+    openAPIv3:
+      type: object
+      additionalProperties: false
+      properties:
+        workload_name:
+          title: Workload name
+          type: string
+          default: ""
+          minLength: 1
+        replicas:
+          title: Replicas
+          type: integer
+          default: 1
+        port:
+          title: Port
+          type: integer
+          default: 8080
+        hostname:
+          title: Hostname
+          type: string
+          default: ""
+        cluster_issuer:
+          title: Cluster Issuer
+          type: string
+          default: tap-ingress-selfsigned
+        http_route:
+          type: object
+          additionalProperties: false
+          nullable: true
+          properties:
+            gateways:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                properties:
+                  protocol:
+                    type: string
+                    default: ""
+                  name:
+                    type: string
+                    default: ""
+              default:
+              - protocol: https
+                name: default-gateway
+

@@ -1,0 +1,15 @@
+---
+apiVersion: packaging.carvel.dev/v1alpha1
+kind: PackageInstall
+metadata:
+  name: tanzu-java-web-app
+spec:
+  serviceAccountName: default # ServiceAccount on Run cluster with permissions to deploy Package, see "Set up Run Cluster Namespaces"
+  packageRef:
+    refName: tanzu-java-web-app.my-space.tap # name of the Package
+    versionSelection:
+      constraints: ">=0.0.0" # version of the Package
+      #constraints: 20230803075920.0.0
+  values:
+  - secretRef:
+      name: app-values # Secret created in previous step

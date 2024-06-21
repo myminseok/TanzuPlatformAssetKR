@@ -1,0 +1,32 @@
+---
+apiVersion: kappctrl.k14s.io/v1alpha1
+kind: App
+metadata:
+  name: carvel-package-tanzu-java-web-app-packages
+  namespace: my-space
+spec:
+  # specifies that app should be deployed to destination cluster;
+  # by default, cluster is same as where this resource resides
+  cluster:
+    # specifies namespace in destination cluster
+    namespace: run-space
+    # specifies secret containing kubeconfig
+    kubeconfigSecretRef:
+      # specifies secret name within app's namespace
+      name: homelab-run-cluster-kubeconfig
+      # specifies key that contains kubeconfig
+      key: value.yaml
+  fetch:
+  - git:
+      url: git@github.com:myminseok/tap-gitops-repo.git # GitOps repo URL ex: https://github.com/mycompany/my-gitops
+      ref: origin/main # GitOps repo branchex: origin/main
+      subPath: scc-deliveryhomelab/tanzu-java-web-app.my-space.tap/packages/  # ex: hello-app.dev.tap/packages/
+      secretRef:
+        name: gitops-ssh-carvel-package
+  template:
+  - ytt: {}
+
+  deploy:
+  - kapp:
+      intoNs: run-space
+      rawOptions: ["--dangerous-allow-empty-list-of-resources=true"]

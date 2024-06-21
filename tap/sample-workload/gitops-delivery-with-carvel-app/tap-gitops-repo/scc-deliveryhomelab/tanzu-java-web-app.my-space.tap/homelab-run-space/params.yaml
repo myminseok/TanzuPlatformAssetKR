@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-values
+stringData:
+  values.yaml: |
+    ---
+    workload_name: tanzu-java-web-app
+    replicas: 2
+    #hostname: tanzu-java-web-app.tapsandbox.com

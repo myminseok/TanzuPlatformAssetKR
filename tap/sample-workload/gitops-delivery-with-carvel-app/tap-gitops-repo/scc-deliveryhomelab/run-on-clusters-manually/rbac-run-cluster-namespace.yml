@@ -1,0 +1,16 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: run-space
+  name: app-package-and-pkgi-install-role
+rules:
+  - apiGroups: ["data.packaging.carvel.dev"]
+    resources: ["packages"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
+  - apiGroups: ["packaging.carvel.dev"]
+    resources: ["packageinstalls"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "create", "update", "delete", "patch"]
