@@ -13,20 +13,23 @@ ootb_supply_chain_testing: # Optional if the corresponding shared keys are provi
   registry:
     server: "BUILDSERVICE_REGISTRY_HOSTNAME"
     repository: "SUPPLYCHAIN_REPO"
+  carvel_package:
+    workflow_enabled: true
+    gitops_subpath: scc-deliveryhomelab
   # gitops:
   #   ssh_secret: "" # (Optional) Defaults to "".
   gitops:
-    server_address: https://github.com/ ## This must include the scheme/protocol (e.g. https:// or ssh://)
-    #server_address: ssh://git@github.com/
+    # server_address: https://github.com/ ## This must include the scheme/protocol (e.g. https:// or ssh://)
+    server_address: ssh://git@github.com/
     repository_owner: SUPPLYCHAIN_GITOPS_REPOSITORY_OWNER
     username: SUPPLYCHAIN_GITOPS_REPOSITORY_OWNER
     repository_name: SUPPLYCHAIN_GITOPS_REPOSITORY_NAME
     #branch: main
-    ssh_secret: gitops-basic
+    ssh_secret: gitops-ssh
     commit_strategy: direct #direct,pull_request
   cluster_builder: default
   service_account: default
-
+    
 #@overlay/match missing_ok=True
 ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys are provided.
   registry:
@@ -36,14 +39,14 @@ ootb_supply_chain_testing_scanning: # Optional if the corresponding shared keys 
   # gitops:
   #   ssh_secret: "" # (Optional) Defaults to "".
   gitops:
-    server_address: https://github.com/ ## This must include the scheme/protocol (e.g. https:// or ssh://)
-    #server_address: ssh://git@github.com/
+    # server_address: https://github.com/ ## This must include the scheme/protocol (e.g. https:// or ssh://)
+    server_address: ssh://git@github.com/
     repository_owner: SUPPLYCHAIN_GITOPS_REPOSITORY_OWNER
     username: SUPPLYCHAIN_GITOPS_REPOSITORY_OWNER
     repository_name: tap-gitops-repo
     #branch: main
-    ssh_secret: gitops-basic
-    commit_strategy: pull_request
+    ssh_secret: gitops-ssh
+    commit_strategy: pull_request #direct,pull_request
     pull_request:
       server_kind: github
       commit_branch: ""
