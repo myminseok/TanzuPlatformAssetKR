@@ -23,6 +23,44 @@ yq eval '.spec.ytt' ./server-template.yml > server-template-spec-ytt.yml
 ```
 cp server-template-spec-ytt.yml custom-server-template-spec-ytt.yml
 ```
+and app/update/remove deployment/service configs. for example, in the following snippets, added 'replicas' param under 'spec', which will take params 'replicas' from workload.yml 
+
+```
+...
+#@ def delivery():
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: #@ data.values.workload.metadata.name
+  annotations:
+    kapp.k14s.io/update-strategy: "fallback-on-replace"
+    ootb.apps.tanzu.vmware.com/servicebinding-workload: "true"
+    kapp.k14s.io/change-rule: "upsert after upserting servicebinding.io/ServiceBindings"
+  labels: #@ merge_labels({ "app.kubernetes.io/component": "run", "carto.run/workload-name": data.values.workload.metadata.name })
+spec:
+  selector:
+    matchLabels: #@ data.values.config.metadata.labels
+  template: #@ data.values.config
+  #! TODO added
+  #@ if "replicas" in data.values.params:
+  replicas: #@ data.values.params.replicas 
+  #@ end
+...
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+#! TODO modified
+  name: #@ data.values.workload.metadata.name + "-custom-server"
+  labels: #@ merge_labels({ "app.kubernetes.io/component": "config" })
+data:
+  delivery.yml: #@ yaml.encode(delivery())
+
+```
+> added 'replicas' param under 'spec', which will take params 'replicas' from workload.yml 
+
+
 4. merge custom-server-template-spec-ytt.yml into [custom-server-template.yml](./custom-server-template-files/custom-server-template.yml)
 ```
 cp server-template.yml custom-server-template.yml
@@ -115,7 +153,8 @@ status:
 10. test the new workload type by deploying sample workload.
 ```
 tanzu apps workload delete tanzu-java-web-app --yes  -n my-space
-
+```
+```
 tanzu apps workload apply -f ./custom-server-template-files/workload-tanzu-java-web-app.yml --yes  -n my-space
 ```
 
@@ -154,6 +193,27 @@ Delivery
    deployer          False     Unknown   2s        not found
 ```
 > delivery-basic is only for TAP full profile.
+
+
+use following command to remove some parameters from existing workload.
+```
+tanzu apps workload apply -f ./custom-server-template-files/workload-tanzu-java-web-app.yml --yes  -n my-space --update-strategy replace
+
+...
+ 13, 13   |  - name: testing_pipeline_matching_labels
+ 14, 14   |    value:
+ 15, 15   |      apps.tanzu.vmware.com/language: java
+ 16, 16   |      apps.tanzu.vmware.com/pipeline: test
+ 17     - |  - name: replicas
+ 18     - |    value: 2
+ 19, 17   |  source:
+ 20, 18   |    git:
+ 21, 19   |      ref:
+ 22, 20   |        branch: main
+...
+ Updated workload "tanzu-java-web-app"
+```
+
 
 
 ## Extract deployment configs.

@@ -56,8 +56,10 @@ spec:
   selector:
     matchLabels: #@ data.values.config.metadata.labels
   template: #@ data.values.config
-  #! added
+  #! TODO added
+  #@ if "replicas" in data.values.params:
   replicas: #@ data.values.params.replicas 
+  #@ end
 ---
 apiVersion: v1
 kind: Service
