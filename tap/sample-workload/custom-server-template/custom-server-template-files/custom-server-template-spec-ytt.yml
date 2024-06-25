@@ -1,0 +1,90 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:yaml", "yaml")
+#@ load("@ytt:struct", "struct")
+#@ load("@ytt:assert", "assert")
+
+#@ def merge_labels(fixed_values):
+#@   labels = {}
+#@   if hasattr(data.values.workload.metadata, "labels"):
+#@     exclusions = ["kapp.k14s.io/app", "kapp.k14s.io/association"]
+#@     for k,v in dict(data.values.workload.metadata.labels).items():
+#@       if k not in exclusions:
+#@         labels[k] = v
+#@       end
+#@     end
+#@   end
+#@   labels.update(fixed_values)
+#@   return labels
+#@ end
+
+#@ def intOrString(v):
+#@   return v if type(v) == "int" else int(v.strip()) if v.strip().isdigit() else v
+#@ end
+
+#@ def merge_ports(ports_spec, containers):
+#@   ports = {}
+#@   for c in containers:
+#@     for p in getattr(c, "ports", []):
+#@       ports[p.containerPort] = {"targetPort": p.containerPort, "port": p.containerPort, "name": getattr(p, "name", str(p.containerPort))}
+#@     end
+#@   end
+#@   for p in ports_spec:
+#@     targetPort = getattr(p, "containerPort", p.port)
+#@     type(targetPort) in ("string", "int") or fail("containerPort must be a string or int")
+#@     targetPort = intOrString(targetPort)
+#@     
+#@     port = p.port
+#@     type(port) in ("string", "int") or fail("port must be a string or int")
+#@     port = int(port)
+#@     ports[p.port] = {"targetPort": targetPort, "port": port, "name": getattr(p, "name", str(p.port))}
+#@   end
+#@   return ports.values()
+#@ end
+
+#@ def delivery():
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: #@ data.values.workload.metadata.name
+  annotations:
+    kapp.k14s.io/update-strategy: "fallback-on-replace"
+    ootb.apps.tanzu.vmware.com/servicebinding-workload: "true"
+    kapp.k14s.io/change-rule: "upsert after upserting servicebinding.io/ServiceBindings"
+  labels: #@ merge_labels({ "app.kubernetes.io/component": "run", "carto.run/workload-name": data.values.workload.metadata.name })
+spec:
+  selector:
+    matchLabels: #@ data.values.config.metadata.labels
+  template: #@ data.values.config
+  #! added
+  replicas: #@ data.values.params.replicas 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: #@ data.values.workload.metadata.name
+  labels: #@ merge_labels({ "app.kubernetes.io/component": "run", "carto.run/workload-name": data.values.workload.metadata.name })
+spec:
+  selector: #@ data.values.config.metadata.labels
+  ports:
+  #@ hasattr(data.values.params, "ports") and len(data.values.params.ports) or assert.fail("one or more ports param must be provided.")
+  #@ declared_ports = []
+  #@ if "ports" in data.values.params:
+  #@   declared_ports = data.values.params.ports
+  #@ else:
+  #@   declared_ports = struct.encode([{ "containerPort": 8080, "port": 8080, "name": "http"}])
+  #@ end
+  #@ for p in merge_ports(declared_ports, data.values.config.spec.containers):
+  - #@ p
+  #@ end
+#@ end
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+#! TODO modified
+  name: #@ data.values.workload.metadata.name + "-custom-server"
+  labels: #@ merge_labels({ "app.kubernetes.io/component": "config" })
+data:
+  delivery.yml: #@ yaml.encode(delivery())
