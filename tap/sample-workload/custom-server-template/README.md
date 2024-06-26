@@ -1,9 +1,12 @@
 
 # customizing server-workload type
-this sample elaborates from [official guide](https://docs.vmware.com/en/VMware-Tanzu-Reference-Architecture/services/tanzu-solutions-workbooks/solution-workbooks-tap-workloads-avi-l4-l7.html
-) and added some opinions
+this sample elaborates from [official guide](https://docs.vmware.com/en/VMware-Tanzu-Reference-Architecture/services/tanzu-solutions-workbooks/solution-workbooks-tap-workloads-avi-l4-l7.html) and added some opinions.
 
-install yq on your PC.
+* tested on TAP 1.8.4
+
+
+## Procedure
+0. install yq on your PC.
 
 
 1. Save the existing server-template in a local file. [server-template.yml](./default-server-template-files/server-template.yml)
