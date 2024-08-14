@@ -36,7 +36,7 @@ echo "[MANUAL] PREREQUSITE "
 echo "---------------------------------------------------------------"
 echo "PREREQUSITE: docker login $INSTALL_REGISTRY_HOSTNAME"
 echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
-echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
+echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC Manually."
 docker login $IMGPKG_REGISTRY_HOSTNAME -u $IMGPKG_REGISTRY_USERNAME -p $IMGPKG_REGISTRY_PASSWORD
 
 check_executable "imgpkg"
