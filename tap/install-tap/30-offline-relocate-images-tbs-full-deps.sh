@@ -41,9 +41,9 @@ docker login $IMGPKG_REGISTRY_HOSTNAME -u $IMGPKG_REGISTRY_USERNAME -p $IMGPKG_R
 
 check_executable "imgpkg"
 
-echo "INFO) For TAp 1.6, repo size is 11.24 GiB"
+echo "INFO) For TAp 1.11, repo size is 13 GiB"
 echo "INFO) For TAp 1.8, repo size is 22.88 GiB"
-
+echo "INFO) For TAp 1.6, repo size is 11.24 GiB"
 
 echo "Relocating full-tbs-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 

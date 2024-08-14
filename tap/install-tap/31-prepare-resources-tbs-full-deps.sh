@@ -13,7 +13,7 @@ fi
 
 set -x
 
-## make sure tap-registry is in place. otherwise tanzu package repository add tbs-full-deps-repository will be failed.
+## make sure tap-registry is in place. otherwise tanzu package repository add full-deps-package-repo will be failed.
 tanzu secret registry add tap-registry \
     --server   $INSTALL_REGISTRY_HOSTNAME \
     --username $INSTALL_REGISTRY_USERNAME \
@@ -28,7 +28,7 @@ set -e
 
 
 set +e
-tanzu package repository delete tbs-full-deps-repository -n tap-install -y
+tanzu package repository delete full-deps-package-repo -n tap-install -y
 set -e
 
 if [ -z $TAP_VERSION ]; then
@@ -38,9 +38,9 @@ if [ -z $TAP_VERSION ]; then
     exit 1
   fi
 fi
-echo "Creating package repository add tbs-full-deps-repository for buildservice.tanzu.vmware.com version:$TAP_VERSION"
+echo "Creating package repository add full-deps-package-repo for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 
 url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSION
 
-tanzu package repository add tbs-full-deps-repository \
+tanzu package repository add full-deps-package-repo \
   --url $url -n tap-install
