@@ -1,0 +1,1 @@
+## see https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.11/tap/install-offline-tbs-offline-install-deps.html#optional-update-dependencies-out-of-band-of-tanzu-application-platform-releases-1

@@ -1,3 +1,5 @@
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.11/tap/install-offline-profile.html
+
 #!/bin/bash
 SCRIPTDIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 source $SCRIPTDIR/common-scripts/common.sh
@@ -46,6 +48,7 @@ set +e
  kubectl get secretexports -A | grep tap-registry
 set -e
 
+
 ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.5/tap/install-offline-profile.html
 tanzu secret registry update registry-credentials \
 --username $BUILDSERVICE_REGISTRY_USERNAME \
@@ -58,11 +61,7 @@ set +e
  kubectl get secretexports -A | grep registry-credentials
 set -e
 
-
-url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/tap-packages:$TAP_VERSION 
-if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
-  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages:$TAP_VERSION 
-fi
+url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/tap-packages:$TAP_VERSION
 
 tanzu package repository update tanzu-tap-repository \
   --url $url \

@@ -40,10 +40,7 @@ if [ -z $TAP_VERSION ]; then
 fi
 echo "Creating package repository add tbs-full-deps-repository for buildservice.tanzu.vmware.com version:$TAP_VERSION"
 
-url=${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSION
-if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
-  url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSION
-fi
+url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSION
 
 tanzu package repository add tbs-full-deps-repository \
   --url $url -n tap-install

@@ -16,8 +16,9 @@ buildservice:
   ## it  will be created after build-service is installed(rerun 04-relocate-images-tbs-full-deps.sh, 30-prepare-resources-tbs-full-deps.sh, 31-install-tbs-full-deps.sh 
   kp_default_repository: "BUILDSERVICE_REGISTRY_HOSTNAME/BUILDSERVICE_REPO"
   ## TODO apply kp-default-repo-secret
-  kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
-  kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
+  # kp_default_repository_username: "BUILDSERVICE_REGISTRY_USERNAME"
+  # kp_default_repository_password: "BUILDSERVICE_REGISTRY_PASSWORD"
+  ## kp_default_repository_secret will be share with buildservice.kp_default_repository_secret in tap-values.yml
   # kp_default_repository_secret: # Takes the value from the shared section by default, but can be overridden by setting a different value.
   #   name: "kp-default-repo-secret"
   #   namespace: "build-service"

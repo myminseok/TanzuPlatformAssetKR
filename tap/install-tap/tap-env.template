@@ -15,10 +15,10 @@ INSTALL_REPO="tanzu-application-platform"
 
 ## "ghcr.io", 
 IMGPKG_REGISTRY_HOSTNAME="my-image-registry.example.com"
-## optional. put empty for harbor
-IMGPKG_REGISTRY_OWNER="ownername" 
-## !!!!! any path for operational preference. it should be create as PUBLIC manually
-IMGPKG_REPO="tap"
+## !!!!! set any path for operational preference. it should be create as PUBLIC manually
+## add ownername for public registry; ghcr.io
+IMGPKG_REPO="tap" ## for harbor
+#IMGPKG_REPO="ownername/tap" ## ghcr.io
 ## for authentication.
 IMGPKG_REGISTRY_USERNAME="ownername"
 ## password for authentication.  or ghcr.io TOKEN

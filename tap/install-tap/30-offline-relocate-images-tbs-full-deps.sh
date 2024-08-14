@@ -1,4 +1,4 @@
-## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.3/tap/GUID-tbs-offline-install-deps.html
+## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.11/tap/install-offline-tbs-offline-install-deps.html
 ## 
 
 #!/bin/bash
@@ -24,6 +24,7 @@ if is_arg_exist '-h' $@; then
   exit 0
 fi
 
+verify_tap_env_param "INSTALL_REGISTRY_HOSTNAME", "$INSTALL_REGISTRY_HOSTNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_HOSTNAME", "$IMGPKG_REGISTRY_HOSTNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_USERNAME", "$IMGPKG_REGISTRY_USERNAME"
 verify_tap_env_param "IMGPKG_REGISTRY_PASSWORD", "$IMGPKG_REGISTRY_PASSWORD"
@@ -33,9 +34,10 @@ verify_tap_env_param "TAP_VERSION", "$TAP_VERSION"
 echo "==============================================================="
 echo "[MANUAL] PREREQUSITE "
 echo "---------------------------------------------------------------"
-echo "PREREQUSITE: docker login registry.tanzu.vmware.com"
+echo "PREREQUSITE: docker login $INSTALL_REGISTRY_HOSTNAME"
 echo "PREREQUSITE: docker login $IMGPKG_REGISTRY_HOSTNAME"
-echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REGISTRY_USERNAME/$IMGPKG_REPO as PUBLIC"
+echo "PREREQUSITE: create repo  $IMGPKG_REGISTRY_HOSTNAME/$IMGPKG_REPO as PUBLIC"
+docker login $IMGPKG_REGISTRY_HOSTNAME -u $IMGPKG_REGISTRY_USERNAME -p $IMGPKG_REGISTRY_PASSWORD
 
 check_executable "imgpkg"
 
@@ -53,11 +55,8 @@ if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
   REGISTRY_CA_PATH_ARG="--registry-ca-cert-path $REGISTRY_CA_PATH"
 fi
 
-public_repo_url="registry.tanzu.vmware.com/tanzu-application-platform/full-deps-package-repo:${TAP_VERSION}"
-relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/$IMGPKG_REGISTRY_OWNER/${IMGPKG_REPO}/full-deps-package-repo"
-if [ "x$IMGPKG_REGISTRY_OWNER" == "x" ]; then
-  relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo"
-fi
+public_repo_url="$INSTALL_REGISTRY_HOSTNAME/tanzu-application-platform/full-deps-package-repo:${TAP_VERSION}"
+relocated_repo_url="${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo"
 
 get_value_from_args 'DOWNLOAD_TAR_PATH' '--download' $@
 if [ ! -z $DOWNLOAD_TAR_PATH ]; then
@@ -65,8 +64,11 @@ if [ ! -z $DOWNLOAD_TAR_PATH ]; then
   set -x
   DOWNLOAD_DIR=$(dirname "${DOWNLOAD_TAR_PATH}")
   mkdir -p $DOWNLOAD_DIR
-  imgpkg copy -b $public_repo_url --to-tar ${DOWNLOAD_TAR_PATH} \
+  imgpkg copy -b $public_repo_url \
+    --to-tar ${DOWNLOAD_TAR_PATH} \
     --include-non-distributable-layers $REGISTRY_CA_PATH_ARG
+    ## --debug 2>&1 | tee download.log
+        
   echo ""
   echo "Successfully downloaded to $DOWNLOAD_TAR_PATH"
   exit 0 
@@ -81,12 +83,15 @@ if [ ! -z $UPLOAD_TAR_PATH ]; then
   fi 
   echo "Uploading $UPLOAD_TAR_PATH to $relocated_repo_url"
   set -x
-  imgpkg copy --tar ${UPLOAD_TAR_PATH} --to-repo $relocated_repo_url  $REGISTRY_CA_PATH_ARG
+  imgpkg copy \
+    --tar ${UPLOAD_TAR_PATH} \
+    --to-repo $relocated_repo_url \
+    $REGISTRY_CA_PATH_ARG
   exit 0 
 fi
 
 echo "Downloading and Uploading to $IMGPKG_REGISTRY_HOSTNAME directly."
 set -x
-imgpkg copy -b $public_repo_url --to-repo $relocated_repo_url $REGISTRY_CA_PATH_ARG
-
-
+imgpkg copy -b $public_repo_url \
+  --to-repo $relocated_repo_url \
+  --include-non-distributable-layers $REGISTRY_CA_PATH_ARG
