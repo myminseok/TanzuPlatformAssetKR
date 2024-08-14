@@ -37,6 +37,8 @@ docker login $IMGPKG_REGISTRY_HOSTNAME -u $IMGPKG_REGISTRY_USERNAME -p $IMGPKG_R
 
 check_executable "imgpkg"
 
+echo "INFO) For TAP 1.11, repo size is 9 GiB"
+
 REGISTRY_CA_PATH_ARG=""
 if [ ! -z $IMGPKG_REGISTRY_CA_CERTIFICATE ]; then
   REGISTRY_CA_PATH="/tmp/imgpkg_registry_ca.crt"
