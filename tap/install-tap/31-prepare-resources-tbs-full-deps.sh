@@ -14,13 +14,14 @@ fi
 set -x
 
 ## make sure tap-registry is in place. otherwise tanzu package repository add full-deps-package-repo will be failed.
-tanzu secret registry add tap-registry \
-    --server   $INSTALL_REGISTRY_HOSTNAME \
-    --username $INSTALL_REGISTRY_USERNAME \
-    --password $INSTALL_REGISTRY_PASSWORD \
-    --namespace tap-install \
-    --export-to-all-namespaces \
-    --yes
+# tanzu secret registry add tap-registry \
+#     --server   $INSTALL_REGISTRY_HOSTNAME \
+#     --username $INSTALL_REGISTRY_USERNAME \
+#     --password $INSTALL_REGISTRY_PASSWORD \
+#     --namespace tap-install \
+#     --export-to-all-namespaces \
+#     --yes
+
 set +e
  kubectl get secretexports -A | grep tap-registry
 set -e
@@ -44,3 +45,6 @@ url=${IMGPKG_REGISTRY_HOSTNAME}/${IMGPKG_REPO}/full-deps-package-repo:$TAP_VERSI
 
 tanzu package repository add full-deps-package-repo \
   --url $url -n tap-install
+
+
+tanzu package repository list -A 

@@ -5,11 +5,12 @@ load_env_file $SCRIPTDIR/tap-env
 
 print_current_k8s
 
-$SCRIPTDIR/99-delete-tbs-full-deps.sh
-
-tanzu package installed delete tap -n tap-install $@
 set +e
+$SCRIPTDIR/99-delete-tbs-full-deps.sh
+tanzu package installed delete tap -n tap-install $@
+set -e
+
 kubectl delete clusterrole/tap-install-cluster-admin-role
 kubectl delete clusterrolebinding/tap-install-cluster-admin-role-binding
-set -e
+
 
