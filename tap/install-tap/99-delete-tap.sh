@@ -5,7 +5,9 @@ load_env_file $SCRIPTDIR/tap-env
 
 print_current_k8s
 
+set +e
 $SCRIPTDIR/99-delete-tbs-full-deps.sh
+set -e
 
 tanzu package installed delete tap -n tap-install $@
 set +e

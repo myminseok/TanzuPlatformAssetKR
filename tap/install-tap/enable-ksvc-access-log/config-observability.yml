@@ -1,0 +1,174 @@
+apiVersion: v1
+data:
+  logging.enable-request-log: "false"
+  logging.request-log-template: '{"xxxhttpRequest": {"requestMethod": "{{.Request.Method}}", "requestUrl": "{{js .Request.RequestURI}}", "requestSize": "{{.Request.ContentLength}}", "status": {{.Response.Code}}, "responseSize": "{{.Response.Size}}", "userAgent": "{{js .Request.UserAgent}}", "remoteIp": "{{js .Request.RemoteAddr}}", "serverIp": "{{.Revision.PodIP}}", "referer": "{{js .Request.Referer}}", "latency": "{{.Response.Latency}}s", "protocol": "{{.Request.Proto}}"}, "traceId": "{{index .Request.Header "X-B3-Traceid"}}"}'
+  _example: |
+    ################################
+    #                              #
+    #    EXAMPLE CONFIGURATION     #
+    #                              #
+    ################################
+
+    # This block is not actually functional configuration,
+    # but serves to illustrate the available configuration
+    # options and document them in a way that is accessible
+    # to users that `kubectl edit` this config map.
+    #
+    # These sample configuration options may be copied out of
+    # this example block and unindented to be in the data block
+    # to actually change the configuration.
+
+    # logging.enable-var-log-collection defaults to false.
+    # The fluentd daemon set will be set up to collect /var/log if
+    # this flag is true.
+    logging.enable-var-log-collection: "false"
+
+    # logging.revision-url-template provides a template to use for producing the
+    # logging URL that is injected into the status of each Revision.
+    logging.revision-url-template: "http://logging.example.com/?revisionUID=${REVISION_UID}"
+
+    # If non-empty, this enables queue proxy writing user request logs to stdout, excluding probe
+    # requests.
+    # NB: after 0.18 release logging.enable-request-log must be explicitly set to true
+    # in order for request logging to be enabled.
+    #
+    # The value determines the shape of the request logs and it must be a valid go text/template.
+    # It is important to keep this as a single line. Multiple lines are parsed as separate entities
+    # by most collection agents and will split the request logs into multiple records.
+    #
+    # The following fields and functions are available to the template:
+    #
+    # Request: An http.Request (see https://golang.org/pkg/net/http/#Request)
+    # representing an HTTP request received by the server.
+    #
+    # Response:
+    # struct {
+    #   Code    int       // HTTP status code (see https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)
+    #   Size    int       // An int representing the size of the response.
+    #   Latency float64   // A float64 representing the latency of the response in seconds.
+    # }
+    #
+    # Revision:
+    # struct {
+    #   Name          string  // Knative revision name
+    #   Namespace     string  // Knative revision namespace
+    #   Service       string  // Knative service name
+    #   Configuration string  // Knative configuration name
+    #   PodName       string  // Name of the pod hosting the revision
+    #   PodIP         string  // IP of the pod hosting the revision
+    # }
+    #
+    logging.request-log-template: '{"httpRequest": {"requestMethod": "{{.Request.Method}}", "requestUrl": "{{js .Request.RequestURI}}", "requestSize": "{{.Request.ContentLength}}", "status": {{.Response.Code}}, "responseSize": "{{.Response.Size}}", "userAgent": "{{js .Request.UserAgent}}", "remoteIp": "{{js .Request.RemoteAddr}}", "serverIp": "{{.Revision.PodIP}}", "referer": "{{js .Request.Referer}}", "latency": "{{.Response.Latency}}s", "protocol": "{{.Request.Proto}}"}, "traceId": "{{index .Request.Header "X-B3-Traceid"}}"}'
+
+    # If true, the request logging will be enabled.
+    # NB: up to and including Knative version 0.18 if logging.request-log-template is non-empty, this value
+    # will be ignored.
+    logging.enable-request-log: "false"
+
+    # If true, this enables queue proxy writing request logs for probe requests to stdout.
+    # It uses the same template for user requests, i.e. logging.request-log-template.
+    logging.enable-probe-request-log: "false"
+
+    # metrics.backend-destination field specifies the system metrics destination.
+    # It supports either prometheus (the default) or opencensus.
+    metrics.backend-destination: prometheus
+
+    # metrics.reporting-period-seconds specifies the global metrics reporting period for control and data plane components.
+    # If a zero or negative value is passed the default reporting period is used (10 secs).
+    # If the attribute is not specified a default value is used per metrics backend.
+    # For the prometheus backend the default reporting period is 5s while for opencensus it is 60s.
+    metrics.reporting-period-seconds: "5"
+
+    # metrics.request-metrics-backend-destination specifies the request metrics
+    # destination. It enables queue proxy to send request metrics.
+    # Currently supported values: prometheus (the default), opencensus.
+    metrics.request-metrics-backend-destination: prometheus
+
+    # metrics.request-metrics-reporting-period-seconds specifies the request metrics reporting period in sec at queue proxy.
+    # If a zero or negative value is passed the default reporting period is used (10 secs).
+    # If the attribute is not specified, it is overridden by the value of metrics.reporting-period-seconds.
+    metrics.request-metrics-reporting-period-seconds: "5"
+
+    # profiling.enable indicates whether it is allowed to retrieve runtime profiling data from
+    # the pods via an HTTP server in the format expected by the pprof visualization tool. When
+    # enabled, the Knative Serving pods expose the profiling data on an alternate HTTP port 8008.
+    # The HTTP context root for profiling is then /debug/pprof/.
+    profiling.enable: "false"
+kind: ConfigMap
+metadata:
+  annotations:
+    kapp.k14s.io/change-group: install
+    kapp.k14s.io/identity: v1;knative-serving//ConfigMap/config-observability;v1
+    kapp.k14s.io/original: '{"apiVersion":"v1","data":{"_example":"################################\n#                              #\n#    EXAMPLE
+      CONFIGURATION     #\n#                              #\n################################\n\n#
+      This block is not actually functional configuration,\n# but serves to illustrate
+      the available configuration\n# options and document them in a way that is accessible\n#
+      to users that `kubectl edit` this config map.\n#\n# These sample configuration
+      options may be copied out of\n# this example block and unindented to be in the
+      data block\n# to actually change the configuration.\n\n# logging.enable-var-log-collection
+      defaults to false.\n# The fluentd daemon set will be set up to collect /var/log
+      if\n# this flag is true.\nlogging.enable-var-log-collection: \"false\"\n\n#
+      logging.revision-url-template provides a template to use for producing the\n#
+      logging URL that is injected into the status of each Revision.\nlogging.revision-url-template:
+      \"http://logging.example.com/?revisionUID=${REVISION_UID}\"\n\n# If non-empty,
+      this enables queue proxy writing user request logs to stdout, excluding probe\n#
+      requests.\n# NB: after 0.18 release logging.enable-request-log must be explicitly
+      set to true\n# in order for request logging to be enabled.\n#\n# The value determines
+      the shape of the request logs and it must be a valid go text/template.\n# It
+      is important to keep this as a single line. Multiple lines are parsed as separate
+      entities\n# by most collection agents and will split the request logs into multiple
+      records.\n#\n# The following fields and functions are available to the template:\n#\n#
+      Request: An http.Request (see https://golang.org/pkg/net/http/#Request)\n# representing
+      an HTTP request received by the server.\n#\n# Response:\n# struct {\n#   Code    int       //
+      HTTP status code (see https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml)\n#   Size    int       //
+      An int representing the size of the response.\n#   Latency float64   // A float64
+      representing the latency of the response in seconds.\n# }\n#\n# Revision:\n#
+      struct {\n#   Name          string  // Knative revision name\n#   Namespace     string  //
+      Knative revision namespace\n#   Service       string  // Knative service name\n#   Configuration
+      string  // Knative configuration name\n#   PodName       string  // Name of
+      the pod hosting the revision\n#   PodIP         string  // IP of the pod hosting
+      the revision\n# }\n#\nlogging.request-log-template: ''{\"httpRequest\": {\"requestMethod\":
+      \"{{.Request.Method}}\", \"requestUrl\": \"{{js .Request.RequestURI}}\", \"requestSize\":
+      \"{{.Request.ContentLength}}\", \"status\": {{.Response.Code}}, \"responseSize\":
+      \"{{.Response.Size}}\", \"userAgent\": \"{{js .Request.UserAgent}}\", \"remoteIp\":
+      \"{{js .Request.RemoteAddr}}\", \"serverIp\": \"{{.Revision.PodIP}}\", \"referer\":
+      \"{{js .Request.Referer}}\", \"latency\": \"{{.Response.Latency}}s\", \"protocol\":
+      \"{{.Request.Proto}}\"}, \"traceId\": \"{{index .Request.Header \"X-B3-Traceid\"}}\"}''\n\n#
+      If true, the request logging will be enabled.\n# NB: up to and including Knative
+      version 0.18 if logging.request-log-template is non-empty, this value\n# will
+      be ignored.\nlogging.enable-request-log: \"false\"\n\n# If true, this enables
+      queue proxy writing request logs for probe requests to stdout.\n# It uses the
+      same template for user requests, i.e. logging.request-log-template.\nlogging.enable-probe-request-log:
+      \"false\"\n\n# metrics.backend-destination field specifies the system metrics
+      destination.\n# It supports either prometheus (the default) or opencensus.\nmetrics.backend-destination:
+      prometheus\n\n# metrics.reporting-period-seconds specifies the global metrics
+      reporting period for control and data plane components.\n# If a zero or negative
+      value is passed the default reporting period is used (10 secs).\n# If the attribute
+      is not specified a default value is used per metrics backend.\n# For the prometheus
+      backend the default reporting period is 5s while for opencensus it is 60s.\nmetrics.reporting-period-seconds:
+      \"5\"\n\n# metrics.request-metrics-backend-destination specifies the request
+      metrics\n# destination. It enables queue proxy to send request metrics.\n# Currently
+      supported values: prometheus (the default), opencensus.\nmetrics.request-metrics-backend-destination:
+      prometheus\n\n# metrics.request-metrics-reporting-period-seconds specifies the
+      request metrics reporting period in sec at queue proxy.\n# If a zero or negative
+      value is passed the default reporting period is used (10 secs).\n# If the attribute
+      is not specified, it is overridden by the value of metrics.reporting-period-seconds.\nmetrics.request-metrics-reporting-period-seconds:
+      \"5\"\n\n# profiling.enable indicates whether it is allowed to retrieve runtime
+      profiling data from\n# the pods via an HTTP server in the format expected by
+      the pprof visualization tool. When\n# enabled, the Knative Serving pods expose
+      the profiling data on an alternate HTTP port 8008.\n# The HTTP context root
+      for profiling is then /debug/pprof/.\nprofiling.enable: \"false\"\n"},"kind":"ConfigMap","metadata":{"annotations":{"kapp.k14s.io/change-group":"install","knative.dev/example-checksum":"54abd711"},"labels":{"app.kubernetes.io/component":"observability","app.kubernetes.io/name":"knative-serving","app.kubernetes.io/part-of":"cloud-native-runtimes","app.kubernetes.io/version":"knative-v1.14.1-pr15250","kapp.k14s.io/app":"1727230916888829387","kapp.k14s.io/association":"v1.19ad349200e256128c530da1462ee82c"},"name":"config-observability","namespace":"knative-serving"},"spec":{"template":{"metadata":{"annotations":{"kapp.k14s.io/change-group":"install"}}}}}'
+    kapp.k14s.io/original-diff-md5: a8efb2662486972ba9da603758558460
+    knative.dev/example-checksum: 54abd711
+  creationTimestamp: "2024-09-25T02:22:01Z"
+  labels:
+    app.kubernetes.io/component: observability
+    app.kubernetes.io/name: knative-serving
+    app.kubernetes.io/part-of: cloud-native-runtimes
+    app.kubernetes.io/version: knative-v1.14.1-pr15250
+    kapp.k14s.io/app: "1727230916888829387"
+    kapp.k14s.io/association: v1.19ad349200e256128c530da1462ee82c
+  name: config-observability
+  namespace: knative-serving
+  resourceVersion: "2010233"
+  uid: c1f1448c-c84e-432b-8d4e-d3b3cc3187a3
