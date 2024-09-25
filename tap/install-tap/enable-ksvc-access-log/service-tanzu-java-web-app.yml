@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kapp.k14s.io/change-rule: upsert after upserting servicebinding.io/ServiceBindings
+    kapp.k14s.io/identity: v1;my-space/serving.knative.dev/Service/tanzu-java-web-app;serving.knative.dev/v1
+    kapp.k14s.io/original: '{"apiVersion":"serving.knative.dev/v1","kind":"Service","metadata":{"annotations":{"kapp.k14s.io/change-rule":"upsert
+      after upserting servicebinding.io/ServiceBindings","kbld.k14s.io/images":"null\n","ootb.apps.tanzu.vmware.com/apidescriptor-ref":"true","ootb.apps.tanzu.vmware.com/servicebinding-workload":"true"},"labels":{"app.kubernetes.io/component":"run","app.kubernetes.io/part-of":"tanzu-java-web-app","apps.tanzu.vmware.com/auto-configure-actuators":"false","apps.tanzu.vmware.com/has-tests":"true","apps.tanzu.vmware.com/use-sonarqube":"true","apps.tanzu.vmware.com/workload-type":"web","carto.run/workload-name":"tanzu-java-web-app","kapp.k14s.io/app":"1727231633185955265","kapp.k14s.io/association":"v1.512e806ea626c2bb684d51aa2ca2f646"},"name":"tanzu-java-web-app","namespace":"my-space"},"spec":{"template":{"metadata":{"annotations":{"apps.tanzu.vmware.com/correlationid":"https://github.com/myminseok/tanzu-java-web-app?sub_path=/","autoscaling.knative.dev/minScale":"1","boot.spring.io/version":"2.5.8","conventions.carto.run/applied-conventions":"spring-boot-convention/auto-configure-actuators-check\nspring-boot-convention/is-native-app-check\nspring-boot-convention/is-prometheus-enabled-check\nspring-boot-convention/spring-boot\nspring-boot-convention/spring-boot-graceful-shutdown\nspring-boot-convention/spring-boot-web\nspring-boot-convention/spring-boot-actuator\nspring-boot-convention/app-live-view-appflavour-check\nspring-boot-convention/app-live-view-connector-boot\nspring-boot-convention/app-live-view-appflavours-boot","developer.conventions/target-containers":"workload"},"labels":{"app.kubernetes.io/component":"run","app.kubernetes.io/part-of":"tanzu-java-web-app","apps.tanzu.vmware.com/auto-configure-actuators":"false","apps.tanzu.vmware.com/has-tests":"true","apps.tanzu.vmware.com/use-sonarqube":"true","apps.tanzu.vmware.com/workload-type":"web","carto.run/workload-name":"tanzu-java-web-app","conventions.carto.run/framework":"spring-boot","kapp.k14s.io/app":"1727231633185955265","kapp.k14s.io/association":"v1.512e806ea626c2bb684d51aa2ca2f646","tanzu.app.live.view":"true","tanzu.app.live.view.application.actuator.path":"actuator","tanzu.app.live.view.application.actuator.port":"8080","tanzu.app.live.view.application.flavours":"spring-boot","tanzu.app.live.view.application.name":"tanzu-java-web-app"}},"spec":{"containers":[{"env":[{"name":"BP_LOG_LEVEL","value":"DEBUG"},{"name":"JAVA_TOOL_OPTIONS","value":"-Dserver.port=\"8080\"
+      -Dserver.shutdown.grace-period=\"24s\""}],"image":"ghcr.io/myminseok/tap-service/minseok-supply-chain/tanzu-java-web-app-my-space@sha256:4cbad465bdbce42f3ecbdb6fdbab550ec3fed9e42c8083af7ca9f493dda1ff01","name":"workload","ports":[{"containerPort":8080,"protocol":"TCP"}],"resources":{},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"runAsNonRoot":true,"runAsUser":1000,"seccompProfile":{"type":"RuntimeDefault"}}}],"serviceAccountName":"default"}}}}'
+    kapp.k14s.io/original-diff-md5: 80f7a5c4a4914c7d7db2df1a0bc78b99
+    kbld.k14s.io/images: |
+      null
+    ootb.apps.tanzu.vmware.com/apidescriptor-ref: "true"
+    ootb.apps.tanzu.vmware.com/servicebinding-workload: "true"
+    serving.knative.dev/creator: system:serviceaccount:my-space:default
+    serving.knative.dev/lastModifier: system:serviceaccount:my-space:default
+  creationTimestamp: "2024-09-25T02:34:03Z"
+  labels:
+    app.kubernetes.io/component: run
+    app.kubernetes.io/part-of: tanzu-java-web-app
+    apps.tanzu.vmware.com/auto-configure-actuators: "false"
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/use-sonarqube: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    carto.run/workload-name: tanzu-java-web-app
+    kapp.k14s.io/app: "1727231633185955265"
+    kapp.k14s.io/association: v1.512e806ea626c2bb684d51aa2ca2f646
+    serving.knative.dev/route: tanzu-java-web-app
+    serving.knative.dev/service: tanzu-java-web-app
+  name: tanzu-java-web-app
+  namespace: my-space
+  ownerReferences:
+  - apiVersion: serving.knative.dev/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Route
+    name: tanzu-java-web-app
+    uid: 5be8a0b6-1340-44ff-a0e8-2fe6681d0117
+  resourceVersion: "2024986"
+  uid: ab86a3b4-ee99-42be-ab0d-0491c01f19a4
+spec:
+  clusterIP: None
+  clusterIPs:
+  - None
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  - IPv6
+  ipFamilyPolicy: RequireDualStack
+  ports:
+  - appProtocol: kubernetes.io/h2c
+    name: http2
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

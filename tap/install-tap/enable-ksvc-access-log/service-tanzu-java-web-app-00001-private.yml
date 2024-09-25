@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    apps.tanzu.vmware.com/correlationid: https://github.com/myminseok/tanzu-java-web-app?sub_path=/
+    autoscaling.knative.dev/class: kpa.autoscaling.knative.dev
+    autoscaling.knative.dev/minScale: "1"
+    boot.spring.io/version: 2.5.8
+    conventions.carto.run/applied-conventions: |-
+      spring-boot-convention/auto-configure-actuators-check
+      spring-boot-convention/is-native-app-check
+      spring-boot-convention/is-prometheus-enabled-check
+      spring-boot-convention/spring-boot
+      spring-boot-convention/spring-boot-graceful-shutdown
+      spring-boot-convention/spring-boot-web
+      spring-boot-convention/spring-boot-actuator
+      spring-boot-convention/app-live-view-appflavour-check
+      spring-boot-convention/app-live-view-connector-boot
+      spring-boot-convention/app-live-view-appflavours-boot
+    developer.conventions/target-containers: workload
+    serving.knative.dev/creator: system:serviceaccount:my-space:default
+  creationTimestamp: "2024-09-25T02:33:53Z"
+  labels:
+    app: tanzu-java-web-app-00001
+    app.kubernetes.io/component: run
+    app.kubernetes.io/part-of: tanzu-java-web-app
+    apps.tanzu.vmware.com/auto-configure-actuators: "false"
+    apps.tanzu.vmware.com/has-tests: "true"
+    apps.tanzu.vmware.com/use-sonarqube: "true"
+    apps.tanzu.vmware.com/workload-type: web
+    carto.run/workload-name: tanzu-java-web-app
+    conventions.carto.run/framework: spring-boot
+    kapp.k14s.io/app: "1727231633185955265"
+    kapp.k14s.io/association: v1.512e806ea626c2bb684d51aa2ca2f646
+    networking.internal.knative.dev/serverlessservice: tanzu-java-web-app-00001
+    networking.internal.knative.dev/serviceType: Private
+    serving.knative.dev/configuration: tanzu-java-web-app
+    serving.knative.dev/configurationGeneration: "1"
+    serving.knative.dev/configurationUID: 28cfb4d0-7b6e-4ad9-ae32-6d704b53db8e
+    serving.knative.dev/revision: tanzu-java-web-app-00001
+    serving.knative.dev/revisionUID: a7e0bb23-fc5d-431d-80f1-7d4a27557f49
+    serving.knative.dev/service: tanzu-java-web-app
+    serving.knative.dev/serviceUID: 3c759bb1-6d70-4589-8d6d-88ec6ec1a3d1
+    tanzu.app.live.view: "true"
+    tanzu.app.live.view.application.actuator.path: actuator
+    tanzu.app.live.view.application.actuator.port: "8080"
+    tanzu.app.live.view.application.flavours: spring-boot
+    tanzu.app.live.view.application.name: tanzu-java-web-app
+  name: tanzu-java-web-app-00001-private
+  namespace: my-space
+  ownerReferences:
+  - apiVersion: networking.internal.knative.dev/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: ServerlessService
+    name: tanzu-java-web-app-00001
+    uid: f0aa3b79-7052-4293-94ed-1920a6b6fd85
+  resourceVersion: "2024638"
+  uid: 482f54fa-5d9c-40f3-ad1e-ef7e0388309b
+spec:
+  clusterIP: 100.70.222.3
+  clusterIPs:
+  - 100.70.222.3
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8012
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8112
+  - name: http-autometric
+    port: 9090
+    protocol: TCP
+    targetPort: http-autometric
+  - name: http-usermetric
+    port: 9091
+    protocol: TCP
+    targetPort: http-usermetric
+  - name: http-queueadm
+    port: 8022
+    protocol: TCP
+    targetPort: 8022
+  - name: http-istio
+    port: 8012
+    protocol: TCP
+    targetPort: 8012
+  selector:
+    serving.knative.dev/revisionUID: a7e0bb23-fc5d-431d-80f1-7d4a27557f49
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
