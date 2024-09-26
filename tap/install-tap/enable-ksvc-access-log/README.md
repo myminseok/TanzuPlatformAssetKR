@@ -1,7 +1,8 @@
 
 # Enabling request logging in knative serving
-by following https://knative.dev/docs/serving/observability/logging/request-logging/
+- by following https://knative.dev/docs/serving/observability/logging/request-logging/
 
+- TESTED on TAP 1.11.1
 
 ## how to apply using overlay
 
