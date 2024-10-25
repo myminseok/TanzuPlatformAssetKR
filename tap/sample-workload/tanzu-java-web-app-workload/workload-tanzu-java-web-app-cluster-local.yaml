@@ -1,0 +1,40 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  name: tanzu-java-web-app-cluster-local
+  labels:
+    apps.tanzu.vmware.com/workload-type: web
+    app.kubernetes.io/part-of: tanzu-java-web-app-cluster-local
+    apps.tanzu.vmware.com/has-tests: true
+    ## will expose Knative Services as `cluster.local`` domain instead of ingress based domain.
+    ### tanzu-java-web-app-cluster-local   Ready   http://tanzu-java-web-app-cluster-local.my-space.svc.cluster.local
+    ## for proxy infront of the cluster-local service, see https://github.com/myminseok/vmware-docs/blob/main/samples/nginx-proxy-k8s/nginx-http-rewrite.yml
+    networking.knative.dev/visibility: cluster-local
+  annotations:
+    autoscaling.knative.dev/minScale: "1"
+    autoscaling.knative.dev/maxScale: "3"
+spec:
+  env:
+  - name: BP_LOG_LEVEL
+    value: DEBUG
+  source:
+    git:
+      url: https://github.com/myminseok/tanzu-java-web-app
+      ref:
+        branch: main
+  params:
+  ## https://docs.vmware.com/en/VMware-Tanzu-Application-Platform/1.6/tap/scc-ootb-supply-chain-testing.html multiple testing pipeline
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/pipeline: test
+      apps.tanzu.vmware.com/language: java
+  - name: clusterBuilder
+    value: base-jammy
+  ## NOTE: following config does not work
+  # - name: annotations
+  #   value:
+  #     autoscaling.knative.dev/maxScale: "2"
+  #     autoscaling.knative.dev/minScale: "1"
+  #     networking.knative.dev/visibility: cluster-local
+
+
